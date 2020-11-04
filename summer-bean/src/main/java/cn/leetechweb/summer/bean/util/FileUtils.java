@@ -9,7 +9,7 @@ import java.io.InputStream;
  *
  * @author junyu lee
  **/
-public final class FileUtils {
+public abstract class FileUtils {
 
     /**
      * @param resourceName 资源名称

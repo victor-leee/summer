@@ -16,7 +16,7 @@ import static cn.leetechweb.summer.bean.loader.XmlNodeDefinition.*;
  *
  * @author junyu lee
  **/
-public final class XmlUtils {
+public abstract class XmlUtils {
 
     public static List<Node> asList(NodeList nodeList) {
         List<Node> result = new ArrayList<>();

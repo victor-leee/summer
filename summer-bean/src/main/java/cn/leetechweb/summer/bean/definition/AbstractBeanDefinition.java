@@ -10,24 +10,25 @@ import java.util.Map;
  * @author junyu lee
  **/
 public interface AbstractBeanDefinition {
+
     /**
-     * 设置实例化该bean的依赖列表，必须确保依赖列表中的bean先初始化
-     * @param relies 实例化该bean的依赖bean名称列表
+     * 返回创建该bean时的依赖
+     * @return 返回依赖
      */
-    void setDependencies(String[] relies);
+    String[] dependsOn();
 
     /**
      * 获取该Bean的参数
      * @param parameterName 参数名
      * @return 参数值
      */
-    Object getParameter(String parameterName);
+    BeanDefinitionParameter getParameter(String parameterName);
 
     /**
-     * 返回这个Bean的所有参数和参数值的映射关系
-     * @return 参数key->value映射关系
+     * 获取该beanDef的所有参数名
+     * @return 所有的参数名
      */
-    Map<String, Object> getParameterMap();
+    String[] getParameterNames();
 
     /**
      * 获取bean名称

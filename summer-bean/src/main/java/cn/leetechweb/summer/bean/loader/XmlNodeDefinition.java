@@ -52,4 +52,9 @@ public final class XmlNodeDefinition {
      * 文本节点
      */
     public static final String TEXT_NODE = "#text";
+
+    /**
+     * 引用attr，指引用上下文中的bean
+     */
+    public static final String REF_VALUE = "ref";
 }

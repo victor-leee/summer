@@ -1,7 +1,9 @@
 package cn.leetechweb.summer.bean.loader.parser.impl;
 
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
-import cn.leetechweb.summer.bean.definition.impl.GlobalStaticBeanDefinitionImpl;
+import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
+import cn.leetechweb.summer.bean.definition.impl.XmlBeanDefinitionImpl;
+import cn.leetechweb.summer.bean.definition.impl.XmlBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.loader.parser.XmlNodeParser;
 import cn.leetechweb.summer.bean.loader.validator.NodeAttrValidatorFactory;
 import cn.leetechweb.summer.bean.util.StringUtils;
@@ -71,15 +73,20 @@ public final class SimpleBeanWithConstructorNodeParser implements XmlNodeParser<
         // 获取该BeanDefinition的所有构造函数的参数列表
         Node constructorNode = XmlUtils.firstNonTextChildNode(node);
         List<Node> paramNodes = XmlUtils.asListExcludeTextNodes(constructorNode.getChildNodes());
-        Map<String, Object> paramMap = new HashMap<>(16);
+        Map<String, XmlBeanDefinitionParameter> paramMap = new HashMap<>(16);
         for (Node paramNode : paramNodes) {
             NamedNodeMap attrMap = paramNode.getAttributes();
             String paramName = attrMap.getNamedItem(ORDER).getNodeValue();
-            // TODO: 2020/11/3 这个可以是依赖，不一定是字符串参数
-            String paramValue = attrMap.getNamedItem(VALUE).getNodeValue();
-            paramMap.put(paramName, paramValue);
+            String paramValue = attrMap.getNamedItem(VALUE) == null ? null :
+                    attrMap.getNamedItem(VALUE).getNodeValue();
+            String refValue = attrMap.getNamedItem(REF_VALUE) == null ? null :
+                    attrMap.getNamedItem(REF_VALUE).getNodeValue();
+            boolean isReference = refValue != null;
+            XmlBeanDefinitionParameter parameter = new XmlBeanDefinitionParameter(paramName,
+                    isReference ? refValue : paramValue, isReference);
+            paramMap.put(paramName, parameter);
         }
-        return new GlobalStaticBeanDefinitionImpl(beanDefId, beanClassPath, paramMap);
+        return new XmlBeanDefinitionImpl(beanDefId, beanClassPath, paramMap);
     }
 
     @Override

@@ -9,12 +9,12 @@ package cn.leetechweb.summer.bean;
 public class TestBean {
     private final String first;
     private final Float sec;
-    private final String thr;
+    private final TestBean thr;
 
-    public TestBean(String first, Float sec, String thr) {
+    public TestBean(String first, Float sec, TestBean ref) {
         this.first = first;
         this.sec = sec;
-        this.thr = thr;
+        this.thr = ref;
     }
 
     public String getFirst() {
@@ -25,7 +25,7 @@ public class TestBean {
         return sec;
     }
 
-    public String getThr() {
+    public TestBean getThr() {
         return thr;
     }
 

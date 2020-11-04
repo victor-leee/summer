@@ -21,7 +21,6 @@ public class ConstructorParamValidator implements NodeAttrValidator {
             return false;
         }
         NamedNodeMap attrMap = node.getAttributes();
-        return attrMap.getNamedItem(ORDER) != null
-                && attrMap.getNamedItem(VALUE) != null;
+        return attrMap.getNamedItem(ORDER) != null;
     }
 }

@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.bean.xml;
 
+import cn.leetechweb.summer.bean.util.FileUtils;
 import org.w3c.dom.Document;
 
 import java.io.InputStream;
@@ -25,7 +26,7 @@ public class ClassPathDocumentLoader extends DomLoader {
     @Override
     public Document loadDocument(String resourceName) {
         try {
-            return loadDocument(Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName));
+            return loadDocument(FileUtils.getInputStreamFromClassPath(resourceName));
         }catch (Exception e) {
             throw new RuntimeException("资源处理失败");
         }

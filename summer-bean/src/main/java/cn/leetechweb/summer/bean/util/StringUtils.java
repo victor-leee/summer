@@ -10,7 +10,7 @@ import java.util.Arrays;
  *
  * @author junyu lee
  **/
-public final class StringUtils {
+public abstract class StringUtils {
 
     private static final char RIGHT_BIG_BRACKET = '}';
 

@@ -11,7 +11,7 @@ import java.util.*;
  *
  * @author junyu lee
  **/
-public final class BeanUtils {
+public abstract class BeanUtils {
 
     /**
      * 使用构造函数创建bean
@@ -22,11 +22,12 @@ public final class BeanUtils {
     public static Object createBeanByConstructor(String beanClassPath, Map<String, Object> constructorArgs) {
         try {
             Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(beanClassPath);
-            Constructor<?>[] constructors = clazz.getConstructors();
-            // 根据参数名来决定使用哪一个构造函数
+            Constructor<?>[] constructors = clazz.getDeclaredConstructors();
+            // 根据参数数组长度来决定使用哪一个构造函数
             ConstructorBindingStrategy bindingStrategy = new OrderedConstructorBinding(constructors,
                     constructorArgs);
             Constructor<?> constructor = bindingStrategy.getConstructor();
+            ReflectionUtils.makeAccessible(constructor);
             return bindingStrategy.initializeObject(constructor, constructorArgs);
         }catch (Exception e) {
             e.printStackTrace();
@@ -41,10 +42,8 @@ public final class BeanUtils {
      */
     public static void convertParametersToItsActualTypes(Parameter[] parameters, Object[] args) {
         for (int i = 0; i < args.length; i++) {
-            Parameter parameter = parameters[i];
-            if (parameter.getType().equals(Float.class)) {
-                args[i] = Float.valueOf(String.valueOf(args[i]));
-            }
+            Class<?> type = parameters[i].getType();
+            args[i] = ConvertUtils.convert(type, args[i]);
         }
     }
 
