@@ -25,7 +25,7 @@ public class ClassPathDocumentLoader extends DomLoader {
     @Override
     public Document loadDocument(String resourceName) {
         try {
-            return DOCUMENT_BUILDER.parse(resourceName);
+            return loadDocument(Thread.currentThread().getContextClassLoader().getResourceAsStream(resourceName));
         }catch (Exception e) {
             throw new RuntimeException("资源处理失败");
         }

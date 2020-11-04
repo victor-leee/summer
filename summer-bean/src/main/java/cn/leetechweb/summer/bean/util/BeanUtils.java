@@ -54,10 +54,14 @@ public final class BeanUtils {
      * 注意如果返回的Constructor为空会抛出RuntimeException错误
      */
     static abstract class ConstructorBindingStrategy {
+
         protected final Constructor<?>[] constructors;
 
-        protected ConstructorBindingStrategy(Constructor<?>[] constructors) {
+        protected final Map<String, Object> params;
+
+        protected ConstructorBindingStrategy(Constructor<?>[] constructors, Map<String, Object> params) {
             this.constructors = constructors;
+            this.params = params;
         }
 
         /**
@@ -128,7 +132,7 @@ public final class BeanUtils {
         }
 
         public NamedConstructorBinding(Constructor<?>[] constructors, Map<String, Object> params) {
-            super(constructors);
+            super(constructors, params);
             this.paramSet = params.keySet();
         }
 
@@ -168,7 +172,7 @@ public final class BeanUtils {
         }
 
         OrderedConstructorBinding(Constructor<?>[] constructors, Map<String, Object> params) {
-            super(constructors);
+            super(constructors, params);
             this.count = params.size();
         }
     }

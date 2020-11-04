@@ -2,9 +2,7 @@ package cn.leetechweb.summer.context;
 
 import cn.leetechweb.summer.bean.TestBean;
 import cn.leetechweb.summer.bean.context.Context;
-import cn.leetechweb.summer.bean.xml.ClassPathDocumentLoader;
-import cn.leetechweb.summer.bean.xml.DomLoader;
-import org.w3c.dom.Node;
+import cn.leetechweb.summer.bean.context.XmlContext;
 
 /**
  * Project Name: summer
@@ -14,8 +12,10 @@ import org.w3c.dom.Node;
  **/
 public class ContextTest {
     public static void main(String[] args) {
-        Context context = new Context("summer-bean.xml");
+        Context context = new XmlContext("summer-bean.xml");
         TestBean testBean = context.getBean("first_bean", TestBean.class);
         System.out.println(testBean);
+        TestBean another = context.getBean("second_bean", TestBean.class);
+        System.out.println(another);
     }
 }

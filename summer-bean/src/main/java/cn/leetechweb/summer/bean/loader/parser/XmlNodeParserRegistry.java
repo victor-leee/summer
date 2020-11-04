@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 处理Xml单个Node的parser注册表
+ * 处理Xml单个Node的parser注册表，也就是对xml的处理中心
  * parser接口：
  * @see XmlNodeParser
  * @param <T> 该节点处理注册表处理的结果类型

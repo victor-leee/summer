@@ -1,8 +1,8 @@
 package cn.leetechweb.summer.bean.definition;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import cn.leetechweb.summer.bean.util.StringUtils;
+
+import java.util.*;
 
 /**
  * BeanDefinition的注册类
@@ -13,19 +13,23 @@ import java.util.List;
  **/
 public final class BeanDefinitionRegistry implements Iterable<AbstractBeanDefinition> {
 
-    private final List<AbstractBeanDefinition> beanDefinitions = new ArrayList<>();
+    private final Map<String, AbstractBeanDefinition> beanDefinitions = new HashMap<>(256);
 
     public void addBeanDefinition(AbstractBeanDefinition abstractBeanDefinition) {
-        this.beanDefinitions.add(abstractBeanDefinition);
+        this.beanDefinitions.put(abstractBeanDefinition.getBeanName(), abstractBeanDefinition);
     }
 
     public AbstractBeanDefinition getBeanDefinition(String beanName) {
-        for (AbstractBeanDefinition definition : this.beanDefinitions) {
-            if (definition.getBeanName().equals(beanName)) {
-                return definition;
-            }
+        AbstractBeanDefinition abstractBeanDefinition = this.beanDefinitions.get(beanName);
+        if (abstractBeanDefinition == null) {
+            throw new RuntimeException(StringUtils.format("beanName为:{}的beanDefinition为null", false,
+                    beanName));
         }
-        return null;
+        return abstractBeanDefinition;
+    }
+
+    Map<String, AbstractBeanDefinition> getBeanDefinitions() {
+        return beanDefinitions;
     }
 
     @Override
@@ -33,28 +37,27 @@ public final class BeanDefinitionRegistry implements Iterable<AbstractBeanDefini
         return new BeanDefinitionRegistryIter(this);
     }
 
-    public List<AbstractBeanDefinition> getBeanDefinitions() {
-        return beanDefinitions;
-    }
-
     private static class BeanDefinitionRegistryIter implements Iterator<AbstractBeanDefinition> {
 
         BeanDefinitionRegistry registry;
 
+        String[] keys;
+
+        int curr = 0;
+
         BeanDefinitionRegistryIter(BeanDefinitionRegistry registry) {
             this.registry = registry;
+            this.keys = registry.getBeanDefinitions().keySet().toArray(new String[0]);
         }
-
-        private int curr = 0;
 
         @Override
         public boolean hasNext() {
-            return curr < registry.getBeanDefinitions().size();
+            return curr < keys.length;
         }
 
         @Override
         public AbstractBeanDefinition next() {
-            return registry.getBeanDefinitions().get(curr++);
+            return registry.getBeanDefinition(keys[curr++]);
         }
     }
 }

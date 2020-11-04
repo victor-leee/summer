@@ -52,14 +52,4 @@ public abstract class DomLoader {
         return document.getDocumentElement();
     }
 
-    /**
-     * 从输入流中返回xml根节点
-     * @param in 资源输入流
-     * @return 文档根节点
-     */
-    public Element getRootElement(InputStream in) {
-        Document document = loadDocument(in);
-        return document.getDocumentElement();
-    }
-
 }

@@ -25,59 +25,18 @@ import java.util.List;
  *
  * @author junyu lee
  **/
-public final class BeanDefinitionLoader implements Loader, Publisher<BeanDefinitionRegistry> {
-
-    /**
-     * Bean定义类(AbstractBeanDefinition)的Xml节点处理注册表
-     */
-    private final XmlNodeParserRegistry<AbstractBeanDefinition> parserRegistry;
-
-    /**
-     * 用来获取根节点的loader
-     */
-    private final DomLoader domLoader;
-
-    /**
-     * Bean Def的根节点
-     * <beans>
-     *     ...
-     * </beans>
-     */
-    private Node beanDefRootElement;
+public abstract class BeanDefinitionLoader implements Loader, Publisher<BeanDefinitionRegistry> {
 
     /**
      * beanDef注册表
      */
-    private final BeanDefinitionRegistry beanRegistry = new BeanDefinitionRegistry();
+    protected final BeanDefinitionRegistry beanRegistry = new BeanDefinitionRegistry();
 
-    private final List<Listener<BeanDefinitionRegistry>> listeners = new ArrayList<>();
-
-    public BeanDefinitionLoader(XmlNodeParserRegistry<AbstractBeanDefinition> parserRegistry,
-                                DomLoader domLoader) {
-        this.parserRegistry = parserRegistry;
-        this.domLoader = domLoader;
-    }
-
-    @Override
-    public void load(String resource) {
-        InputStream xmlIs = Thread.currentThread().getContextClassLoader().getResourceAsStream(resource);
-        this.beanDefRootElement = this.domLoader.getRootElement(xmlIs);
-    }
-
-    @Override
-    public void parse() {
-        parse0(beanDefRootElement);
-        // 向监听处理器发送本次处理的结果
-        this.publish(beanRegistry);
-    }
-
-    private void parse0(Node element) {
-        AbstractBeanDefinition beanDefinition = parserRegistry.parseNode(element);
-        if (beanDefinition != null) {
-            this.beanRegistry.addBeanDefinition(beanDefinition);
-        }
-        XmlUtils.asList(element.getChildNodes()).forEach(this::parse0);
-    }
+    /**
+     * 监听loader初始化的listeners
+     * 当初始化工作完毕后，listeners会进行下一步的实例化工作
+     */
+    protected final List<Listener<BeanDefinitionRegistry>> listeners = new ArrayList<>();
 
     @Override
     public void publish(BeanDefinitionRegistry data) {
