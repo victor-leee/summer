@@ -4,6 +4,8 @@ import cn.leetechweb.summer.bean.TestBean;
 import cn.leetechweb.summer.bean.context.Context;
 import cn.leetechweb.summer.bean.context.XmlContext;
 
+import java.time.LocalDateTime;
+
 /**
  * Project Name: summer
  * Create Time: 2020/11/3 22:26
@@ -11,7 +13,7 @@ import cn.leetechweb.summer.bean.context.XmlContext;
  * @author junyu lee
  **/
 public class ContextTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException {
         Context context = new XmlContext("summer-bean.xml");
         TestBean testBean = context.getBean("first_bean", TestBean.class);
         System.out.println(testBean);

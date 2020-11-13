@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author junyu lee
  **/
-public final class XmlBeanFactory implements BeanFactory {
+public final class SimpleBeanFactory implements BeanFactory {
 
     /**
      * 默认的beanMap初始化容量

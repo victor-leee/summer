@@ -18,29 +18,23 @@ public abstract class Context {
 
     protected final List<Loader> loaderList = new ArrayList<>();
 
-    protected final List<BeanFactory> beanFactories = new ArrayList<>();
+    protected BeanFactory beanFactory;
 
     public Object getBean(String beanName) {
-        for (BeanFactory beanFactory : beanFactories) {
-            if (beanFactory.hasBean(beanName)) {
-                return beanFactory.getBean(beanName);
-            }
-        }
-        return null;
+        return this.beanFactory.getBean(beanName);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T getBean(String beanName, Class<T> clazz) {
-        for (BeanFactory beanFactory : beanFactories) {
-            if (beanFactory.hasBean(beanName)) {
-                return beanFactory.getBean(beanName, clazz);
-            }
-        }
-        return null;
+        return this.beanFactory.getBean(beanName, clazz);
     }
 
     protected void initLoaders() {
         this.loaderList.forEach(Loader::load);
+    }
+
+    protected void setBeanFactory(BeanFactory beanFactory) {
+        this.beanFactory = beanFactory;
     }
 
 }

@@ -2,14 +2,9 @@ package cn.leetechweb.summer.bean.loader;
 
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.Publisher;
-import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
-import cn.leetechweb.summer.bean.loader.parser.XmlNodeParserRegistry;
-import cn.leetechweb.summer.bean.util.XmlUtils;
 import cn.leetechweb.summer.bean.xml.DomLoader;
-import org.w3c.dom.Node;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 

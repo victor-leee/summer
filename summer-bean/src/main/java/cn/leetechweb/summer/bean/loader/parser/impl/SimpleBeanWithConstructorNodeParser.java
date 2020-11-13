@@ -1,7 +1,6 @@
 package cn.leetechweb.summer.bean.loader.parser.impl;
 
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
-import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.impl.XmlBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.XmlBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.loader.parser.XmlNodeParser;

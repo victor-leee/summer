@@ -1,10 +1,11 @@
 package cn.leetechweb.summer.bean.context;
 
+import cn.leetechweb.summer.bean.ConstructorBeanCreator;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
-import cn.leetechweb.summer.bean.factory.impl.XmlBeanFactory;
+import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
 import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
-import cn.leetechweb.summer.bean.loader.BeanDefinitionPostHandler;
+import cn.leetechweb.summer.bean.handler.BeanDefinitionPostHandler;
 import cn.leetechweb.summer.bean.loader.ClassPathXmlBeanDefinitionLoader;
 import cn.leetechweb.summer.bean.loader.parser.XmlNodeParser;
 import cn.leetechweb.summer.bean.loader.parser.XmlNodeParserRegistry;
@@ -38,10 +39,11 @@ public final class XmlContext extends Context {
                 xmlResource,
                 parserRegistry);
         // 初始化XmlBeanFactory
-        BeanFactory xmlBeanFactory = new XmlBeanFactory();
-        beanFactories.add(xmlBeanFactory);
+        BeanFactory xmlBeanFactory = new SimpleBeanFactory();
+        setBeanFactory(xmlBeanFactory);
         // 初始化beanDefs的监听器，beanDefs初始化完毕后交由postHandler完成剩下的bean初始化工作
-        BeanDefinitionPostHandler postBeanInitializedListener = new BeanDefinitionPostHandler(xmlBeanFactory);
+        BeanDefinitionPostHandler postBeanInitializedListener = new BeanDefinitionPostHandler(
+                xmlBeanFactory, new ConstructorBeanCreator());
         beanDefsLoader.addListener(postBeanInitializedListener);
         loaderList.add(beanDefsLoader);
 

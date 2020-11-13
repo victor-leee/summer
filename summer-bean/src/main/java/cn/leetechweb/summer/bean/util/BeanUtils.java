@@ -15,13 +15,12 @@ public abstract class BeanUtils {
 
     /**
      * 使用构造函数创建bean
-     * @param beanClassPath bean的类路径
+     * @param clazz 实例化的类对象
      * @param constructorArgs 构造函数参数map
      * @return 实例化的bean
      */
-    public static Object createBeanByConstructor(String beanClassPath, Map<String, Object> constructorArgs) {
+    public static Object createBeanByConstructor(Class<?> clazz, Map<String, Object> constructorArgs) {
         try {
-            Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(beanClassPath);
             Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             // 根据参数数组长度来决定使用哪一个构造函数
             ConstructorBindingStrategy bindingStrategy = new OrderedConstructorBinding(constructors,
@@ -33,6 +32,16 @@ public abstract class BeanUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static Object createBeanByConstructor(String beanPath, Map<String,Object> constructorArgs) {
+        try {
+            Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass(beanPath);
+            return createBeanByConstructor(clazz, constructorArgs);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        throw new RuntimeException();
     }
 
     /**
