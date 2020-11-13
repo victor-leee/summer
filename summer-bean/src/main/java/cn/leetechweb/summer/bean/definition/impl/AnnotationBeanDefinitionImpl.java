@@ -31,10 +31,14 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
      */
     String beanName;
 
+
+    String beanCompletePath;
+
     public AnnotationBeanDefinitionImpl(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
-                                        String beanName) {
+                                        String beanName, String beanCompletePath) {
         this.parameterMap = parameterMap;
         this.beanName = beanName;
+        this.beanCompletePath = beanCompletePath;
         List<String> depends = new ArrayList<>();
         for (BeanDefinitionParameter parameter : parameterMap.values()) {
             depends.add(parameter.getParameterValue());
@@ -64,6 +68,6 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
 
     @Override
     public String getBeanCompletePath() {
-        return null;
+        return this.beanCompletePath;
     }
 }

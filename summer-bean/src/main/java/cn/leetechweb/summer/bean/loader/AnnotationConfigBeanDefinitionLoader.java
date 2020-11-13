@@ -47,11 +47,11 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
     }
 
     @Override
-    public void load() {
+    public void load() throws ClassNotFoundException {
         this.loadHelper();
     }
 
-    private void loadHelper() {
+    private void loadHelper() throws ClassNotFoundException {
         if (mainClass.isAnnotationPresent(Summer.class)) {
             String[] basePackages = mainClass.getAnnotation(Summer.class).value();
             if (basePackages.length == 0) {
@@ -75,13 +75,13 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
             Map<String, AnnotationBeanDefinitionParameter> parameterMap = new HashMap<>(256);
             for (Field field : withAutowiredFields) {
-                Class<?> fieldClass = field.getDeclaringClass();
+                Class<?> fieldClass = field.getType();
                 AnnotationBeanDefinitionParameter parameter =
                         new AnnotationBeanDefinitionParameter(field.getName(), fieldClass);
                 parameterMap.put(field.getName(), parameter);
             }
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
-                    parameterMap, clazz.getSimpleName()
+                    parameterMap, clazz.getName(), clazz.getName()
             );
             beanRegistry.addBeanDefinition(beanDefinition);
         }

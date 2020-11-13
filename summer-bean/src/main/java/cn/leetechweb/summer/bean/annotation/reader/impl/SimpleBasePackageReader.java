@@ -4,8 +4,8 @@ import cn.leetechweb.summer.bean.annotation.reader.Reader;
 import cn.leetechweb.summer.bean.util.FileUtils;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Set;
+import java.util.regex.Matcher;
 
 /**
  * Project Name: summer
@@ -18,12 +18,8 @@ public class SimpleBasePackageReader implements Reader {
     private Set<Class<?>> classSet;
 
     @Override
-    public void read(String basePackage) {
-        // 获取classpath
-        URL projectUrl = this.getClass().getResource("/");
-        String classpath = projectUrl.getPath();
-        String realBasePackage = classpath + File.separator + getFilePath(basePackage);
-        FileUtils.scans(realBasePackage, classSet);
+    public void read(String basePackage) throws ClassNotFoundException {
+        FileUtils.scans(basePackage, classSet);
     }
 
     @Override
@@ -37,7 +33,7 @@ public class SimpleBasePackageReader implements Reader {
      * @return 文件路径
      */
     private String getFilePath(String classpath) {
-        return classpath.replaceAll("\\.", File.separator);
+        return classpath.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
     }
 
 }

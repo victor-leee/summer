@@ -26,7 +26,7 @@ import java.util.List;
  **/
 public final class XmlContext extends Context {
 
-    public XmlContext(String xmlResource) {
+    public XmlContext(String xmlResource) throws ClassNotFoundException {
         // 定义domLoader加载资源
         DomLoader domLoader = new ClassPathDocumentLoader();
 

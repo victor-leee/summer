@@ -17,7 +17,7 @@ import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
  **/
 public final class AnnotationConfigContext extends Context {
 
-    public AnnotationConfigContext(Class<?> baseClass) {
+    public AnnotationConfigContext(Class<?> baseClass) throws ClassNotFoundException {
         BeanDefinitionLoader beanDefinitionLoader = new AnnotationConfigBeanDefinitionLoader(
             baseClass, new SimpleBasePackageReader()
         );

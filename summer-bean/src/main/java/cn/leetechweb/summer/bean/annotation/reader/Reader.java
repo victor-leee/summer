@@ -15,7 +15,7 @@ public interface Reader {
      * 扫描basePackage下的所有类
      * @param basePackage 扫描根目录
      */
-    void read(String basePackage);
+    void read(String basePackage) throws ClassNotFoundException;
 
     /**
      * 读取后要存放的类集合

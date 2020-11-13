@@ -79,8 +79,13 @@ public abstract class ReflectionUtils {
         for (Field field : fields) {
             Object fieldVal = paramMap.get(field.getName());
             Assert.isNotNull(fieldVal);
+            makeAccessible(field);
             field.set(bean, fieldVal);
         }
+    }
+
+    public static void makeAccessible(Field field) {
+        field.setAccessible(true);
     }
 
 }

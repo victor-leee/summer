@@ -29,8 +29,10 @@ public abstract class Context {
         return this.beanFactory.getBean(beanName, clazz);
     }
 
-    protected void initLoaders() {
-        this.loaderList.forEach(Loader::load);
+    protected void initLoaders() throws ClassNotFoundException {
+        for (Loader loader : this.loaderList) {
+            loader.load();
+        }
     }
 
     protected void setBeanFactory(BeanFactory beanFactory) {

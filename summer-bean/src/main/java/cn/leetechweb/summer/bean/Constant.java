@@ -8,6 +8,8 @@ package cn.leetechweb.summer.bean;
  **/
 public abstract class Constant {
 
-    public static final String JAVA_SUFFIX = ".java";
+    public static final String CLASS_SUFFIX = ".class";
+
+    public static final String PACKAGE_SEPARATOR = ".";
 
 }

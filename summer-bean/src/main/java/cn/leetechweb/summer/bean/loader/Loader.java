@@ -12,5 +12,5 @@ public interface Loader {
     /**
      * 加载资源接口
      */
-    void load();
+    void load() throws ClassNotFoundException;
 }
