@@ -10,7 +10,9 @@ package cn.leetechweb.summer.bean.definition;
 public interface BeanDefinitionParameter {
 
     /**
-     * 返回该参数是否引用了其他bean，如果是，确保引用的参数先实例化
+     * 返回该参数是否引用了其他bean
+     * 如果返回true，则参数值代表其他的bean的标识
+     * 如果返回false，参数值代表primitive values
      * @return 该参数是否是引用其他bean的参数
      */
     boolean isReference();

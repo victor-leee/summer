@@ -6,6 +6,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
+ * Bean构造器的装饰器
+ * 用于处理构造Bean过后的额外工作
+ * 例如通过setter或者字段注入一些依赖
+ * @see cn.leetechweb.summer.bean.creator.impl.FieldBeanCreatorDecoratorImpl
+ * @see cn.leetechweb.summer.bean.creator.impl.SetterInjectionBeanCreatorDecoratorImpl
  * Project Name: summer
  * Create Time: 2020/11/14 13:01
  *

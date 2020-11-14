@@ -36,7 +36,7 @@ public class Service {
     }
 
     @Autowired
-    public void setFuckDao(FuckDao fuckDao) {
+    public void fuckfuckDao(FuckDao fuckDao) {
         this.fuckDao = fuckDao;
     }
 }

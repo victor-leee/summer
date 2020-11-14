@@ -6,7 +6,6 @@ import cn.leetechweb.summer.bean.annotation.reader.Reader;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
-import cn.leetechweb.summer.bean.util.ConvertUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.lang.reflect.Field;

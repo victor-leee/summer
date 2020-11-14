@@ -1,4 +1,4 @@
-package cn.leetechweb.summer.bean;
+package cn.leetechweb.summer.context;
 
 /**
  * Project Name: summer

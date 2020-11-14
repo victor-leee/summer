@@ -99,9 +99,7 @@ public abstract class ReflectionUtils {
         List<Method> result = new ArrayList<>();
         for (Method method : allMethods) {
             if (method.isAnnotationPresent(Autowired.class)) {
-                if (method.getName().startsWith(SETTER_PREFIX)) {
-                    result.add(method);
-                }
+                result.add(method);
             }
         }
         return result;
