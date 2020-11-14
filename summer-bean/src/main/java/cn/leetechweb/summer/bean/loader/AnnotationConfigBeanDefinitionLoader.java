@@ -81,7 +81,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             getMethodsParameters(parameterMap, clazz);
 
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
-                    parameterMap, clazz.getName(), clazz.getName()
+                    parameterMap, clazz.getSimpleName(), clazz.getName()
             );
             beanRegistry.addBeanDefinition(beanDefinition);
         }
@@ -93,8 +93,8 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Field field : withAutowiredFields) {
             Class<?> fieldClass = field.getType();
             AnnotationBeanDefinitionParameter parameter =
-                    new AnnotationBeanDefinitionParameter(field.getName(), fieldClass);
-            parameterMap.put(fieldClass.getName(), parameter);
+                    new AnnotationBeanDefinitionParameter(fieldClass.getSimpleName(), fieldClass);
+            parameterMap.put(fieldClass.getSimpleName(), parameter);
         }
     }
 
@@ -105,8 +105,8 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             Class<?>[] paramTypes = method.getParameterTypes();
             for (Class<?> type : paramTypes) {
                 AnnotationBeanDefinitionParameter parameter =
-                        new AnnotationBeanDefinitionParameter(type.getName(), type);
-                parameterMap.put(type.getName(), parameter);
+                        new AnnotationBeanDefinitionParameter(type.getSimpleName(), type);
+                parameterMap.put(type.getSimpleName(), parameter);
             }
         }
     }

@@ -115,7 +115,7 @@ public final class BeanDefinitionPostHandler implements Listener<BeanDefinitionR
         String[] paramNames = definition.getParameterNames();
         for (String paramName : paramNames) {
             BeanDefinitionParameter parameter = definition.getParameter(paramName);
-            Object paramValue = parameter.isReference() ? alreadyCreatedBeanMap.get(parameter.getParameterValue())
+            Object paramValue = parameter.isReference() ? alreadyCreatedBeanMap.get(parameter.getParameterName())
                     : parameter.getParameterValue();
             parameters.put(paramName, paramValue);
         }

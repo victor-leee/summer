@@ -1,10 +1,7 @@
 package cn.leetechweb.summer.bean.definition.impl;
 
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
-import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -31,7 +28,9 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
      */
     String beanName;
 
-
+    /**
+     * bean的类路径
+     */
     String beanCompletePath;
 
     public AnnotationBeanDefinitionImpl(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
@@ -39,11 +38,7 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
         this.parameterMap = parameterMap;
         this.beanName = beanName;
         this.beanCompletePath = beanCompletePath;
-        List<String> depends = new ArrayList<>();
-        for (BeanDefinitionParameter parameter : parameterMap.values()) {
-            depends.add(parameter.getParameterValue());
-        }
-        this.dependsOn = depends.toArray(new String[0]);
+        this.dependsOn = parameterMap.keySet().toArray(new String[0]);
     }
 
     @Override
