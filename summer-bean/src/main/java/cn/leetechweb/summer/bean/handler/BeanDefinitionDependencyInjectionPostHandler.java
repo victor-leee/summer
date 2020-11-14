@@ -1,5 +1,7 @@
 package cn.leetechweb.summer.bean.handler;
 
+import cn.leetechweb.summer.bean.Constant;
+import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.creator.BeanCreator;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
 import cn.leetechweb.summer.bean.exception.CycleDependencyException;
@@ -8,8 +10,10 @@ import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
+import cn.leetechweb.summer.bean.util.ReflectionUtils;
 import cn.leetechweb.summer.bean.util.StringUtils;
 
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -69,12 +73,16 @@ public final class BeanDefinitionDependencyInjectionPostHandler implements Liste
             String beanPath = beanDefinition.getBeanCompletePath();
             String beanName = beanDefinition.getBeanName();
             Object bean;
+            Map<String, Object> nestedBeans;
             try {
                 bean = this.beanCreator.create(beanPath, beanParamMap);
+                nestedBeans = getNestedBeans(bean);
             }catch (Exception e) {
                 throw new AnnotationContainerInitializationException("bean初始化错误");
             }
             this.beanFactory.addBean(beanName, bean);
+            nestedBeans.forEach(this.beanFactory::addBean);
+
             // 如果这个bean有被依赖的bean，将其放入dependencyInitializationMap中备用
             if (dependedMap.containsKey(beanName)) {
                 alreadyCreatedBeanMap.put(beanName, bean);
@@ -121,6 +129,30 @@ public final class BeanDefinitionDependencyInjectionPostHandler implements Liste
             parameters.put(paramName, paramValue);
         }
         return parameters;
+    }
+
+    /**
+     * 返回bean实体中的嵌套beans
+     * @param bean bean实体
+     * @return bean实体中的嵌套bean
+     */
+    private Map<String, Object> getNestedBeans(Object bean) {
+        List<Method> methods = ReflectionUtils.getMethodsProducingBeans(bean.getClass());
+        Map<String, Object> result = new HashMap<>(16);
+        for (Method method : methods) {
+            ReflectionUtils.makeAccessible(method);
+            String beanName = method.getAnnotation(Bean.class).name();
+            if (Constant.EMPTY_STRING.equals(beanName)) {
+                beanName = method.getReturnType().getSimpleName();
+            }
+            try {
+                result.put(beanName, method.invoke(bean));
+            }catch (Exception e) {
+                e.printStackTrace();
+                throw new AnnotationContainerInitializationException("初始化一个inner bean发生错误");
+            }
+        }
+        return result;
     }
 
 }

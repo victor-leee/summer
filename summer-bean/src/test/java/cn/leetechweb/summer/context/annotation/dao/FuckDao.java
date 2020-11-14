@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.context.annotation.dao;
 
+import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;
 
 /**
@@ -18,5 +19,11 @@ public class FuckDao {
         return "FuckDao{" +
                 "fuck=" + fuck +
                 '}';
+    }
+
+
+    @Bean(name = "inner")
+    public InnerBean getInnerBean() {
+        return new InnerBean();
     }
 }

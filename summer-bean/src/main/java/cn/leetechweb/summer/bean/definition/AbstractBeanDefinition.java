@@ -48,4 +48,8 @@ public interface AbstractBeanDefinition {
      * @return bean的完整classpath
      */
     String getBeanCompletePath();
+
+    boolean isDependencyInjection();
+
+    boolean isMethodProduce();
 }

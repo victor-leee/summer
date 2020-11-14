@@ -1,5 +1,8 @@
 package cn.leetechweb.summer.bean.loader;
 
+import cn.leetechweb.summer.bean.Constant;
+import cn.leetechweb.summer.bean.annotation.Bean;
+import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Summer;
 import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.bean.annotation.reader.Reader;
@@ -64,6 +67,10 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
                 this.classReader.read(basePackage);
             }
 
+            this.loadingClasses.removeIf(
+                    loadingClass -> !loadingClass.isAnnotationPresent(Component.class)
+            );
+
             constructClassMetaData();
 
             publish(beanRegistry);
@@ -78,8 +85,10 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
 
             Map<String, AnnotationBeanDefinitionParameter> parameterMap = new HashMap<>(256);
 
+            // 寻找需要注入的字段
             getFieldsParameters(parameterMap, clazz);
 
+            // 寻找需要注入的方法
             getMethodsParameters(parameterMap, clazz);
 
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
@@ -93,6 +102,8 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
                                      Class<?> clazz) {
         List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
         List<Field> withValuesFields = ReflectionUtils.getFieldsNeedInjectionValue(clazz);
+
+        // 所有需要bean依赖注入的字段,也就是使用了@Autowired的字段
         for (Field field : withAutowiredFields) {
             Class<?> fieldClass = field.getType();
             AnnotationBeanDefinitionParameter parameter =
@@ -100,6 +111,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             parameterMap.put(BeanUtils.getBeanName(parameter.getReferenceClass()), parameter);
         }
 
+        // 所有需要常量注入的字段，也就是使用了@Value的字段
         for (Field field : withValuesFields) {
             String annotationValue = field.getAnnotation(Value.class).value();
             AnnotationBeanDefinitionParameter parameter =

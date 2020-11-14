@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.bean.util;
 
 import cn.leetechweb.summer.bean.annotation.Autowired;
+import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Value;
 
 import java.lang.reflect.*;
@@ -125,6 +126,21 @@ public abstract class ReflectionUtils {
         for (Field field : fields) {
             if (fieldPredicate.test(field)) {
                 result.add(field);
+            }
+        }
+        return result;
+    }
+
+    public static List<Method> getMethodsProducingBeans(Class<?> clazz) {
+        return filterMethods(clazz, method -> method.isAnnotationPresent(Bean.class));
+    }
+
+    private static List<Method> filterMethods(Class<?> clazz, Predicate<Method> predicate) {
+        List<Method> result = new ArrayList<>();
+        Method[] methods = clazz.getDeclaredMethods();
+        for (Method method : methods) {
+            if (predicate.test(method)) {
+                result.add(method);
             }
         }
         return result;

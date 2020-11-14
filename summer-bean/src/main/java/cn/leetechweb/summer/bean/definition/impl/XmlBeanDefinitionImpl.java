@@ -79,6 +79,16 @@ public class XmlBeanDefinitionImpl implements AbstractBeanDefinition {
     }
 
     @Override
+    public boolean isDependencyInjection() {
+        return dependsOn != null;
+    }
+
+    @Override
+    public boolean isMethodProduce() {
+        return false;
+    }
+
+    @Override
     public String[] dependsOn() {
         return dependsOn;
     }
