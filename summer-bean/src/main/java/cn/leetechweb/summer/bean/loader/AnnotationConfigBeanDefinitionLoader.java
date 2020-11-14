@@ -1,10 +1,12 @@
 package cn.leetechweb.summer.bean.loader;
 
 import cn.leetechweb.summer.bean.annotation.Summer;
+import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.bean.annotation.reader.Reader;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
+import cn.leetechweb.summer.bean.util.ConvertUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -90,11 +92,19 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
     private void getFieldsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
                                      Class<?> clazz) {
         List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
+        List<Field> withValuesFields = ReflectionUtils.getFieldsNeedInjectionValue(clazz);
         for (Field field : withAutowiredFields) {
             Class<?> fieldClass = field.getType();
             AnnotationBeanDefinitionParameter parameter =
                     new AnnotationBeanDefinitionParameter(fieldClass.getSimpleName(), fieldClass);
             parameterMap.put(fieldClass.getSimpleName(), parameter);
+        }
+
+        for (Field field : withValuesFields) {
+            String annotationValue = field.getAnnotation(Value.class).value();
+            AnnotationBeanDefinitionParameter parameter =
+                    new AnnotationBeanDefinitionParameter(field.getName(), annotationValue);
+            parameterMap.put(parameter.getParameterName(), parameter);
         }
     }
 

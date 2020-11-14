@@ -2,6 +2,7 @@ package cn.leetechweb.summer.context.annotation.service;
 
 import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Component;
+import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.context.annotation.dao.Dao;
 import cn.leetechweb.summer.context.annotation.dao.FuckDao;
 
@@ -18,7 +19,11 @@ public class Service {
 
     FuckDao fuckDao;
 
-    private Integer b = 1;
+    @Value(value = "1")
+    private Integer b;
+
+    @Value(value = "true")
+    private Boolean isError;
 
     @Override
     public String toString() {
@@ -26,6 +31,7 @@ public class Service {
                 "dao=" + dao +
                 ", fuckDao=" + fuckDao +
                 ", b=" + b +
+                ", isError=" + isError +
                 '}';
     }
 

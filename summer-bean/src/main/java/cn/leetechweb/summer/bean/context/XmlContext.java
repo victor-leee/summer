@@ -5,7 +5,7 @@ import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
 import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionPostHandler;
+import cn.leetechweb.summer.bean.handler.BeanDefinitionDependencyInjectionPostHandler;
 import cn.leetechweb.summer.bean.loader.ClassPathXmlBeanDefinitionLoader;
 import cn.leetechweb.summer.bean.loader.parser.XmlNodeParser;
 import cn.leetechweb.summer.bean.loader.parser.XmlNodeParserRegistry;
@@ -42,7 +42,7 @@ public final class XmlContext extends Context {
         BeanFactory xmlBeanFactory = new SimpleBeanFactory();
         setBeanFactory(xmlBeanFactory);
         // 初始化beanDefs的监听器，beanDefs初始化完毕后交由postHandler完成剩下的bean初始化工作
-        BeanDefinitionPostHandler postBeanInitializedListener = new BeanDefinitionPostHandler(
+        BeanDefinitionDependencyInjectionPostHandler postBeanInitializedListener = new BeanDefinitionDependencyInjectionPostHandler(
                 xmlBeanFactory, new ConstructorBeanCreatorImpl());
         beanDefsLoader.addListener(postBeanInitializedListener);
         loaderList.add(beanDefsLoader);

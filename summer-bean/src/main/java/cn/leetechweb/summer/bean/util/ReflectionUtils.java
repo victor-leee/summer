@@ -1,13 +1,13 @@
 package cn.leetechweb.summer.bean.util;
 
-import cn.leetechweb.summer.bean.Filter;
 import cn.leetechweb.summer.bean.annotation.Autowired;
-import cn.leetechweb.summer.bean.annotation.AutowiredFilter;
+import cn.leetechweb.summer.bean.annotation.Value;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static cn.leetechweb.summer.bean.Constant.*;
 
@@ -41,15 +41,7 @@ public abstract class ReflectionUtils {
      * @return 带有@Autowired注解的field
      */
     public static List<Field> getFieldsNeedAutowired(Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        Filter<Field> fieldFilter = new AutowiredFilter();
-        List<Field> result = new ArrayList<>();
-        for (Field field : fields) {
-            if (fieldFilter.stay(field)) {
-                result.add(field);
-            }
-        }
-        return result;
+        return filterField(clazz, field -> field.isAnnotationPresent(Autowired.class));
     }
 
     /**
@@ -85,6 +77,15 @@ public abstract class ReflectionUtils {
         }
     }
 
+    public static void setFieldParameter(Object bean, String fieldName, String fieldValue) throws NoSuchFieldException, IllegalAccessException {
+        Assert.allNotNull(StringUtils.format("设置bean的field参数时发生错误，bean:{}，" +
+                "fieldName:{}，fieldValue:{}", false, bean, fieldName, fieldValue));
+        Field field = bean.getClass().getDeclaredField(fieldName);
+        Assert.isNotNull(field, "field名为{}的field为null", fieldName);
+        makeAccessible(field);
+        field.set(bean, ConvertUtils.convert(field.getType(), fieldValue));
+    }
+
     public static void makeAccessible(AccessibleObject accessibleObject) {
         accessibleObject.setAccessible(true);
     }
@@ -101,6 +102,31 @@ public abstract class ReflectionUtils {
                 if (method.getName().startsWith(SETTER_PREFIX)) {
                     result.add(method);
                 }
+            }
+        }
+        return result;
+    }
+
+    public static List<Field> getFieldsNeedInjectionValue(Object bean) {
+        return getFieldsNeedInjectionValue(bean.getClass());
+    }
+
+    public static List<Field> getFieldsNeedInjectionValue(Class<?> clazz) {
+        return filterField(clazz, field -> field.isAnnotationPresent(Value.class));
+    }
+
+    /**
+     * 根据过滤条件对类的fields做一次过滤
+     * @param clazz 类对象
+     * @param fieldPredicate 类参数过滤器
+     * @return 过滤过后的fields
+     */
+    public static List<Field> filterField(Class<?> clazz, Predicate<Field> fieldPredicate) {
+        List<Field> result = new ArrayList<>();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            if (fieldPredicate.test(field)) {
+                result.add(field);
             }
         }
         return result;

@@ -14,9 +14,13 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
 
     private final Class<?> referenceClass;
 
+    private final boolean isReference;
+
+    private final String parameterValue;
+
     @Override
     public boolean isReference() {
-        return true;
+        return this.isReference;
     }
 
     @Override
@@ -26,7 +30,7 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
 
     @Override
     public String getParameterValue() {
-        return this.referenceClass.getName();
+        return this.parameterValue;
     }
 
     public Class<?> getReferenceClass() {
@@ -36,5 +40,15 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
     public AnnotationBeanDefinitionParameter(String parameterName, Class<?> referenceClass) {
         this.parameterName = parameterName;
         this.referenceClass = referenceClass;
+        this.isReference = true;
+        this.parameterValue = referenceClass.getName();
     }
+
+    public AnnotationBeanDefinitionParameter(String parameterName, String parameterValue) {
+        this.parameterName = parameterName;
+        this.parameterValue = parameterValue;
+        this.isReference = false;
+        this.referenceClass = null;
+    }
+
 }

@@ -14,12 +14,13 @@ import java.util.*;
 
 /**
  * 在容器初始化所有的BeanDefinition后，BeanDefinitionPostHandler负责处理注册表中的信息
+ * 这是bean之间处理依赖注入的后处理器
  * Project Name: summer
  * Create Time: 2020/11/3 22:22
  *
  * @author junyu lee
  **/
-public final class BeanDefinitionPostHandler implements Listener<BeanDefinitionRegistry> {
+public final class BeanDefinitionDependencyInjectionPostHandler implements Listener<BeanDefinitionRegistry> {
 
     private final BeanFactory beanFactory;
 
@@ -101,7 +102,7 @@ public final class BeanDefinitionPostHandler implements Listener<BeanDefinitionR
 
     }
 
-    public BeanDefinitionPostHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
+    public BeanDefinitionDependencyInjectionPostHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
         this.beanFactory = beanFactory;
         this.beanCreator = beanCreator;
     }

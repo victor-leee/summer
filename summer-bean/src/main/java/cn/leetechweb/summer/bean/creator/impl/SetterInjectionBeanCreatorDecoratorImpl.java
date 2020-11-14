@@ -33,8 +33,7 @@ public class SetterInjectionBeanCreatorDecoratorImpl extends BeanCreatorDecorato
             Object[] methodParamValues = new Object[method.getParameterCount()];
             for (int i = 0; i < methodParamValues.length; i++) {
                 Object setterBean = paramMap.get(paramTypes[i].getSimpleName());
-                Assert.isNotNull(setterBean, StringUtils.format("构造{}发生注入错误, 第{}个参数为null", false,
-                        bean.getClass().getName(), i));
+                Assert.isNotNull(setterBean, "构造{}发生错误，第{}个参数为null", bean.getClass().getName(), i);
                 methodParamValues[i] = setterBean;
             }
             method.invoke(bean, methodParamValues);

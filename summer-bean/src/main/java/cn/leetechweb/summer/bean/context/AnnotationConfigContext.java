@@ -1,13 +1,16 @@
 package cn.leetechweb.summer.bean.context;
 
+import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.creator.BeanCreator;
 import cn.leetechweb.summer.bean.creator.impl.DefaultConstructorBeanCreatorImpl;
 import cn.leetechweb.summer.bean.creator.impl.FieldBeanCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.annotation.reader.impl.SimpleBasePackageReader;
 import cn.leetechweb.summer.bean.creator.impl.SetterInjectionBeanCreatorDecoratorImpl;
+import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionPostHandler;
+import cn.leetechweb.summer.bean.handler.BeanDefinitionConstantInjectionPostHandler;
+import cn.leetechweb.summer.bean.handler.BeanDefinitionDependencyInjectionPostHandler;
 import cn.leetechweb.summer.bean.loader.AnnotationConfigBeanDefinitionLoader;
 import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
 
@@ -29,10 +32,16 @@ public final class AnnotationConfigContext extends Context {
         BeanCreator defaultCtorCreator = new DefaultConstructorBeanCreatorImpl();
         BeanCreator fieldInjection = new FieldBeanCreatorDecoratorImpl(defaultCtorCreator);
         BeanCreator setterInjection = new SetterInjectionBeanCreatorDecoratorImpl(fieldInjection);
-        BeanDefinitionPostHandler postHandler = new BeanDefinitionPostHandler(
+        // bean依赖注入后处理器
+        Listener<BeanDefinitionRegistry> postHandler = new BeanDefinitionDependencyInjectionPostHandler(
                 beanFactory, setterInjection
         );
+        // 常量注入后处理器
+        Listener<BeanDefinitionRegistry> constantHandler = new BeanDefinitionConstantInjectionPostHandler(
+                beanFactory
+        );
         beanDefinitionLoader.addListener(postHandler);
+        beanDefinitionLoader.addListener(constantHandler);
         loaderList.add(beanDefinitionLoader);
 
         initLoaders();
