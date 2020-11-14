@@ -1,6 +1,6 @@
 package cn.leetechweb.summer.bean.context;
 
-import cn.leetechweb.summer.bean.ConstructorBeanCreator;
+import cn.leetechweb.summer.bean.creator.impl.ConstructorBeanCreatorImpl;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
@@ -43,7 +43,7 @@ public final class XmlContext extends Context {
         setBeanFactory(xmlBeanFactory);
         // 初始化beanDefs的监听器，beanDefs初始化完毕后交由postHandler完成剩下的bean初始化工作
         BeanDefinitionPostHandler postBeanInitializedListener = new BeanDefinitionPostHandler(
-                xmlBeanFactory, new ConstructorBeanCreator());
+                xmlBeanFactory, new ConstructorBeanCreatorImpl());
         beanDefsLoader.addListener(postBeanInitializedListener);
         loaderList.add(beanDefsLoader);
 

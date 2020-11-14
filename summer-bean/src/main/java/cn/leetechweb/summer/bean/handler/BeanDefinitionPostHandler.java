@@ -1,7 +1,8 @@
 package cn.leetechweb.summer.bean.handler;
 
-import cn.leetechweb.summer.bean.BeanCreator;
-import cn.leetechweb.summer.bean.CycleDependencyException;
+import cn.leetechweb.summer.bean.creator.BeanCreator;
+import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
+import cn.leetechweb.summer.bean.exception.CycleDependencyException;
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
@@ -66,7 +67,12 @@ public final class BeanDefinitionPostHandler implements Listener<BeanDefinitionR
             Map<String, Object> beanParamMap = getParameters(beanDefinition);
             String beanPath = beanDefinition.getBeanCompletePath();
             String beanName = beanDefinition.getBeanName();
-            Object bean = this.beanCreator.create(beanPath, beanParamMap);
+            Object bean;
+            try {
+                bean = this.beanCreator.create(beanPath, beanParamMap);
+            }catch (Exception e) {
+                throw new AnnotationContainerInitializationException("bean初始化错误");
+            }
             this.beanFactory.addBean(beanName, bean);
             // 如果这个bean有被依赖的bean，将其放入dependencyInitializationMap中备用
             if (dependedMap.containsKey(beanName)) {

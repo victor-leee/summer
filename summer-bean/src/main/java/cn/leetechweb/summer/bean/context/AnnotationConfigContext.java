@@ -1,7 +1,10 @@
 package cn.leetechweb.summer.bean.context;
 
-import cn.leetechweb.summer.bean.FieldBeanCreator;
+import cn.leetechweb.summer.bean.creator.BeanCreator;
+import cn.leetechweb.summer.bean.creator.impl.DefaultConstructorBeanCreatorImpl;
+import cn.leetechweb.summer.bean.creator.impl.FieldBeanCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.annotation.reader.impl.SimpleBasePackageReader;
+import cn.leetechweb.summer.bean.creator.impl.SetterInjectionBeanCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
 import cn.leetechweb.summer.bean.handler.BeanDefinitionPostHandler;
@@ -23,8 +26,11 @@ public final class AnnotationConfigContext extends Context {
         );
         BeanFactory beanFactory = new SimpleBeanFactory();
         setBeanFactory(beanFactory);
+        BeanCreator defaultCtorCreator = new DefaultConstructorBeanCreatorImpl();
+        BeanCreator fieldInjection = new FieldBeanCreatorDecoratorImpl(defaultCtorCreator);
+        BeanCreator setterInjection = new SetterInjectionBeanCreatorDecoratorImpl(fieldInjection);
         BeanDefinitionPostHandler postHandler = new BeanDefinitionPostHandler(
-                beanFactory, new FieldBeanCreator()
+                beanFactory, setterInjection
         );
         beanDefinitionLoader.addListener(postHandler);
         loaderList.add(beanDefinitionLoader);

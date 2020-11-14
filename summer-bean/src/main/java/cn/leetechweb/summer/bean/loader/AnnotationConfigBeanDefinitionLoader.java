@@ -8,6 +8,7 @@ import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationExce
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -72,18 +73,41 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
      */
     private void constructClassMetaData() {
         for (Class<?> clazz : loadingClasses) {
-            List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
+
             Map<String, AnnotationBeanDefinitionParameter> parameterMap = new HashMap<>(256);
-            for (Field field : withAutowiredFields) {
-                Class<?> fieldClass = field.getType();
-                AnnotationBeanDefinitionParameter parameter =
-                        new AnnotationBeanDefinitionParameter(field.getName(), fieldClass);
-                parameterMap.put(field.getName(), parameter);
-            }
+
+            getFieldsParameters(parameterMap, clazz);
+
+            getMethodsParameters(parameterMap, clazz);
+
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
                     parameterMap, clazz.getName(), clazz.getName()
             );
             beanRegistry.addBeanDefinition(beanDefinition);
+        }
+    }
+
+    private void getFieldsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
+                                     Class<?> clazz) {
+        List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
+        for (Field field : withAutowiredFields) {
+            Class<?> fieldClass = field.getType();
+            AnnotationBeanDefinitionParameter parameter =
+                    new AnnotationBeanDefinitionParameter(field.getName(), fieldClass);
+            parameterMap.put(fieldClass.getName(), parameter);
+        }
+    }
+
+    private void getMethodsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
+                                      Class<?> clazz) {
+        List<Method> methods = ReflectionUtils.getMethodsNeedAutowired(clazz);
+        for (Method method : methods) {
+            Class<?>[] paramTypes = method.getParameterTypes();
+            for (Class<?> type : paramTypes) {
+                AnnotationBeanDefinitionParameter parameter =
+                        new AnnotationBeanDefinitionParameter(type.getName(), type);
+                parameterMap.put(type.getName(), parameter);
+            }
         }
     }
 

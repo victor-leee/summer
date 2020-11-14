@@ -1,4 +1,4 @@
-package cn.leetechweb.summer.bean;
+package cn.leetechweb.summer.bean.exception;
 
 /**
  * Project Name: summer

@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.context.annotation;
 
+import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Component;
 
 /**
@@ -12,6 +13,12 @@ import cn.leetechweb.summer.bean.annotation.Component;
 public class Dao {
 
     private String haha = "123";
+
+//    /**
+//     * 循环依赖检查
+//     */
+//    @Autowired
+//    Service service;
 
     public Dao() {
 

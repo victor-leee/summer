@@ -1,5 +1,6 @@
-package cn.leetechweb.summer.bean;
+package cn.leetechweb.summer.bean.creator.impl;
 
+import cn.leetechweb.summer.bean.creator.BeanCreator;
 import cn.leetechweb.summer.bean.util.BeanUtils;
 
 import java.util.Map;
@@ -10,7 +11,8 @@ import java.util.Map;
  *
  * @author junyu lee
  **/
-public class ConstructorBeanCreator implements BeanCreator {
+public class ConstructorBeanCreatorImpl implements BeanCreator {
+
     @Override
     public Object create(Class<?> clazz) {
         return null;

@@ -14,13 +14,21 @@ public class Service {
     @Autowired
     Dao dao;
 
+    FuckDao fuckDao;
+
     private Integer b = 1;
 
     @Override
     public String toString() {
         return "Service{" +
                 "dao=" + dao +
+                ", fuckDao=" + fuckDao +
                 ", b=" + b +
                 '}';
+    }
+
+    @Autowired
+    public void setFuckDao(FuckDao fuckDao) {
+        this.fuckDao = fuckDao;
     }
 }

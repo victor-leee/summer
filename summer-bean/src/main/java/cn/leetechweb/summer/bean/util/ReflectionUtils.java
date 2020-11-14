@@ -1,14 +1,15 @@
 package cn.leetechweb.summer.bean.util;
 
 import cn.leetechweb.summer.bean.Filter;
+import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.AutowiredFilter;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static cn.leetechweb.summer.bean.Constant.*;
 
 /**
  * 反射工具类
@@ -19,7 +20,7 @@ import java.util.Map;
  **/
 public abstract class ReflectionUtils {
 
-    public static final int NO_CTOR_PARAMS = 0;
+    public static final int NO_PARAMS = 0;
 
     /**
      * 让构造函数可以被访问到
@@ -61,7 +62,7 @@ public abstract class ReflectionUtils {
     public static Constructor<?> getDefaultConstructor(Class<?> clazz) throws InstantiationException {
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
-            if (constructor.getParameterCount() == NO_CTOR_PARAMS) {
+            if (constructor.getParameterCount() == NO_PARAMS) {
                 return constructor;
             }
         }
@@ -77,15 +78,32 @@ public abstract class ReflectionUtils {
         Assert.isNotNull(bean);
         List<Field> fields = getFieldsNeedAutowired(bean.getClass());
         for (Field field : fields) {
-            Object fieldVal = paramMap.get(field.getName());
+            Object fieldVal = paramMap.get(field.getType().getName());
             Assert.isNotNull(fieldVal);
             makeAccessible(field);
             field.set(bean, fieldVal);
         }
     }
 
-    public static void makeAccessible(Field field) {
-        field.setAccessible(true);
+    public static void makeAccessible(AccessibleObject accessibleObject) {
+        accessibleObject.setAccessible(true);
+    }
+
+    public static List<Method> getMethodsNeedAutowired(Object bean) {
+        return getMethodsNeedAutowired(bean.getClass());
+    }
+
+    public static List<Method> getMethodsNeedAutowired(Class<?> clazz) {
+        Method[] allMethods = clazz.getDeclaredMethods();
+        List<Method> result = new ArrayList<>();
+        for (Method method : allMethods) {
+            if (method.isAnnotationPresent(Autowired.class)) {
+                if (method.getName().startsWith(SETTER_PREFIX)) {
+                    result.add(method);
+                }
+            }
+        }
+        return result;
     }
 
 }

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
  *
  * @author junyu lee
  **/
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Autowired {
 }

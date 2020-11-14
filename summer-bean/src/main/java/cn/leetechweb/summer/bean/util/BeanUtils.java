@@ -185,4 +185,13 @@ public abstract class BeanUtils {
         }
     }
 
+    public static Class<?> loadClassFromPath(String beanPath) {
+        try {
+            return Thread.currentThread().getContextClassLoader().loadClass(beanPath);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -9,8 +9,12 @@ package cn.leetechweb.summer.bean.util;
 public abstract class Assert {
 
     public static void isNotNull(Object o) {
+        isNotNull(o, "该参数不能为null");
+    }
+
+    public static void isNotNull(Object o, String message) {
         if (o == null) {
-            throw new NullPointerException("该参数不能为null");
+            throw new NullPointerException(message);
         }
     }
 
