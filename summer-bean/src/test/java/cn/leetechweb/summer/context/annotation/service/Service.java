@@ -12,9 +12,8 @@ import cn.leetechweb.summer.context.annotation.dao.FuckDao;
  *
  * @author junyu lee
  **/
-@Component
+@Component(name = "service")
 public class Service {
-    @Autowired
     Dao dao;
 
     FuckDao fuckDao;
@@ -36,7 +35,8 @@ public class Service {
     }
 
     @Autowired
-    public void fuckfuckDao(FuckDao fuckDao) {
+    public void fuckfuckDao(FuckDao fuckDao, Dao dao) {
         this.fuckDao = fuckDao;
+        this.dao = dao;
     }
 }

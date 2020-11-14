@@ -2,6 +2,8 @@ package cn.leetechweb.summer.context;
 
 import cn.leetechweb.summer.bean.context.AnnotationConfigContext;
 import cn.leetechweb.summer.bean.context.Context;
+import cn.leetechweb.summer.context.annotation.dao.FuckDao;
+import cn.leetechweb.summer.context.annotation.service.SecondService;
 import cn.leetechweb.summer.context.annotation.service.Service;
 
 /**
@@ -13,7 +15,11 @@ import cn.leetechweb.summer.context.annotation.service.Service;
 public class AnnotationContainerTest {
     public static void main(String[] args) throws ClassNotFoundException {
         Context context = new AnnotationConfigContext(TestBBB.class);
-        Service service = context.getBean("Service", Service.class);
+        Service service = context.getBean("service", Service.class);
         System.out.println(service);
+        FuckDao fuckDao = context.getBean("FuckDao", FuckDao.class);
+        System.out.println(fuckDao);
+        SecondService secondService = context.getBean("SecondService", SecondService.class);
+        System.out.println(secondService);
     }
 }

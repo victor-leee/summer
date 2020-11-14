@@ -70,7 +70,7 @@ public abstract class ReflectionUtils {
         Assert.isNotNull(bean);
         List<Field> fields = getFieldsNeedAutowired(bean.getClass());
         for (Field field : fields) {
-            Object fieldVal = paramMap.get(field.getType().getSimpleName());
+            Object fieldVal = paramMap.get(BeanUtils.getBeanName(field.getType()));
             Assert.isNotNull(fieldVal);
             makeAccessible(field);
             field.set(bean, fieldVal);

@@ -1,5 +1,9 @@
 package cn.leetechweb.summer.bean.util;
 
+import cn.leetechweb.summer.bean.Constant;
+import cn.leetechweb.summer.bean.annotation.Component;
+import cn.leetechweb.summer.bean.exception.NoSuchBeanException;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Parameter;
 import java.util.*;
@@ -192,6 +196,23 @@ public abstract class BeanUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 返回该类对象的bean名称
+     * @param clazz 类对象
+     * @return 该类对象的bean名称
+     */
+    public static String getBeanName(Class<?> clazz) {
+        if (clazz.isAnnotationPresent(Component.class)) {
+            String beanName = clazz.getAnnotation(Component.class).name();
+            if (!Constant.EMPTY_STRING.equals(beanName)) {
+                return beanName;
+            }
+            return clazz.getSimpleName();
+        }else {
+            throw new NoSuchBeanException("没有bean的类别为:{}的bean", clazz.getName());
+        }
     }
 
 }

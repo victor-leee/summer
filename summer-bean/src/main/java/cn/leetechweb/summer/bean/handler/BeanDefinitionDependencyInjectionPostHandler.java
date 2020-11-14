@@ -116,7 +116,7 @@ public final class BeanDefinitionDependencyInjectionPostHandler implements Liste
         String[] paramNames = definition.getParameterNames();
         for (String paramName : paramNames) {
             BeanDefinitionParameter parameter = definition.getParameter(paramName);
-            Object paramValue = parameter.isReference() ? alreadyCreatedBeanMap.get(parameter.getParameterName())
+            Object paramValue = parameter.isReference() ? alreadyCreatedBeanMap.get(parameter.getParameterValue())
                     : parameter.getParameterValue();
             parameters.put(paramName, paramValue);
         }

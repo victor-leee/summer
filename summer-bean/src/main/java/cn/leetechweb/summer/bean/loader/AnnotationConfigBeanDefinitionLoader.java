@@ -6,6 +6,7 @@ import cn.leetechweb.summer.bean.annotation.reader.Reader;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
+import cn.leetechweb.summer.bean.util.BeanUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.lang.reflect.Field;
@@ -82,7 +83,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             getMethodsParameters(parameterMap, clazz);
 
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
-                    parameterMap, clazz.getSimpleName(), clazz.getName()
+                    parameterMap, BeanUtils.getBeanName(clazz), clazz.getName()
             );
             beanRegistry.addBeanDefinition(beanDefinition);
         }
@@ -95,8 +96,8 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Field field : withAutowiredFields) {
             Class<?> fieldClass = field.getType();
             AnnotationBeanDefinitionParameter parameter =
-                    new AnnotationBeanDefinitionParameter(fieldClass.getSimpleName(), fieldClass);
-            parameterMap.put(fieldClass.getSimpleName(), parameter);
+                    new AnnotationBeanDefinitionParameter(fieldClass);
+            parameterMap.put(BeanUtils.getBeanName(parameter.getReferenceClass()), parameter);
         }
 
         for (Field field : withValuesFields) {
@@ -114,7 +115,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             Class<?>[] paramTypes = method.getParameterTypes();
             for (Class<?> type : paramTypes) {
                 AnnotationBeanDefinitionParameter parameter =
-                        new AnnotationBeanDefinitionParameter(type.getSimpleName(), type);
+                        new AnnotationBeanDefinitionParameter(type);
                 parameterMap.put(type.getSimpleName(), parameter);
             }
         }

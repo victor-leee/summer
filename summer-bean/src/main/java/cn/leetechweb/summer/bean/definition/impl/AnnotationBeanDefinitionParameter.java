@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.bean.definition.impl;
 
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
+import cn.leetechweb.summer.bean.util.BeanUtils;
 
 /**
  * Project Name: summer
@@ -17,21 +18,21 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
     private final String parameterName;
 
     /**
-     * 引用的类
-     */
-    private final Class<?> referenceClass;
-
-    /**
      * 是否是引用类型参数
      */
     private final boolean isReference;
 
     /**
      * 如果是primitive类型，则这个代表实际的参数值
-     * 否则它不用代表什么，因为我们使用beanName(parameterName)作依赖注入
-     * 但是还是使用全限定类名做了填充
+     * 否则依然是bean的名称
      */
     private final String parameterValue;
+
+    private final Class<?> referenceClass;
+
+    public Class<?> getReferenceClass() {
+        return referenceClass;
+    }
 
     @Override
     public boolean isReference() {
@@ -48,15 +49,28 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
         return this.parameterValue;
     }
 
-    public Class<?> getReferenceClass() {
-        return referenceClass;
+    /**
+     * 指定该参数依赖于其他对象
+     * 参数名和参数值为依赖的对象beanName
+     * 注意这里的beanName使用默认的beanName，也就是类的名称
+     * @param referenceClass 依赖对象
+     */
+    public AnnotationBeanDefinitionParameter(Class<?> referenceClass) {
+        this.parameterName = BeanUtils.getBeanName(referenceClass);
+        this.isReference = true;
+        this.parameterValue = BeanUtils.getBeanName(referenceClass);
+        this.referenceClass = referenceClass;
     }
 
-    public AnnotationBeanDefinitionParameter(String parameterName, Class<?> referenceClass) {
-        this.parameterName = parameterName;
-        this.referenceClass = referenceClass;
+    /**
+     * 显式指定依赖的bean名称
+     * @param beanName 以来的bean名称
+     */
+    public AnnotationBeanDefinitionParameter(String beanName) {
+        this.parameterName = beanName;
         this.isReference = true;
-        this.parameterValue = referenceClass.getName();
+        this.parameterValue = beanName;
+        this.referenceClass = null;
     }
 
     public AnnotationBeanDefinitionParameter(String parameterName, String parameterValue) {
