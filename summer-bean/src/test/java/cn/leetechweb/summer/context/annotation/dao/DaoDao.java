@@ -9,7 +9,7 @@ import cn.leetechweb.summer.bean.annotation.Component;
  * @author junyu lee
  **/
 @Component(name = "daodao")
-public class DaoDao {
+public class DaoDao implements BaseDao {
 
     Integer Hi = 123;
 

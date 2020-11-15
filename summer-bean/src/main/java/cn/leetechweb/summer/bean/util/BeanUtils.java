@@ -2,11 +2,11 @@ package cn.leetechweb.summer.bean.util;
 
 import cn.leetechweb.summer.bean.Constant;
 import cn.leetechweb.summer.bean.annotation.Component;
+import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
 import cn.leetechweb.summer.bean.exception.NoSuchBeanException;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 
 /**
@@ -113,9 +113,9 @@ public abstract class BeanUtils {
         @Override
         Object initializeObject(Constructor<?> constructor, Map<String, Object> args) {
             List<Object> paramValues = new ArrayList<>();
-            Class<?>[] ctorParamTypes = constructor.getParameterTypes();
-            for (Class<?> param : ctorParamTypes) {
-                String beanName = getBeanName(param);
+            Parameter[] parameters = constructor.getParameters();
+            for (Parameter parameter : parameters) {
+                String beanName = getBeanName(parameter);
                 Object thisParam = null;
                 if (params.containsKey(beanName)) {
                     thisParam = params.get(beanName);
@@ -123,7 +123,7 @@ public abstract class BeanUtils {
                 if (thisParam == null) {
                     thisParam = params.values()
                             .stream()
-                            .filter(object -> object.getClass().equals(param))
+                            .filter(object -> object.getClass().equals(parameter.getType()))
                             .findAny()
                             .orElse(null);
                 }
@@ -209,6 +209,27 @@ public abstract class BeanUtils {
         }else {
             throw new NoSuchBeanException("没有bean的类别为:{}的bean", clazz.getName());
         }
+    }
+
+    /**
+     * 返回规则：
+     * 如果该字段带有@Resource注解，则使用@Resource注解上指定的beanName
+     * 否则获取返回类型的beanName
+     * @param field 字段
+     * @return 该需要注入的字段的beanName
+     */
+    public static String getBeanName(Field field) {
+        if (field.isAnnotationPresent(Resource.class)) {
+            return field.getAnnotation(Resource.class).name();
+        }
+        return getBeanName(field.getType());
+    }
+
+    public static String getBeanName(Parameter parameter) {
+        if (parameter.isAnnotationPresent(Resource.class)) {
+            return parameter.getDeclaredAnnotation(Resource.class).name();
+        }
+        return getBeanName(parameter.getType());
     }
 
 }

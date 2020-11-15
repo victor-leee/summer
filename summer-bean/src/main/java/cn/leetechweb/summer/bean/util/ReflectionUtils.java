@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import static cn.leetechweb.summer.bean.Constant.*;
 
 /**
  * 反射工具类
@@ -43,7 +42,8 @@ public abstract class ReflectionUtils {
      * @return 带有@Autowired注解的field
      */
     public static List<Field> getFieldsNeedAutowired(Class<?> clazz) {
-        return filterField(clazz, field -> field.isAnnotationPresent(Autowired.class));
+        return filterField(clazz, field -> field.isAnnotationPresent(Autowired.class)
+        || field.isAnnotationPresent(Resource.class));
     }
 
     /**
@@ -71,16 +71,10 @@ public abstract class ReflectionUtils {
     public static void setFieldParameters(Object bean, Map<String,Object> paramMap) throws IllegalAccessException {
         Assert.isNotNull(bean);
         List<Field> fields = getFieldsNeedAutowired(bean.getClass());
-        List<Field> withResourceFields = withResourceFields(bean.getClass());
-        // 设置@Autowired字段
+        // 设置@Autowired字段和@Resource字段
         for (Field field : fields) {
-            Object fieldVal = paramMap.get(BeanUtils.getBeanName(field.getType()));
+            Object fieldVal = paramMap.get(BeanUtils.getBeanName(field));
             setFieldParam(bean, field, fieldVal);
-        }
-        // 设置@Resource字段
-        for (Field field : withResourceFields) {
-            String beanName = field.getAnnotation(Resource.class).name();
-            setFieldParam(bean, field, paramMap.get(beanName));
         }
     }
 
@@ -141,10 +135,6 @@ public abstract class ReflectionUtils {
             }
         }
         return result;
-    }
-
-    public static List<Field> withResourceFields(Class<?> clazz) {
-        return filterField(clazz, field -> field.isAnnotationPresent(Resource.class));
     }
 
     public static List<Method> getMethodsProducingBeans(Class<?> clazz) {

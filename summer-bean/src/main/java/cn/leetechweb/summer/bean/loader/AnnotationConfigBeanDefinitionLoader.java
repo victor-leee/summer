@@ -1,19 +1,21 @@
 package cn.leetechweb.summer.bean.loader;
 
 import cn.leetechweb.summer.bean.annotation.Component;
-import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.annotation.Summer;
 import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.bean.annotation.reader.Reader;
+import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
+import cn.leetechweb.summer.bean.exception.BeanNameAlreadyExistsException;
 import cn.leetechweb.summer.bean.util.BeanUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -107,34 +109,28 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             throw new AnnotationContainerInitializationException("构造函数只能有1个");
         }
         Constructor<?> ctor = clazz.getDeclaredConstructors()[0];
-        Class<?>[] ctorTypes = ctor.getParameterTypes();
-        for (Class<?> type : ctorTypes) {
-            AnnotationBeanDefinitionParameter parameter = new AnnotationBeanDefinitionParameter(type);
-            parameterMap.put(BeanUtils.getBeanName(type), parameter);
+        Parameter[] ctorParams = ctor.getParameters();
+        for (Parameter parameter : ctorParams) {
+            String parameterBeanName = BeanUtils.getBeanName(parameter);
+            AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
+                    parameterBeanName
+            );
+            put(parameterBeanName, beanParam, parameterMap);
         }
     }
 
     private void getFieldsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
                                      Class<?> clazz) {
         List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
-        List<Field> withResourceFields = ReflectionUtils.withResourceFields(clazz);
         List<Field> withValuesFields = ReflectionUtils.getFieldsNeedInjectionValue(clazz);
 
-        // 所有需要自动bean依赖注入的字段,也就是使用了@Autowired的字段
+        // 所有需要自动bean依赖注入的字段,也就是使用了@Autowired的字段或@Resource的字段
         for (Field field : withAutowiredFields) {
-            Class<?> fieldClass = field.getType();
-            AnnotationBeanDefinitionParameter parameter =
-                    new AnnotationBeanDefinitionParameter(fieldClass);
-            parameterMap.put(BeanUtils.getBeanName(parameter.getReferenceClass()), parameter);
-        }
-        
-        // 所有需要按beanName依赖注入的字段，也就是使用了@Resource的字段
-        for (Field field : withResourceFields) {
-            String beanName = field.getAnnotation(Resource.class).name();
+            String fieldBeanName = BeanUtils.getBeanName(field);
             AnnotationBeanDefinitionParameter parameter = new AnnotationBeanDefinitionParameter(
-                    beanName
+                    fieldBeanName
             );
-            parameterMap.put(beanName, parameter);
+            put(fieldBeanName, parameter, parameterMap);
         }
 
         // 所有需要常量注入的字段，也就是使用了@Value的字段
@@ -142,7 +138,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             String annotationValue = field.getAnnotation(Value.class).value();
             AnnotationBeanDefinitionParameter parameter =
                     new AnnotationBeanDefinitionParameter(field.getName(), annotationValue);
-            parameterMap.put(parameter.getParameterName(), parameter);
+            put(parameter.getParameterName(), parameter, parameterMap);
         }
     }
 
@@ -150,13 +146,23 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
                                       Class<?> clazz) {
         List<Method> methods = ReflectionUtils.getMethodsNeedAutowired(clazz);
         for (Method method : methods) {
-            Class<?>[] paramTypes = method.getParameterTypes();
-            for (Class<?> type : paramTypes) {
-                AnnotationBeanDefinitionParameter parameter =
-                        new AnnotationBeanDefinitionParameter(type);
-                parameterMap.put(type.getSimpleName(), parameter);
+            Parameter[] parameters = method.getParameters();
+            for (Parameter parameter : parameters) {
+                String parameterBeanName = BeanUtils.getBeanName(parameter);
+                AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
+                        parameterBeanName
+                );
+                put(parameterBeanName, beanParam, parameterMap);
             }
         }
+    }
+
+    private void put(String beanName, AnnotationBeanDefinitionParameter parameter,
+                     Map<String, AnnotationBeanDefinitionParameter> parameterMap) {
+        if (parameterMap.containsKey(beanName)) {
+            throw new BeanNameAlreadyExistsException("bean名称:{}已经存在", beanName);
+        }
+        parameterMap.put(beanName, parameter);
     }
 
 }

@@ -10,7 +10,7 @@ import cn.leetechweb.summer.bean.annotation.Component;
  * @author junyu lee
  **/
 @Component
-public class Dao {
+public class Dao implements BaseDao{
 
     private String haha = "123";
 

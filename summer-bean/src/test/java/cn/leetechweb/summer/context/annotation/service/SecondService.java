@@ -3,7 +3,7 @@ package cn.leetechweb.summer.context.annotation.service;
 import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Resource;
-import cn.leetechweb.summer.context.annotation.dao.DaoDao;
+import cn.leetechweb.summer.context.annotation.dao.BaseDao;
 import cn.leetechweb.summer.context.annotation.dao.FuckDao;
 
 /**
@@ -20,19 +20,20 @@ public class SecondService {
     @Autowired
     FuckDao fuckDao;
 
-    @Resource(name = "daodao")
-    DaoDao daoDao;
+    BaseDao baseDao;
 
     @Override
     public String toString() {
         return "SecondService{" +
                 "service=" + service +
                 ", fuckDao=" + fuckDao +
-                ", daoDao=" + daoDao +
+                ", baseDao=" + baseDao +
                 '}';
     }
 
-    public SecondService(Service service) {
+    public SecondService(Service service, @Resource(name = "daodao") BaseDao baseDao) {
         this.service = service;
+        this.baseDao = baseDao;
     }
+
 }
