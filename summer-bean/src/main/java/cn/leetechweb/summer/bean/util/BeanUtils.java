@@ -200,15 +200,14 @@ public abstract class BeanUtils {
      * @return 该类对象的bean名称
      */
     public static String getBeanName(Class<?> clazz) {
+        String beanName = Constant.EMPTY_STRING;
         if (clazz.isAnnotationPresent(Component.class)) {
-            String beanName = clazz.getAnnotation(Component.class).name();
-            if (!Constant.EMPTY_STRING.equals(beanName)) {
-                return beanName;
-            }
-            return clazz.getSimpleName();
-        }else {
-            throw new NoSuchBeanException("没有bean的类别为:{}的bean", clazz.getName());
+            beanName = clazz.getAnnotation(Component.class).name();
         }
+        if (!Constant.EMPTY_STRING.equals(beanName)) {
+            return beanName;
+        }
+        return clazz.getSimpleName();
     }
 
     /**

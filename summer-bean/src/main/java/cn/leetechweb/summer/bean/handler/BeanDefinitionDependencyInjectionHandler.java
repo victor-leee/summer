@@ -9,11 +9,14 @@ import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
+import cn.leetechweb.summer.bean.exception.NoSuchBeanException;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
+import cn.leetechweb.summer.bean.util.BeanUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 import cn.leetechweb.summer.bean.util.StringUtils;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -145,8 +148,19 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
             if (Constant.EMPTY_STRING.equals(beanName)) {
                 beanName = method.getReturnType().getSimpleName();
             }
+            // 这个@Bean方法需要的参数
+            Parameter[] params = method.getParameters();
+            Object[] paramValues = new Object[params.length];
+            for (int i = 0; i < params.length; i++) {
+                String paramBeanName = BeanUtils.getBeanName(params[i]);
+                Object paramVal = beanFactory.getBean(paramBeanName);
+                if (paramVal == null) {
+                    throw new NoSuchBeanException("没有bean名为{}的bean实体", paramBeanName);
+                }
+                paramValues[i] = paramVal;
+            }
             try {
-                result.put(beanName, method.invoke(bean));
+                result.put(beanName, method.invoke(bean, paramValues));
             }catch (Exception e) {
                 e.printStackTrace();
                 throw new AnnotationContainerInitializationException("初始化一个inner bean发生错误");

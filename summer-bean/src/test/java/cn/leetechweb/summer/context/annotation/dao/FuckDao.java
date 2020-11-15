@@ -2,6 +2,8 @@ package cn.leetechweb.summer.context.annotation.dao;
 
 import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;
+import cn.leetechweb.summer.bean.annotation.Resource;
+import cn.leetechweb.summer.bean.annotation.Value;
 
 /**
  * Project Name: summer
@@ -12,7 +14,8 @@ import cn.leetechweb.summer.bean.annotation.Component;
 @Component
 public class FuckDao {
 
-    private Integer fuck = 12;
+    @Value("123")
+    private Integer fuck;
 
     @Override
     public String toString() {
@@ -23,7 +26,7 @@ public class FuckDao {
 
 
     @Bean(name = "inner")
-    public InnerBean getInnerBean() {
-        return new InnerBean();
+    public InnerBean getInnerBean(@Resource(name = "daodao") BaseDao baseDao) {
+        return new InnerBean(baseDao);
     }
 }

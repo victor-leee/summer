@@ -145,6 +145,8 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
     private void getMethodsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
                                       Class<?> clazz) {
         List<Method> methods = ReflectionUtils.getMethodsNeedAutowired(clazz);
+        List<Method> producingBeanMethods = ReflectionUtils.getMethodsProducingBeans(clazz);
+        methods.addAll(producingBeanMethods);
         for (Method method : methods) {
             Parameter[] parameters = method.getParameters();
             for (Parameter parameter : parameters) {
