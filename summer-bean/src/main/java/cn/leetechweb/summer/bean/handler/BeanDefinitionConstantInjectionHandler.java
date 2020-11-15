@@ -14,11 +14,11 @@ import cn.leetechweb.summer.bean.util.ReflectionUtils;
  *
  * @author junyu lee
  **/
-public final class BeanDefinitionConstantInjectionPostHandler implements Listener<BeanDefinitionRegistry> {
+public final class BeanDefinitionConstantInjectionHandler implements Listener<BeanDefinitionRegistry> {
 
     private final BeanFactory beanFactory;
 
-    public BeanDefinitionConstantInjectionPostHandler(BeanFactory beanFactory) {
+    public BeanDefinitionConstantInjectionHandler(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 

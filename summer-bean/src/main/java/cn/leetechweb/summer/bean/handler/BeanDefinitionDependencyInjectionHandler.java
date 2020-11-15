@@ -24,7 +24,7 @@ import java.util.*;
  *
  * @author junyu lee
  **/
-public final class BeanDefinitionDependencyInjectionPostHandler implements Listener<BeanDefinitionRegistry> {
+public final class BeanDefinitionDependencyInjectionHandler implements Listener<BeanDefinitionRegistry> {
 
     private final BeanFactory beanFactory;
 
@@ -110,7 +110,7 @@ public final class BeanDefinitionDependencyInjectionPostHandler implements Liste
 
     }
 
-    public BeanDefinitionDependencyInjectionPostHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
+    public BeanDefinitionDependencyInjectionHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
         this.beanFactory = beanFactory;
         this.beanCreator = beanCreator;
     }

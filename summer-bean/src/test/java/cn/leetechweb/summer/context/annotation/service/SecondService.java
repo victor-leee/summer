@@ -2,7 +2,6 @@ package cn.leetechweb.summer.context.annotation.service;
 
 import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Component;
-import cn.leetechweb.summer.context.annotation.dao.Dao;
 import cn.leetechweb.summer.context.annotation.dao.FuckDao;
 
 /**
@@ -14,7 +13,6 @@ import cn.leetechweb.summer.context.annotation.dao.FuckDao;
 @Component
 public class SecondService {
 
-    @Autowired
     Service service;
 
     @Autowired
@@ -26,5 +24,9 @@ public class SecondService {
                 "service=" + service +
                 ", fuckDao=" + fuckDao +
                 '}';
+    }
+
+    public SecondService(Service service) {
+        this.service = service;
     }
 }

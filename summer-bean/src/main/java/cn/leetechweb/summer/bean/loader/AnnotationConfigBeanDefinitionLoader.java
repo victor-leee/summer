@@ -1,7 +1,5 @@
 package cn.leetechweb.summer.bean.loader;
 
-import cn.leetechweb.summer.bean.Constant;
-import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Summer;
 import cn.leetechweb.summer.bean.annotation.Value;
@@ -12,6 +10,7 @@ import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationExce
 import cn.leetechweb.summer.bean.util.BeanUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
@@ -91,10 +90,26 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             // 寻找需要注入的方法
             getMethodsParameters(parameterMap, clazz);
 
+            // 寻找需要注入的构造函数的参数
+            getConstructorParams(parameterMap, clazz);
+
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
                     parameterMap, BeanUtils.getBeanName(clazz), clazz.getName()
             );
             beanRegistry.addBeanDefinition(beanDefinition);
+        }
+    }
+
+    private void getConstructorParams(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
+                                      Class<?> clazz) {
+        if (clazz.getDeclaredConstructors().length != 1) {
+            throw new AnnotationContainerInitializationException("构造函数只能有1个");
+        }
+        Constructor<?> ctor = clazz.getDeclaredConstructors()[0];
+        Class<?>[] ctorTypes = ctor.getParameterTypes();
+        for (Class<?> type : ctorTypes) {
+            AnnotationBeanDefinitionParameter parameter = new AnnotationBeanDefinitionParameter(type);
+            parameterMap.put(BeanUtils.getBeanName(type), parameter);
         }
     }
 

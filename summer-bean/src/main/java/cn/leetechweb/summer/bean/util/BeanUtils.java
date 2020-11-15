@@ -2,6 +2,7 @@ package cn.leetechweb.summer.bean.util;
 
 import cn.leetechweb.summer.bean.Constant;
 import cn.leetechweb.summer.bean.annotation.Component;
+import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
 import cn.leetechweb.summer.bean.exception.NoSuchBeanException;
 
 import java.lang.reflect.Constructor;
@@ -27,7 +28,7 @@ public abstract class BeanUtils {
         try {
             Constructor<?>[] constructors = clazz.getDeclaredConstructors();
             // 根据参数数组长度来决定使用哪一个构造函数
-            ConstructorBindingStrategy bindingStrategy = new OrderedConstructorBinding(constructors,
+            ConstructorBindingStrategy bindingStrategy = new NamedBeanConstructorBidingStrategy(constructors,
                     constructorArgs);
             Constructor<?> constructor = bindingStrategy.getConstructor();
             ReflectionUtils.makeAccessible(constructor);
@@ -103,51 +104,46 @@ public abstract class BeanUtils {
         protected abstract Constructor<?> get();
     }
 
-    static final class NamedConstructorBinding extends ConstructorBindingStrategy {
+    static class NamedBeanConstructorBidingStrategy extends ConstructorBindingStrategy {
 
-        private final Set<String> paramSet;
+        protected NamedBeanConstructorBidingStrategy(Constructor<?>[] constructors, Map<String, Object> params) {
+            super(constructors, params);
+        }
 
         @Override
-        Object initializeObject(Constructor<?> constructor, Map<String, Object> constructorArgs) {
-            List<Object> orderedParamValues = new ArrayList<>();
-            Parameter[] parameters = constructor.getParameters();
-            for (Parameter parameter : parameters) {
-                orderedParamValues.add(constructorArgs.get(parameter.getName()));
+        Object initializeObject(Constructor<?> constructor, Map<String, Object> args) {
+            List<Object> paramValues = new ArrayList<>();
+            Class<?>[] ctorParamTypes = constructor.getParameterTypes();
+            for (Class<?> param : ctorParamTypes) {
+                String beanName = getBeanName(param);
+                Object thisParam = null;
+                if (params.containsKey(beanName)) {
+                    thisParam = params.get(beanName);
+                }
+                if (thisParam == null) {
+                    thisParam = params.values()
+                            .stream()
+                            .filter(object -> object.getClass().equals(param))
+                            .findAny()
+                            .orElse(null);
+                }
+                paramValues.add(thisParam);
             }
-            Object inst = null;
             try {
-                inst = constructor.newInstance(orderedParamValues.toArray());
+                return constructor.newInstance(paramValues.toArray());
             }catch (Exception e) {
                 e.printStackTrace();
+                throw new AnnotationContainerInitializationException("无法通过构造函数创建bean");
             }
-            return inst;
         }
 
         @Override
         protected Constructor<?> get() {
-            for (Constructor<?> constructor : super.constructors) {
-                Parameter[] constructorParams = constructor.getParameters();
-                Set<String> params = new HashSet<>();
-                int paramCount = 0;
-                for (Parameter parameter : constructorParams) {
-                    paramCount++;
-                    params.add(parameter.getName());
-                }
-
-                if (paramCount == paramSet.size()) {
-                    if (paramSet.containsAll(params)) {
-                        return constructor;
-                    }
-                }
+            if (constructors.length != 1) {
+                throw new AnnotationContainerInitializationException("检测到容器中某个bean的构造函数过多");
             }
-            return null;
+            return constructors[0];
         }
-
-        public NamedConstructorBinding(Constructor<?>[] constructors, Map<String, Object> params) {
-            super(constructors, params);
-            this.paramSet = params.keySet();
-        }
-
     }
 
     /**
