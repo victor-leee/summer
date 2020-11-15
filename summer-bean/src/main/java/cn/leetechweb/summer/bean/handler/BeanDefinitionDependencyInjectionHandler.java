@@ -1,22 +1,14 @@
 package cn.leetechweb.summer.bean.handler;
 
-import cn.leetechweb.summer.bean.Constant;
-import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.creator.BeanCreator;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
 import cn.leetechweb.summer.bean.exception.CycleDependencyException;
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
-import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
-import cn.leetechweb.summer.bean.exception.NoSuchBeanException;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
-import cn.leetechweb.summer.bean.util.BeanUtils;
-import cn.leetechweb.summer.bean.util.ReflectionUtils;
 import cn.leetechweb.summer.bean.util.StringUtils;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.*;
 
 /**
@@ -72,23 +64,17 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
         });
         while (!initStack.isEmpty()) {
             AbstractBeanDefinition beanDefinition = initStack.pollLast();
-            Map<String, Object> beanParamMap = getParameters(beanDefinition);
-            String beanPath = beanDefinition.getBeanCompletePath();
             String beanName = beanDefinition.getBeanName();
             Object bean;
-            Map<String, Object> nestedBeans;
             try {
-                bean = this.beanCreator.create(beanPath, beanParamMap);
-                nestedBeans = getNestedBeans(bean);
+                bean = this.beanCreator.create(beanDefinition);
             }catch (Exception e) {
                 throw new AnnotationContainerInitializationException("bean初始化错误");
             }
             this.beanFactory.addBean(beanName, bean);
-            nestedBeans.forEach(this.beanFactory::addBean);
 
             // 如果这个bean有被依赖的bean，将其放入dependencyInitializationMap中备用
             if (dependedMap.containsKey(beanName)) {
-                alreadyCreatedBeanMap.put(beanName, bean);
                 // 将依赖该bean的bean的依赖列表减一
                 List<String> isDependedBy = dependedMap.get(beanName);
                 for (String dependent : isDependedBy) {
@@ -108,7 +94,6 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
             }
         });
 
-        this.alreadyCreatedBeanMap.clear();
         this.dependedMap.clear();
 
     }
@@ -116,57 +101,6 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
     public BeanDefinitionDependencyInjectionHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
         this.beanFactory = beanFactory;
         this.beanCreator = beanCreator;
-    }
-
-    /**
-     * 取出beanDef的参数
-     * @param definition bean定义类对象
-     */
-    private Map<String, Object> getParameters(AbstractBeanDefinition definition) {
-        Map<String, Object> parameters = new HashMap<>(32);
-        String[] paramNames = definition.getParameterNames();
-        for (String paramName : paramNames) {
-            BeanDefinitionParameter parameter = definition.getParameter(paramName);
-            Object paramValue = parameter.isReference() ? alreadyCreatedBeanMap.get(parameter.getParameterValue())
-                    : parameter.getParameterValue();
-            parameters.put(paramName, paramValue);
-        }
-        return parameters;
-    }
-
-    /**
-     * 返回bean实体中的嵌套beans
-     * @param bean bean实体
-     * @return bean实体中的嵌套bean
-     */
-    private Map<String, Object> getNestedBeans(Object bean) {
-        List<Method> methods = ReflectionUtils.getMethodsProducingBeans(bean.getClass());
-        Map<String, Object> result = new HashMap<>(16);
-        for (Method method : methods) {
-            ReflectionUtils.makeAccessible(method);
-            String beanName = method.getAnnotation(Bean.class).name();
-            if (Constant.EMPTY_STRING.equals(beanName)) {
-                beanName = method.getReturnType().getSimpleName();
-            }
-            // 这个@Bean方法需要的参数
-            Parameter[] params = method.getParameters();
-            Object[] paramValues = new Object[params.length];
-            for (int i = 0; i < params.length; i++) {
-                String paramBeanName = BeanUtils.getBeanName(params[i]);
-                Object paramVal = beanFactory.getBean(paramBeanName);
-                if (paramVal == null) {
-                    throw new NoSuchBeanException("没有bean名为{}的bean实体", paramBeanName);
-                }
-                paramValues[i] = paramVal;
-            }
-            try {
-                result.put(beanName, method.invoke(bean, paramValues));
-            }catch (Exception e) {
-                e.printStackTrace();
-                throw new AnnotationContainerInitializationException("初始化一个inner bean发生错误");
-            }
-        }
-        return result;
     }
 
 }

@@ -35,4 +35,9 @@ public class XmlBeanDefinitionParameter implements BeanDefinitionParameter {
         return this.parameterValue;
     }
 
+    @Override
+    public Class<?> getParameterType() {
+        return null;
+    }
+
 }

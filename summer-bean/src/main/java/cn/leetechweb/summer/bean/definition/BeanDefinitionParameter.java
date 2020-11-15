@@ -28,4 +28,10 @@ public interface BeanDefinitionParameter {
      * @return 参数值
      */
     String getParameterValue();
+
+    /**
+     * 返回参数类型
+     * @return 参数类型
+     */
+    Class<?> getParameterType();
 }

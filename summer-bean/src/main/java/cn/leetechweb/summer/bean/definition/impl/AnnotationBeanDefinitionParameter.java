@@ -49,6 +49,11 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
         return this.parameterValue;
     }
 
+    @Override
+    public Class<?> getParameterType() {
+        return getReferenceClass();
+    }
+
     /**
      * 指定该参数依赖于其他对象
      * 参数名和参数值为依赖的对象beanName
@@ -64,13 +69,14 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
 
     /**
      * 显式指定依赖的bean名称
-     * @param beanName 以来的bean名称
+     * @param beanName 依赖的bean名称
+     * @param parameterType 参数类型
      */
-    public AnnotationBeanDefinitionParameter(String beanName) {
+    public AnnotationBeanDefinitionParameter(String beanName, Class<?> parameterType) {
         this.parameterName = beanName;
         this.isReference = true;
         this.parameterValue = beanName;
-        this.referenceClass = null;
+        this.referenceClass = parameterType;
     }
 
     public AnnotationBeanDefinitionParameter(String parameterName, String parameterValue) {

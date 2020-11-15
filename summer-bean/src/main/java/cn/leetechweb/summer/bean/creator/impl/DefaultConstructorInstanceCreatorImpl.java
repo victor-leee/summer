@@ -1,6 +1,6 @@
 package cn.leetechweb.summer.bean.creator.impl;
 
-import cn.leetechweb.summer.bean.creator.BeanCreator;
+import cn.leetechweb.summer.bean.creator.InstanceCreator;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,7 +12,7 @@ import java.util.Map;
  *
  * @author junyu lee
  **/
-public class DefaultConstructorBeanCreatorImpl implements BeanCreator {
+public class DefaultConstructorInstanceCreatorImpl implements InstanceCreator {
     @Override
     public Object create(Class<?> clazz) throws InstantiationException, InvocationTargetException, IllegalAccessException {
         return ReflectionUtils.getDefaultConstructor(clazz).newInstance();

@@ -2,10 +2,11 @@ package cn.leetechweb.summer.bean.context;
 
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.creator.BeanCreator;
-import cn.leetechweb.summer.bean.creator.impl.ConstructorBeanCreatorImpl;
-import cn.leetechweb.summer.bean.creator.impl.FieldBeanCreatorDecoratorImpl;
+import cn.leetechweb.summer.bean.creator.InstanceCreator;
+import cn.leetechweb.summer.bean.creator.impl.ConstructorInstanceCreatorImpl;
+import cn.leetechweb.summer.bean.creator.impl.FieldInstanceCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.annotation.reader.impl.SimpleBasePackageReader;
-import cn.leetechweb.summer.bean.creator.impl.SetterInjectionBeanCreatorDecoratorImpl;
+import cn.leetechweb.summer.bean.creator.impl.SetterInjectionInstanceCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
@@ -29,12 +30,13 @@ public final class AnnotationConfigContext extends Context {
         );
         BeanFactory beanFactory = new SimpleBeanFactory();
         setBeanFactory(beanFactory);
-        BeanCreator ctorInjection = new ConstructorBeanCreatorImpl();
-        BeanCreator fieldInjection = new FieldBeanCreatorDecoratorImpl(ctorInjection);
-        BeanCreator setterInjection = new SetterInjectionBeanCreatorDecoratorImpl(fieldInjection);
+        InstanceCreator ctorInjection = new ConstructorInstanceCreatorImpl();
+        InstanceCreator fieldInjection = new FieldInstanceCreatorDecoratorImpl(ctorInjection);
+        InstanceCreator setterInjection = new SetterInjectionInstanceCreatorDecoratorImpl(fieldInjection);
+        BeanCreator beanCreator = new BeanCreator(setterInjection, beanFactory);
         // bean依赖注入处理器
         Listener<BeanDefinitionRegistry> postHandler = new BeanDefinitionDependencyInjectionHandler(
-                beanFactory, setterInjection
+                beanFactory, beanCreator
         );
         // 常量注入处理器
         Listener<BeanDefinitionRegistry> constantHandler = new BeanDefinitionConstantInjectionHandler(

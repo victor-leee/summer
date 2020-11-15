@@ -1,9 +1,11 @@
 package cn.leetechweb.summer.bean.loader;
 
+import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Summer;
 import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.bean.annotation.reader.Reader;
+import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionParameter;
@@ -100,6 +102,37 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
                     parameterMap, BeanUtils.getBeanName(clazz), clazz.getName()
             );
             beanRegistry.addBeanDefinition(beanDefinition);
+
+            // 再次扫描该类，寻找所有标记有@Bean的方法
+            scanMethodsProducingBeans(clazz, beanDefinition);
+        }
+    }
+
+    /**
+     * @param clazz 类
+     * @param parentBeanDef 由于类中带有@Bean的方法会产生新的bean，因此需要引用父beanDef来确定是哪一个bean
+     *                      用于执行method.invoke(bean)
+     */
+    private void scanMethodsProducingBeans(Class<?> clazz, AbstractBeanDefinition parentBeanDef) {
+        List<Method> methods = ReflectionUtils.getMethodsProducingBeans(clazz);
+        for (Method method : methods) {
+            // 参数列表
+            Map<String, AnnotationBeanDefinitionParameter> parameterMap = new HashMap<>(16);
+            // 获取该返回的bean名称
+            String beanName = BeanUtils.getBeanName(method);
+            // 获取要生成该bean需要的参数
+            Parameter[] parameters = method.getParameters();
+            for (Parameter parameter : parameters) {
+                String paramBeanName = BeanUtils.getBeanName(parameter);
+                AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
+                        paramBeanName, parameter.getType()
+                );
+                put(paramBeanName, beanParam, parameterMap);
+            }
+            AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
+                    beanName, method, parentBeanDef, parameterMap
+            );
+            beanRegistry.addBeanDefinition(beanDefinition);
         }
     }
 
@@ -113,7 +146,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Parameter parameter : ctorParams) {
             String parameterBeanName = BeanUtils.getBeanName(parameter);
             AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
-                    parameterBeanName
+                    parameterBeanName, parameter.getType()
             );
             put(parameterBeanName, beanParam, parameterMap);
         }
@@ -128,7 +161,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Field field : withAutowiredFields) {
             String fieldBeanName = BeanUtils.getBeanName(field);
             AnnotationBeanDefinitionParameter parameter = new AnnotationBeanDefinitionParameter(
-                    fieldBeanName
+                    fieldBeanName, field.getType()
             );
             put(fieldBeanName, parameter, parameterMap);
         }
@@ -145,14 +178,12 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
     private void getMethodsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
                                       Class<?> clazz) {
         List<Method> methods = ReflectionUtils.getMethodsNeedAutowired(clazz);
-        List<Method> producingBeanMethods = ReflectionUtils.getMethodsProducingBeans(clazz);
-        methods.addAll(producingBeanMethods);
         for (Method method : methods) {
             Parameter[] parameters = method.getParameters();
             for (Parameter parameter : parameters) {
                 String parameterBeanName = BeanUtils.getBeanName(parameter);
                 AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
-                        parameterBeanName
+                        parameterBeanName, parameter.getType()
                 );
                 put(parameterBeanName, beanParam, parameterMap);
             }

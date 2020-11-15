@@ -1,7 +1,7 @@
 package cn.leetechweb.summer.bean.creator.impl;
 
-import cn.leetechweb.summer.bean.creator.BeanCreator;
-import cn.leetechweb.summer.bean.creator.BeanCreatorDecorator;
+import cn.leetechweb.summer.bean.creator.InstanceCreator;
+import cn.leetechweb.summer.bean.creator.InstanceCreatorDecorator;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.util.Map;
@@ -12,10 +12,10 @@ import java.util.Map;
  *
  * @author junyu lee
  **/
-public class FieldBeanCreatorDecoratorImpl extends BeanCreatorDecorator {
+public class FieldInstanceCreatorDecoratorImpl extends InstanceCreatorDecorator {
 
-    public FieldBeanCreatorDecoratorImpl(BeanCreator beanCreator) {
-        super(beanCreator);
+    public FieldInstanceCreatorDecoratorImpl(InstanceCreator instanceCreator) {
+        super(instanceCreator);
     }
 
     @Override

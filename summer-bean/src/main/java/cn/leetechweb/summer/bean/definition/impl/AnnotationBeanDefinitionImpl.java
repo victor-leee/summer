@@ -4,8 +4,6 @@ import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 
@@ -47,6 +45,11 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
      */
     Method beanMethod;
 
+    /**
+     * 父bean定义，用于在@Bean生成bean对象时引用
+     */
+    AbstractBeanDefinition parentBeanDef;
+
     public AnnotationBeanDefinitionImpl(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
                                         String beanName, String beanCompletePath) {
         this.parameterMap = parameterMap;
@@ -58,10 +61,24 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
                 .toArray(String[]::new);
     }
 
-    public AnnotationBeanDefinitionImpl(String beanName, Method beanMethod) {
+    public AnnotationBeanDefinitionImpl(String beanName, Method beanMethod, AbstractBeanDefinition parentBeanDef,
+                                        Map<String, AnnotationBeanDefinitionParameter> parameterMap) {
         this.isMethodProduce = true;
         this.beanMethod = beanMethod;
         this.beanName = beanName;
+        this.parentBeanDef = parentBeanDef;
+        this.beanCompletePath = beanMethod.getReturnType().getName();
+
+        // 这里处理的时候注意，这个bean的构建还要依赖于父bean的构建完成
+        String[] paramDepends = parameterMap.values().stream()
+                .filter(BeanDefinitionParameter::isReference)
+                .map(BeanDefinitionParameter::getParameterName)
+                .toArray(String[]::new);
+        this.dependsOn = new String[paramDepends.length + 1];
+        System.arraycopy(paramDepends, 0, this.dependsOn, 0, paramDepends.length);
+        this.dependsOn[paramDepends.length] = getParentBeanDef().getBeanName();
+
+        this.parameterMap = parameterMap;
     }
 
     @Override
@@ -101,5 +118,9 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
     @Override
     public boolean isMethodProduce() {
         return isMethodProduce;
+    }
+
+    public AbstractBeanDefinition getParentBeanDef() {
+        return parentBeanDef;
     }
 }

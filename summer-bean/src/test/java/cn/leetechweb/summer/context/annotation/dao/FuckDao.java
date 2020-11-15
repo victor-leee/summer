@@ -29,4 +29,9 @@ public class FuckDao {
     public InnerBean getInnerBean(@Resource(name = "daodao") BaseDao baseDao) {
         return new InnerBean(baseDao);
     }
+
+    @Bean(name = "wtf")
+    public WTFDao getWtfDao(@Resource(name = "inner") InnerBean innerBean) {
+        return new WTFDao(innerBean);
+    }
 }

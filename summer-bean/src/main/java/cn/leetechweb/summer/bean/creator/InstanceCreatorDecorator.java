@@ -1,5 +1,7 @@
 package cn.leetechweb.summer.bean.creator;
 
+import cn.leetechweb.summer.bean.creator.impl.FieldInstanceCreatorDecoratorImpl;
+import cn.leetechweb.summer.bean.creator.impl.SetterInjectionInstanceCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.util.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
@@ -9,34 +11,34 @@ import java.util.Map;
  * Bean构造器的装饰器
  * 用于处理构造Bean过后的额外工作
  * 例如通过setter或者字段注入一些依赖
- * @see cn.leetechweb.summer.bean.creator.impl.FieldBeanCreatorDecoratorImpl
- * @see cn.leetechweb.summer.bean.creator.impl.SetterInjectionBeanCreatorDecoratorImpl
+ * @see FieldInstanceCreatorDecoratorImpl
+ * @see SetterInjectionInstanceCreatorDecoratorImpl
  * Project Name: summer
  * Create Time: 2020/11/14 13:01
  *
  * @author junyu lee
  **/
-public abstract class BeanCreatorDecorator implements BeanCreator {
+public abstract class InstanceCreatorDecorator implements InstanceCreator {
 
     /**
      * 使用构造函数的bean creator，用于构造基本的bean
      */
-    private final BeanCreator beanCreator;
+    private final InstanceCreator instanceCreator;
 
-    public BeanCreatorDecorator(BeanCreator beanCreator) {
-        this.beanCreator = beanCreator;
+    public InstanceCreatorDecorator(InstanceCreator instanceCreator) {
+        this.instanceCreator = instanceCreator;
     }
 
     @Override
     public Object create(Class<?> clazz, Map<String, Object> paramMap) throws InstantiationException, InvocationTargetException, IllegalAccessException {
-        Object bean = this.beanCreator.create(clazz, paramMap);
+        Object bean = this.instanceCreator.create(clazz, paramMap);
         this.fill(bean, paramMap);
         return bean;
     }
 
     @Override
     public Object create(Class<?> clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return this.beanCreator.create(clazz);
+        return this.instanceCreator.create(clazz);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.bean.util;
 
 import cn.leetechweb.summer.bean.Constant;
+import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
@@ -229,6 +230,17 @@ public abstract class BeanUtils {
             return parameter.getDeclaredAnnotation(Resource.class).name();
         }
         return getBeanName(parameter.getType());
+    }
+
+    public static String getBeanName(Method method) {
+        if (method.isAnnotationPresent(Bean.class)) {
+            String beanName = method.getAnnotation(Bean.class).name();
+            if (Constant.EMPTY_STRING.equals(beanName)) {
+                return getBeanName(method.getReturnType());
+            }
+            return beanName;
+        }
+        throw new IllegalArgumentException(StringUtils.format("方法名：{}的返回值似乎没有标记为@Bean", false, method.getName()));
     }
 
 }

@@ -1,7 +1,7 @@
 package cn.leetechweb.summer.bean.creator.impl;
 
-import cn.leetechweb.summer.bean.creator.BeanCreator;
-import cn.leetechweb.summer.bean.creator.BeanCreatorDecorator;
+import cn.leetechweb.summer.bean.creator.InstanceCreator;
+import cn.leetechweb.summer.bean.creator.InstanceCreatorDecorator;
 import cn.leetechweb.summer.bean.util.Assert;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
@@ -17,10 +17,10 @@ import java.util.Map;
  *
  * @author junyu lee
  **/
-public class SetterInjectionBeanCreatorDecoratorImpl extends BeanCreatorDecorator {
+public class SetterInjectionInstanceCreatorDecoratorImpl extends InstanceCreatorDecorator {
 
-    public SetterInjectionBeanCreatorDecoratorImpl(BeanCreator beanCreator) {
-        super(beanCreator);
+    public SetterInjectionInstanceCreatorDecoratorImpl(InstanceCreator instanceCreator) {
+        super(instanceCreator);
     }
 
     @Override
