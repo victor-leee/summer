@@ -12,8 +12,6 @@ public abstract class Constant {
 
     public static final String PACKAGE_SEPARATOR = ".";
 
-    public static final String SETTER_PREFIX = "set";
-
     public static final String EMPTY_STRING = "";
 
 }

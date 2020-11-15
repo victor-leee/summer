@@ -2,6 +2,7 @@ package cn.leetechweb.summer.bean.util;
 
 import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Bean;
+import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.annotation.Value;
 
 import java.lang.reflect.*;
@@ -70,12 +71,23 @@ public abstract class ReflectionUtils {
     public static void setFieldParameters(Object bean, Map<String,Object> paramMap) throws IllegalAccessException {
         Assert.isNotNull(bean);
         List<Field> fields = getFieldsNeedAutowired(bean.getClass());
+        List<Field> withResourceFields = withResourceFields(bean.getClass());
+        // 设置@Autowired字段
         for (Field field : fields) {
             Object fieldVal = paramMap.get(BeanUtils.getBeanName(field.getType()));
-            Assert.isNotNull(fieldVal);
-            makeAccessible(field);
-            field.set(bean, fieldVal);
+            setFieldParam(bean, field, fieldVal);
         }
+        // 设置@Resource字段
+        for (Field field : withResourceFields) {
+            String beanName = field.getAnnotation(Resource.class).name();
+            setFieldParam(bean, field, paramMap.get(beanName));
+        }
+    }
+
+    public static void setFieldParam(Object bean, Field field, Object fieldValue) throws IllegalAccessException {
+        Assert.allNotNull("空参数", bean, field);
+        makeAccessible(field);
+        field.set(bean, fieldValue);
     }
 
     public static void setFieldParameter(Object bean, String fieldName, String fieldValue) throws NoSuchFieldException, IllegalAccessException {
@@ -129,6 +141,10 @@ public abstract class ReflectionUtils {
             }
         }
         return result;
+    }
+
+    public static List<Field> withResourceFields(Class<?> clazz) {
+        return filterField(clazz, field -> field.isAnnotationPresent(Resource.class));
     }
 
     public static List<Method> getMethodsProducingBeans(Class<?> clazz) {

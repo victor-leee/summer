@@ -8,7 +8,7 @@ import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 /**
- * 在所有的bean初始化完毕后，该后处理器处理常量注入
+ * 在所有的bean初始化完毕后，该处理器处理常量注入
  * Project Name: summer
  * Create Time: 2020/11/14 15:54
  *

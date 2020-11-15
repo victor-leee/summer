@@ -18,7 +18,7 @@ import java.util.*;
 
 /**
  * 在容器初始化所有的BeanDefinition后，BeanDefinitionPostHandler负责处理注册表中的信息
- * 这是bean之间处理依赖注入的后处理器
+ * 这是bean之间处理依赖注入的处理器
  * Project Name: summer
  * Create Time: 2020/11/3 22:22
  *

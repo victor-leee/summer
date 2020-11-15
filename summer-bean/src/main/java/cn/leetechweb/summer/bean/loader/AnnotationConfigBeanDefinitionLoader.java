@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.bean.loader;
 
 import cn.leetechweb.summer.bean.annotation.Component;
+import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.annotation.Summer;
 import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.bean.annotation.reader.Reader;
@@ -116,14 +117,24 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
     private void getFieldsParameters(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
                                      Class<?> clazz) {
         List<Field> withAutowiredFields = ReflectionUtils.getFieldsNeedAutowired(clazz);
+        List<Field> withResourceFields = ReflectionUtils.withResourceFields(clazz);
         List<Field> withValuesFields = ReflectionUtils.getFieldsNeedInjectionValue(clazz);
 
-        // 所有需要bean依赖注入的字段,也就是使用了@Autowired的字段
+        // 所有需要自动bean依赖注入的字段,也就是使用了@Autowired的字段
         for (Field field : withAutowiredFields) {
             Class<?> fieldClass = field.getType();
             AnnotationBeanDefinitionParameter parameter =
                     new AnnotationBeanDefinitionParameter(fieldClass);
             parameterMap.put(BeanUtils.getBeanName(parameter.getReferenceClass()), parameter);
+        }
+        
+        // 所有需要按beanName依赖注入的字段，也就是使用了@Resource的字段
+        for (Field field : withResourceFields) {
+            String beanName = field.getAnnotation(Resource.class).name();
+            AnnotationBeanDefinitionParameter parameter = new AnnotationBeanDefinitionParameter(
+                    beanName
+            );
+            parameterMap.put(beanName, parameter);
         }
 
         // 所有需要常量注入的字段，也就是使用了@Value的字段
