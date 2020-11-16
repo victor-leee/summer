@@ -1,6 +1,5 @@
 package cn.leetechweb.summer.bean.definition;
 
-import java.util.Map;
 
 /**
  * 抽象Bean定义类
@@ -42,14 +41,9 @@ public interface AbstractBeanDefinition {
      */
     String getBeanName();
 
-    /**
-     * 例如Bean为java/cn/leetechweb/summer/Test.java
-     * 返回java/cn/leetechweb/summer/Test.java
-     * @return bean的完整classpath
-     */
-    String getBeanCompletePath();
-
     boolean isDependencyInjection();
 
     boolean isMethodProduce();
+
+    Class<?> beanType();
 }

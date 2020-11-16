@@ -16,16 +16,38 @@ public final class BeanDefinitionRegistry implements Iterable<AbstractBeanDefini
 
     private final Map<String, AbstractBeanDefinition> beanDefinitions = new HashMap<>(256);
 
-    private final Map<String, List<String>> beanClassList = new HashMap<>(256);
+    private final Map<Class<?>, List<String>> beanClassList = new HashMap<>(256);
 
     public void addBeanDefinition(AbstractBeanDefinition abstractBeanDefinition) {
-        String completePath = abstractBeanDefinition.getBeanCompletePath();
+        Class<?> beanType = abstractBeanDefinition.beanType();
         String beanName = abstractBeanDefinition.getBeanName();
         this.beanDefinitions.put(beanName, abstractBeanDefinition);
-        if (!this.beanClassList.containsKey(completePath)) {
-            this.beanClassList.put(completePath, new ArrayList<>());
+        this.levelUpAddBeanDefinition(beanName, beanType);
+    }
+
+    private void levelUpAddBeanDefinition(String beanName, Class<?> beanType) {
+        this.add(beanName, beanType);
+        this.addInterfacesBeanDefinition(beanName, beanType);
+        beanType = beanType.getSuperclass();
+        while (!Object.class.equals(beanType)) {
+            this.add(beanName, beanType);
+            this.addInterfacesBeanDefinition(beanName, beanType);
+            beanType = beanType.getSuperclass();
         }
-        this.beanClassList.get(completePath).add(beanName);
+    }
+
+    private void addInterfacesBeanDefinition(String beanName, Class<?> beanType) {
+        Class<?>[] interfaceTypes = beanType.getInterfaces();
+        for (Class<?> interfaceType : interfaceTypes) {
+            add(beanName, interfaceType);
+        }
+    }
+
+    private void add(String beanName, Class<?> beanType) {
+        if (!this.beanClassList.containsKey(beanType)) {
+            this.beanClassList.put(beanType, new ArrayList<>());
+        }
+        this.beanClassList.get(beanType).add(beanName);
     }
 
     public AbstractBeanDefinition getBeanDefinition(String beanName) {
@@ -37,34 +59,33 @@ public final class BeanDefinitionRegistry implements Iterable<AbstractBeanDefini
         return abstractBeanDefinition;
     }
 
-//    /**
-//     * 返回parameter描述的bean对象
-//     * @param parameter 未实例化时bean的参数描述符
-//     * @return 这个参数描述的bean
-//     */
-//    public AbstractBeanDefinition getBeanDefinition(BeanDefinitionParameter parameter) {
-//        // 只有在引用的情况下该参数才能描述一个bean对象
-//        AbstractBeanDefinition definition;
-//        if (parameter.isReference()) {
-//            String beanName = parameter.getParameterValue();
-//            if ((definition = getBeanDefinition(beanName)) != null) {
-//                return definition;
-//            }
-//            Class<?> paramType = parameter.getParameterType();
-//            List<String> autowireBeanNameList = this.beanClassList.get(paramType.getName());
-//            if (autowireBeanNameList.size() > 1) {
-//                throw new AnnotationContainerInitializationException(StringUtils.format(
-//                        "检测到{}使用了@Autowired注入，但是summer container中有多个{}类型的bean，请使用@Resource指定具体的beanName注入", false,
-//                        beanName, paramType.getName()));
-//            }
-//            if (autowireBeanNameList.size() == 0) {
-//                throw new RuntimeException(StringUtils.format("beanName为:{}的beanDefinition为null", false,
-//                        beanName));
-//            }
-//            return this.beanDefinitions.get(autowireBeanNameList.get(0));
-//        }
-//        return null;
-//    }
+    /**
+     * 返回parameter描述的bean对象
+     * @param parameter 未实例化时bean的参数描述符
+     * @return 这个参数描述的bean
+     */
+    public AbstractBeanDefinition getBeanDefinition(BeanDefinitionParameter parameter) {
+        // 只有在引用的情况下该参数才能描述一个bean对象
+        if (parameter.isReference()) {
+            String beanName = parameter.getParameterValue();
+            try {
+                return getBeanDefinition(beanName);
+            }catch (Exception ignored){}
+            Class<?> paramType = parameter.getParameterType();
+            List<String> autowireBeanNameList = this.beanClassList.get(paramType);
+            if (autowireBeanNameList.size() > 1) {
+                throw new AnnotationContainerInitializationException(StringUtils.format(
+                        "检测到{}使用了@Autowired注入，但是summer container中有多个{}类型的bean，请使用@Resource指定具体的beanName注入", false,
+                        beanName, paramType.getName()));
+            }
+            if (autowireBeanNameList.size() == 0) {
+                throw new RuntimeException(StringUtils.format("beanName为:{}的beanDefinition为null", false,
+                        beanName));
+            }
+            return this.beanDefinitions.get(autowireBeanNameList.get(0));
+        }
+        return null;
+    }
 
     Map<String, AbstractBeanDefinition> getBeanDefinitions() {
         return beanDefinitions;

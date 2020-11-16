@@ -2,6 +2,7 @@ package cn.leetechweb.summer.bean.definition.impl;
 
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
+import cn.leetechweb.summer.bean.util.Assert;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -31,11 +32,6 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
     String beanName;
 
     /**
-     * bean的类路径
-     */
-    String beanCompletePath;
-
-    /**
      * 该方法是否是由带有@Bean的方法产生的
      */
     boolean isMethodProduce;
@@ -50,11 +46,13 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
      */
     AbstractBeanDefinition parentBeanDef;
 
+    Class<?> beanType;
+
     public AnnotationBeanDefinitionImpl(Map<String, AnnotationBeanDefinitionParameter> parameterMap,
-                                        String beanName, String beanCompletePath) {
+                                        String beanName, Class<?> beanType) {
         this.parameterMap = parameterMap;
         this.beanName = beanName;
-        this.beanCompletePath = beanCompletePath;
+        this.beanType = beanType;
         this.dependsOn = parameterMap.values().stream()
                 .filter(BeanDefinitionParameter::isReference)
                 .map(BeanDefinitionParameter::getParameterName)
@@ -62,22 +60,21 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
     }
 
     public AnnotationBeanDefinitionImpl(String beanName, Method beanMethod, AbstractBeanDefinition parentBeanDef,
-                                        Map<String, AnnotationBeanDefinitionParameter> parameterMap) {
+                                        Map<String, AnnotationBeanDefinitionParameter> parameterMap,
+                                        String[] dependsOn) {
         this.isMethodProduce = true;
         this.beanMethod = beanMethod;
         this.beanName = beanName;
         this.parentBeanDef = parentBeanDef;
-        this.beanCompletePath = beanMethod.getReturnType().getName();
+        this.beanType = beanMethod.getReturnType();
 
         // 这里处理的时候注意，这个bean的构建还要依赖于父bean的构建完成
-        String[] paramDepends = parameterMap.values().stream()
-                .filter(BeanDefinitionParameter::isReference)
-                .map(BeanDefinitionParameter::getParameterName)
-                .toArray(String[]::new);
-        this.dependsOn = new String[paramDepends.length + 1];
-        System.arraycopy(paramDepends, 0, this.dependsOn, 0, paramDepends.length);
-        this.dependsOn[paramDepends.length] = getParentBeanDef().getBeanName();
-
+        parameterMap.put(parentBeanDef.getBeanName(),
+                new AnnotationBeanDefinitionParameter(parentBeanDef.getBeanName(), parentBeanDef.beanType()));
+        String[] thisDepends = new String[dependsOn.length + 1];
+        System.arraycopy(dependsOn, 0, thisDepends, 0, dependsOn.length);
+        thisDepends[dependsOn.length] = parentBeanDef.getBeanName();
+        this.dependsOn = thisDepends;
         this.parameterMap = parameterMap;
     }
 
@@ -102,11 +99,6 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
     }
 
     @Override
-    public String getBeanCompletePath() {
-        return this.beanCompletePath;
-    }
-
-    @Override
     public boolean isDependencyInjection() {
         return this.dependsOn != null;
     }
@@ -118,6 +110,11 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
     @Override
     public boolean isMethodProduce() {
         return isMethodProduce;
+    }
+
+    @Override
+    public Class<?> beanType() {
+        return this.beanType;
     }
 
     public AbstractBeanDefinition getParentBeanDef() {

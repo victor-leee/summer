@@ -9,7 +9,7 @@ import cn.leetechweb.summer.bean.util.StringUtils;
  * @author junyu lee
  **/
 public class AnnotationContainerInitializationException extends RuntimeException {
-    public AnnotationContainerInitializationException(String cause) {
-        super(StringUtils.format("容器初始化失败，失败原因：{}", false, cause));
+    public AnnotationContainerInitializationException(String cause, Object... args) {
+        super(StringUtils.format(cause, false, args));
     }
 }

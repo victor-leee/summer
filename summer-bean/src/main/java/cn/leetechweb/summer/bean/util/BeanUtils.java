@@ -28,7 +28,7 @@ public abstract class BeanUtils {
     public static Object createBeanByConstructor(Class<?> clazz, Map<String, Object> constructorArgs) {
         try {
             Constructor<?>[] constructors = clazz.getDeclaredConstructors();
-            // 根据参数数组长度来决定使用哪一个构造函数
+
             ConstructorBindingStrategy bindingStrategy = new NamedBeanConstructorBidingStrategy(constructors,
                     constructorArgs);
             Constructor<?> constructor = bindingStrategy.getConstructor();

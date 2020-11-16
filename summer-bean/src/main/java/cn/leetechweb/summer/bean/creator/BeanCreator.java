@@ -1,6 +1,8 @@
 package cn.leetechweb.summer.bean.creator;
 
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
+import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
+import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 
@@ -20,11 +22,13 @@ public final class BeanCreator {
 
     private final BeanFactory beanFactory;
 
-    public Object create(AbstractBeanDefinition beanDefinition) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public Object create(AbstractBeanDefinition beanDefinition, BeanDefinitionRegistry registry) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         // 如果这个bean是通过@Bean生成的，则invoke对应的方法生成
         Object[] args = new Object[beanDefinition.dependsOn().length];
         for (int i = 0; i < args.length; i++) {
-            args[i] = beanFactory.getBean(beanDefinition.dependsOn()[i]);
+            BeanDefinitionParameter parameter = beanDefinition.getParameter(beanDefinition.dependsOn()[i]);
+            AbstractBeanDefinition dependencyBeanDef = registry.getBeanDefinition(parameter);
+            args[i] = this.beanFactory.getBean(dependencyBeanDef.getBeanName());
         }
         if (beanDefinition.isMethodProduce()) {
             AnnotationBeanDefinitionImpl beanDef = (AnnotationBeanDefinitionImpl) beanDefinition;
@@ -39,7 +43,7 @@ public final class BeanCreator {
         for (int i = 0; i < args.length; i++) {
             beanParam.put(beanDefinition.dependsOn()[i], args[i]);
         }
-        return this.instanceCreator.create(beanDefinition.getBeanCompletePath(), beanParam);
+        return this.instanceCreator.create(beanDefinition.beanType(), beanParam);
     }
 
     public BeanCreator(InstanceCreator instanceCreator, BeanFactory beanFactory) {

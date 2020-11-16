@@ -1,12 +1,14 @@
 package cn.leetechweb.summer.bean.handler;
 
 import cn.leetechweb.summer.bean.creator.BeanCreator;
+import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
 import cn.leetechweb.summer.bean.exception.CycleDependencyException;
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
+import cn.leetechweb.summer.bean.util.Assert;
 import cn.leetechweb.summer.bean.util.StringUtils;
 
 import java.util.*;
@@ -26,12 +28,6 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
     private final BeanCreator beanCreator;
 
     /**
-     * 实例化对象时，对于已经创建好的对象，暂存到这个map中，供可能的依赖使用
-     * 注意创建完毕后需要将这个map清空节省内存空间
-     */
-    private final Map<String, Object> alreadyCreatedBeanMap = new HashMap<>(256);
-
-    /**
      * 依赖倒置map，能够通过beanName快速查找哪些bean依赖了该bean
      */
     private final Map<String, List<String>> dependedMap = new HashMap<>(256);
@@ -46,11 +42,14 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
             String[] dependsOn = beanDefinition.dependsOn();
             List<AbstractBeanDefinition> dependencies = new ArrayList<>();
             for (String dependency : dependsOn) {
-                dependencies.add(data.getBeanDefinition(dependency));
-                if (!dependedMap.containsKey(dependency)) {
-                    dependedMap.put(dependency, new ArrayList<>());
+                BeanDefinitionParameter parameter = beanDefinition.getParameter(dependency);
+                AbstractBeanDefinition dependencyBean = data.getBeanDefinition(parameter);
+                dependencies.add(dependencyBean);
+                String dependencyBeanName = dependencyBean.getBeanName();
+                if (!dependedMap.containsKey(dependencyBeanName)) {
+                    dependedMap.put(dependencyBeanName, new ArrayList<>());
                 }
-                dependedMap.get(dependency).add(beanName);
+                dependedMap.get(dependencyBeanName).add(beanName);
             }
             dependencyTree.put(beanName, dependencies);
         }
@@ -67,13 +66,13 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
             String beanName = beanDefinition.getBeanName();
             Object bean;
             try {
-                bean = this.beanCreator.create(beanDefinition);
+                bean = this.beanCreator.create(beanDefinition, data);
             }catch (Exception e) {
-                throw new AnnotationContainerInitializationException("bean初始化错误");
+                throw new AnnotationContainerInitializationException("bean初始化错误:{}", e.getMessage());
             }
             this.beanFactory.addBean(beanName, bean);
 
-            // 如果这个bean有被依赖的bean，将其放入dependencyInitializationMap中备用
+
             if (dependedMap.containsKey(beanName)) {
                 // 将依赖该bean的bean的依赖列表减一
                 List<String> isDependedBy = dependedMap.get(beanName);

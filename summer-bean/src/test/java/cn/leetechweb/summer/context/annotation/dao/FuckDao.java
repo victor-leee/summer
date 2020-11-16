@@ -26,7 +26,7 @@ public class FuckDao {
 
 
     @Bean(name = "inner")
-    public InnerBean getInnerBean(@Resource(name = "daodao") BaseDao baseDao) {
+    public InnerBean getInnerBean(@Resource(name = "Dao") BaseDao baseDao) {
         return new InnerBean(baseDao);
     }
 

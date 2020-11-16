@@ -17,7 +17,7 @@ public class SecondService {
 
     Service service;
 
-    @Autowired
+
     FuckDao fuckDao;
 
     BaseDao baseDao;
@@ -31,8 +31,13 @@ public class SecondService {
                 '}';
     }
 
-    public SecondService(Service service, @Resource(name = "daodao") BaseDao baseDao) {
+    public SecondService(Service service) {
         this.service = service;
+    }
+
+    @Autowired
+    public void setFuckDao(FuckDao fuckDao, BaseDao baseDao) {
+        this.fuckDao = fuckDao;
         this.baseDao = baseDao;
     }
 
