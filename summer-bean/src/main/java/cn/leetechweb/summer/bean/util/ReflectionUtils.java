@@ -63,21 +63,6 @@ public abstract class ReflectionUtils {
         throw new InstantiationException("没有默认构造函数");
     }
 
-    /**
-     * 将参数设置在bean上的字段中
-     * @param bean bean实体
-     * @param paramMap 参数map
-     */
-    public static void setFieldParameters(Object bean, Map<String,Object> paramMap) throws IllegalAccessException {
-        Assert.isNotNull(bean);
-        List<Field> fields = getFieldsNeedAutowired(bean.getClass());
-        // 设置@Autowired字段和@Resource字段
-        for (Field field : fields) {
-            Object fieldVal = paramMap.get(BeanUtils.getBeanName(field));
-            setFieldParam(bean, field, fieldVal);
-        }
-    }
-
     public static void setFieldParam(Object bean, Field field, Object fieldValue) throws IllegalAccessException {
         Assert.allNotNull("空参数", bean, field);
         makeAccessible(field);

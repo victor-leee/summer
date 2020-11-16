@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.context.annotation.dao;
 
+import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.annotation.Value;
 
 /**
@@ -22,7 +23,7 @@ public class InnerBean {
                 '}';
     }
 
-    public InnerBean(BaseDao baseDao) {
+    public InnerBean(@Resource(name = "daodao") BaseDao baseDao) {
         this.baseDao = baseDao;
     }
 }

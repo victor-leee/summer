@@ -122,18 +122,15 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             String beanName = BeanUtils.getBeanName(method);
             // 获取要生成该bean需要的参数
             Parameter[] parameters = method.getParameters();
-            String[] depends = new String[parameters.length];
-            int count = 0;
             for (Parameter parameter : parameters) {
                 String paramBeanName = BeanUtils.getBeanName(parameter);
-                depends[count++] = paramBeanName;
                 AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
                         paramBeanName, parameter.getType()
                 );
                 put(paramBeanName, beanParam, parameterMap);
             }
             AnnotationBeanDefinitionImpl beanDefinition = new AnnotationBeanDefinitionImpl(
-                    beanName, method, parentBeanDef, parameterMap, depends
+                    beanName, method, parentBeanDef, parameterMap
             );
             beanRegistry.addBeanDefinition(beanDefinition);
         }

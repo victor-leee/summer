@@ -4,9 +4,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 /**
- * Bean 构造器
- * 提供多种不同的bean构造方式
- * 包括构造函数构造，setter injection构造，field injection构造
+ * 实例构建器
+ * 通过构造函数，并经过一定的修饰，构造一个示例对象
+ * 构造函数的直接实现：
+ * @see cn.leetechweb.summer.bean.creator.impl.ConstructorInstanceCreatorImpl
+ * @see cn.leetechweb.summer.bean.creator.impl.DefaultConstructorInstanceCreatorImpl
+ * 修饰器基类：
+ * @see InstanceCreatorDecorator
+ * 修饰器实现类：
+ * 1. 字段注入修饰器：
+ * @see cn.leetechweb.summer.bean.creator.impl.FieldInstanceCreatorDecoratorImpl
+ * 2. setter注入修饰器：
+ * @see cn.leetechweb.summer.bean.creator.impl.SetterInjectionInstanceCreatorDecoratorImpl
+ *
  * Project Name: summer
  * Create Time: 2020/11/13 22:27
  *

@@ -36,7 +36,7 @@ public class SecondService {
     }
 
     @Autowired
-    public void setFuckDao(FuckDao fuckDao, BaseDao baseDao) {
+    public void setFuckDao(FuckDao fuckDao, @Resource(name = "daodao") BaseDao baseDao) {
         this.fuckDao = fuckDao;
         this.baseDao = baseDao;
     }

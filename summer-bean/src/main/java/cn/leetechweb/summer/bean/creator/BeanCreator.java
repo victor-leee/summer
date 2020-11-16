@@ -18,6 +18,10 @@ import java.util.Map;
  **/
 public final class BeanCreator {
 
+    /**
+     * 实例构建器
+     * 通过构造函数，并经过一定的修饰，构造一个示例对象
+     */
     private final InstanceCreator instanceCreator;
 
     private final BeanFactory beanFactory;
@@ -25,19 +29,15 @@ public final class BeanCreator {
     public Object create(AbstractBeanDefinition beanDefinition, BeanDefinitionRegistry registry) throws IllegalAccessException, InstantiationException, InvocationTargetException {
         // 如果这个bean是通过@Bean生成的，则invoke对应的方法生成
         Object[] args = new Object[beanDefinition.dependsOn().length];
+        // 先生成beanDefinition需要的参数
         for (int i = 0; i < args.length; i++) {
             BeanDefinitionParameter parameter = beanDefinition.getParameter(beanDefinition.dependsOn()[i]);
             AbstractBeanDefinition dependencyBeanDef = registry.getBeanDefinition(parameter);
             args[i] = this.beanFactory.getBean(dependencyBeanDef.getBeanName());
         }
         if (beanDefinition.isMethodProduce()) {
-            AnnotationBeanDefinitionImpl beanDef = (AnnotationBeanDefinitionImpl) beanDefinition;
-            Object parentBean = beanFactory.getBean(beanDef.getParentBeanDef().getBeanName());
-            Object[] argsExcludeParentBean = new Object[Math.max(args.length - 1, 0)];
-            if (args.length - 1 >= 0) {
-                System.arraycopy(args, 0, argsExcludeParentBean, 0, args.length - 1);
-            }
-            return beanDef.getBeanMethod().invoke(parentBean, argsExcludeParentBean);
+            Object parentBean = beanFactory.getBean(beanDefinition.getParent().getBeanName());
+            return ((AnnotationBeanDefinitionImpl) beanDefinition).getBeanMethod().invoke(parentBean, args);
         }
         Map<String, Object> beanParam = new HashMap<>(16);
         for (int i = 0; i < args.length; i++) {

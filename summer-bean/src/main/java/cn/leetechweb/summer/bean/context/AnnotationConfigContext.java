@@ -25,11 +25,13 @@ import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
 public final class AnnotationConfigContext extends Context {
 
     public AnnotationConfigContext(Class<?> baseClass) throws ClassNotFoundException {
+        // 定义Bean定义表的加载器，通过指定的根路径加载
         BeanDefinitionLoader beanDefinitionLoader = new AnnotationConfigBeanDefinitionLoader(
             baseClass, new SimpleBasePackageReader()
         );
         BeanFactory beanFactory = new SimpleBeanFactory();
         setBeanFactory(beanFactory);
+        // 创建实例构造器
         InstanceCreator ctorInjection = new ConstructorInstanceCreatorImpl();
         InstanceCreator fieldInjection = new FieldInstanceCreatorDecoratorImpl(ctorInjection);
         InstanceCreator setterInjection = new SetterInjectionInstanceCreatorDecoratorImpl(fieldInjection);

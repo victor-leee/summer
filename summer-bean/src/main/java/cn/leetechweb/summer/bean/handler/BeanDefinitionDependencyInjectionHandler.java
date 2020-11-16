@@ -8,7 +8,6 @@ import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
-import cn.leetechweb.summer.bean.util.Assert;
 import cn.leetechweb.summer.bean.util.StringUtils;
 
 import java.util.*;
@@ -32,6 +31,11 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
      */
     private final Map<String, List<String>> dependedMap = new HashMap<>(256);
 
+    /**
+     * 该依赖处理器对由Loader发送过来的Bean定义表作初始化工作
+     * 实例化所有的Bean，但是忽略Bean中的所有常量注入(交由下一级监听器处理)
+     * @param data 发布者发送的数据 这里代表由Loader发送的Bean定义表
+     */
     @Override
     public void onEvent(BeanDefinitionRegistry data) {
 
@@ -41,6 +45,7 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
             String beanName = beanDefinition.getBeanName();
             String[] dependsOn = beanDefinition.dependsOn();
             List<AbstractBeanDefinition> dependencies = new ArrayList<>();
+            // 检查参数依赖
             for (String dependency : dependsOn) {
                 BeanDefinitionParameter parameter = beanDefinition.getParameter(dependency);
                 AbstractBeanDefinition dependencyBean = data.getBeanDefinition(parameter);
@@ -50,6 +55,16 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
                     dependedMap.put(dependencyBeanName, new ArrayList<>());
                 }
                 dependedMap.get(dependencyBeanName).add(beanName);
+            }
+            // 检查父子依赖
+            AbstractBeanDefinition parent = beanDefinition.getParent();
+            if (parent != null) {
+                dependencies.add(parent);
+                String parentBeanName = parent.getBeanName();
+                if (!dependedMap.containsKey(parentBeanName)) {
+                    dependedMap.put(parentBeanName, new ArrayList<>());
+                }
+                dependedMap.get(parentBeanName).add(beanName);
             }
             dependencyTree.put(beanName, dependencies);
         }

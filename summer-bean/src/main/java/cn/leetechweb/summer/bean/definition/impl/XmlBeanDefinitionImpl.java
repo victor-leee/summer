@@ -74,17 +74,17 @@ public class XmlBeanDefinitionImpl implements AbstractBeanDefinition {
     }
 
     @Override
-    public boolean isDependencyInjection() {
-        return dependsOn != null;
-    }
-
-    @Override
     public boolean isMethodProduce() {
         return false;
     }
 
     @Override
     public Class<?> beanType() {
+        return null;
+    }
+
+    @Override
+    public AbstractBeanDefinition getParent() {
         return null;
     }
 

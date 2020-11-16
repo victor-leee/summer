@@ -41,9 +41,22 @@ public interface AbstractBeanDefinition {
      */
     String getBeanName();
 
-    boolean isDependencyInjection();
-
+    /**
+     * 返回该类是否是通过执行标注有@Bean的方法而产生的
+     * @return 该bean是否是通过执行某种方法而产生的
+     */
     boolean isMethodProduce();
 
+    /**
+     * 返回该bean的实际class type
+     * @return 该bean的实际class type
+     */
     Class<?> beanType();
+
+    /**
+     * 返回要生成该bean所需要的父beanDef
+     * @return 父beanDef
+     */
+    AbstractBeanDefinition getParent();
+
 }

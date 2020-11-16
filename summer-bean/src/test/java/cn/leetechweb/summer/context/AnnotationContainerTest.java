@@ -4,6 +4,7 @@ import cn.leetechweb.summer.bean.context.AnnotationConfigContext;
 import cn.leetechweb.summer.bean.context.Context;
 import cn.leetechweb.summer.context.annotation.dao.FuckDao;
 import cn.leetechweb.summer.context.annotation.dao.InnerBean;
+import cn.leetechweb.summer.context.annotation.dao.WTFDao;
 import cn.leetechweb.summer.context.annotation.service.SecondService;
 import cn.leetechweb.summer.context.annotation.service.Service;
 
@@ -24,5 +25,7 @@ public class AnnotationContainerTest {
         System.out.println(secondService);
         InnerBean innerBean = context.getBean("inner", InnerBean.class);
         System.out.println(innerBean);
+        WTFDao wtfDao = context.getBean("wtf", WTFDao.class);
+        System.out.println(wtfDao);
     }
 }

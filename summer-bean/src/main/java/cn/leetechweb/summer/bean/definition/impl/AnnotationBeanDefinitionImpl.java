@@ -60,21 +60,14 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
     }
 
     public AnnotationBeanDefinitionImpl(String beanName, Method beanMethod, AbstractBeanDefinition parentBeanDef,
-                                        Map<String, AnnotationBeanDefinitionParameter> parameterMap,
-                                        String[] dependsOn) {
+                                        Map<String, AnnotationBeanDefinitionParameter> parameterMap) {
         this.isMethodProduce = true;
         this.beanMethod = beanMethod;
         this.beanName = beanName;
         this.parentBeanDef = parentBeanDef;
         this.beanType = beanMethod.getReturnType();
 
-        // 这里处理的时候注意，这个bean的构建还要依赖于父bean的构建完成
-        parameterMap.put(parentBeanDef.getBeanName(),
-                new AnnotationBeanDefinitionParameter(parentBeanDef.getBeanName(), parentBeanDef.beanType()));
-        String[] thisDepends = new String[dependsOn.length + 1];
-        System.arraycopy(dependsOn, 0, thisDepends, 0, dependsOn.length);
-        thisDepends[dependsOn.length] = parentBeanDef.getBeanName();
-        this.dependsOn = thisDepends;
+        this.dependsOn = parameterMap.keySet().toArray(new String[0]);
         this.parameterMap = parameterMap;
     }
 
@@ -98,11 +91,6 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
         return this.beanName;
     }
 
-    @Override
-    public boolean isDependencyInjection() {
-        return this.dependsOn != null;
-    }
-
     public Method getBeanMethod() {
         return beanMethod;
     }
@@ -117,7 +105,8 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
         return this.beanType;
     }
 
-    public AbstractBeanDefinition getParentBeanDef() {
-        return parentBeanDef;
+    @Override
+    public AbstractBeanDefinition getParent() {
+        return this.parentBeanDef;
     }
 }

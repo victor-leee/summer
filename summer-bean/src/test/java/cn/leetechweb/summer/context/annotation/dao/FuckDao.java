@@ -31,7 +31,7 @@ public class FuckDao {
     }
 
     @Bean(name = "wtf")
-    public WTFDao getWtfDao(@Resource(name = "inner") InnerBean innerBean) {
+    public WTFDao getWtfDao(InnerBean innerBean) {
         return new WTFDao(innerBean);
     }
 }
