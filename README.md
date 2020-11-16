@@ -107,6 +107,7 @@ public class Service {
 }
  ```
 在类方法中使用@Autowired注解标记该方法，Summer也会自动完成依赖注入的工作
+
 3. 通过字段注入：
 ```java
 @Component(name = "service")
