@@ -80,6 +80,7 @@ public class SecondService {
 }
  ```
  将需要实现依赖注入的依赖双方交由Summer管理，然后指定**一个**构造函数注入需要的实例，Summer会替你注入对应的Bean
+ 
  2. 通过setter实现依赖注入关系：
  ```java
 @Component(name = "service")
