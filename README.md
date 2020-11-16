@@ -18,14 +18,14 @@ public class TestBBB {
 ```
 
 ### 将JavaBean交由Summer管理
-**1**. 使用@Component注解，如果不指定name则默认beanName为类名称
+1. 使用@Component注解，如果不指定name则默认beanName为类名称
  ```java
  @Component(name = "service")
 public class Service {
 }
  ```
  
- **2**. 在由Summer容器管理的实例中，使用@Bean注解创建新的Bean
+2. 在由Summer容器管理的实例中，使用@Bean注解创建新的Bean
  ```java
 @Component
 public class FuckDao {
@@ -53,10 +53,11 @@ public class FuckDao {
 }
  ```
  如果在@Bean注解上使用了name属性，则返回的bean在容器中的名称为name，否则为返回类型的名称
+ 
  ---
  ### 构建依赖注入
  #### 构建bean之间的依赖注入关系
- 1.通过构造函数实现依赖注入关系：
+ 1. 通过构造函数实现依赖注入关系：
  ```java
  @Component
 public class SecondService {
@@ -79,7 +80,7 @@ public class SecondService {
 }
  ```
  将需要实现依赖注入的依赖双方交由Summer管理，然后指定**一个**构造函数注入需要的实例，Summer会替你注入对应的Bean
- 2.通过setter实现依赖注入关系：
+ 2. 通过setter实现依赖注入关系：
  ```java
 @Component(name = "service")
 public class Service {
@@ -105,7 +106,7 @@ public class Service {
 }
  ```
 在类方法中使用@Autowired注解标记该方法，Summer也会自动完成依赖注入的工作
-3.通过字段注入：
+3. 通过字段注入：
 ```java
 @Component(name = "service")
 public class Service {
@@ -127,6 +128,7 @@ public class Service {
 }
 ```
 在类字段上标记@Autowired，Summer也会自动完成依赖注入工作
+
 ##### 解决注入冲突
 如果定义了一个接口，有多个实现类，则使用该接口注入时就会发生多个bean注入的冲突，引发容器报错退出
 要解决这个冲突，使用@Resource(name="xx")指定某一个bean名称为xx的bean进行装配
