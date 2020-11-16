@@ -133,8 +133,8 @@ public class Service {
 
 ##### 解决注入冲突
 如果定义了一个接口，有多个实现类，则使用该接口注入时就会发生多个bean注入的冲突，引发容器报错退出
-要解决这个冲突，使用@Resource(name="xx")指定某一个bean名称为xx的bean进行装配
-例如：
+要解决这个冲突，使用@Resource(name="xx")指定某一个bean名称为xx的bean进行装配，下面给一个示例
+
 接口：
 ```java
 public interface BaseDao {
