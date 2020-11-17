@@ -19,6 +19,6 @@ public @interface Mapping {
      * 返回该类/方法的映射路径
      * @return 映射路径
      */
-    String path();
+    String path() default "";
 
 }

@@ -8,6 +8,10 @@ import cn.leetechweb.summer.bean.handler.creation.PostCreationProcessor;
 import cn.leetechweb.summer.mvc.DispatcherServlet;
 import cn.leetechweb.summer.mvc.MvcUtils;
 import cn.leetechweb.summer.mvc.annotation.Controller;
+import cn.leetechweb.summer.mvc.annotation.Mapping;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 将bean工厂中的Controller类做一下初始化工作
@@ -38,15 +42,31 @@ public class ServletMappingHandler implements ContainerAware, PostCreationProces
 
     @Override
     public void invoke() {
-        this.servletMappingListener = this.beanFactory.getBean(DispatcherServlet.SERVLET_NAME, DispatcherServlet.class);
+        addListener(this.beanFactory.getBean(DispatcherServlet.SERVLET_NAME, DispatcherServlet.class));
         ServletMapping servletMapping = new SimpleServletMapping();
         for (Object bean : this.beanFactory.getBeans()) {
             Class<?> beanType = bean.getClass();
             if (beanType.isAnnotationPresent(Controller.class)) {
                 // 处理这个bean的所有映射关系
                 String baseMappingUrl = MvcUtils.getBaseMappingUrl(beanType);
+                // 处理所有的Servlet映射
+                List<Method> servletMethods = MvcUtils.getServletMethods(beanType);
 
+                appendMappings(servletMethods, servletMapping, baseMappingUrl);
             }
+        }
+
+        this.publish(servletMapping);
+    }
+
+    private void appendMappings(List<Method> methods, ServletMapping servletMapping, String baseMappingUrl) {
+        for (Method method : methods) {
+            String subMapping = method.getAnnotation(Mapping.class).path();
+            String mappingUrl = MvcUtils.mergeMappingUrl(baseMappingUrl, subMapping);
+            ServletDescriptor descriptor = new ServletDescriptor();
+            descriptor.setMethod(method);
+            descriptor.setMappingUrl(mappingUrl);
+            servletMapping.addServletDescriptor(descriptor);
         }
     }
 
@@ -57,6 +77,6 @@ public class ServletMappingHandler implements ContainerAware, PostCreationProces
 
     @Override
     public void addListener(Listener<ServletMapping> listener) {
-
+        this.servletMappingListener = listener;
     }
 }

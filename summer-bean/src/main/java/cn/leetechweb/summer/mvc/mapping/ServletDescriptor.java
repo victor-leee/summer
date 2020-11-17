@@ -17,12 +17,25 @@ public class ServletDescriptor {
      */
     private Method method;
 
+    /**
+     * 映射Url
+     */
+    private String mappingUrl;
+
     public void setMethod(Method method) {
         this.method = method;
     }
 
     public Method getMethod() {
         return method;
+    }
+
+    public String getMappingUrl() {
+        return mappingUrl;
+    }
+
+    public void setMappingUrl(String mappingUrl) {
+        this.mappingUrl = mappingUrl;
     }
 
     /**

@@ -7,7 +7,6 @@ import cn.leetechweb.summer.bean.handler.creation.PostCreationProcessor;
 import cn.leetechweb.summer.bean.loader.Loader;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
