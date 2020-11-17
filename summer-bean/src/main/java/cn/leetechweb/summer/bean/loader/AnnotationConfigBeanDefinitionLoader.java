@@ -1,12 +1,9 @@
 package cn.leetechweb.summer.bean.loader;
 
-import cn.leetechweb.summer.bean.annotation.Bean;
-import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Summer;
 import cn.leetechweb.summer.bean.annotation.Value;
 import cn.leetechweb.summer.bean.annotation.reader.Reader;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
-import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionImpl;
 import cn.leetechweb.summer.bean.definition.impl.AnnotationBeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
@@ -41,6 +38,9 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
      */
     private final Reader classReader;
 
+    /**
+     * 对loadingClasses做分类处理，丢弃不需要处理的类
+     */
     private final List<Predicate<Class<?>>> loadingClassFilters;
 
     private final String[] internalScanBasePackages;

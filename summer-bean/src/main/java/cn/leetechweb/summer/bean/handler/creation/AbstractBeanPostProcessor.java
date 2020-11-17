@@ -10,7 +10,7 @@ import cn.leetechweb.summer.bean.factory.BeanFactory;
  *
  * @author junyu lee
  **/
-public abstract class AbstractBeanPostProcessor implements ContainerAware, PostCreationProcessor{
+public abstract class AbstractBeanPostProcessor implements ContainerAware, PostCreationProcessor {
 
     protected BeanFactory beanFactory;
 

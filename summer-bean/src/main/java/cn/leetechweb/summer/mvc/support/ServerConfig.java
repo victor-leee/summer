@@ -1,5 +1,7 @@
 package cn.leetechweb.summer.mvc.support;
 
+import cn.leetechweb.summer.bean.annotation.Component;
+
 /**
  * 服务器配置类
  * Project Name: summer
@@ -7,6 +9,7 @@ package cn.leetechweb.summer.mvc.support;
  *
  * @author junyu lee
  **/
+@Component
 public final class ServerConfig {
 
     /**

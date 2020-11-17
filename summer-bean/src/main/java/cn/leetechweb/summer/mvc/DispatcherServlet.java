@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  **/
 public final class DispatcherServlet extends SummerServletBean {
 
+    public static final String SERVLET_NAME = "DispatcherServlet";
 
     @Override
     protected void doInternalDispatch(HttpServletRequest request, HttpServletResponse response) {
