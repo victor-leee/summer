@@ -24,9 +24,6 @@ public abstract class MvcUtils {
     public static String getBaseMappingUrl(Class<?> beanType) {
         if (beanType.isAnnotationPresent(Controller.class)) {
             String mappingUrl = getBaseMappingUrl(beanType.getSuperclass());
-            if (!mappingUrl.endsWith(Constant.URL_SEPARATOR)) {
-                mappingUrl = mappingUrl + Constant.URL_SEPARATOR;
-            }
             if (beanType.isAnnotationPresent(Mapping.class)) {
                 String currentMappingUrl = beanType.getAnnotation(Mapping.class).path();
                 mappingUrl = mappingUrl + currentMappingUrl;

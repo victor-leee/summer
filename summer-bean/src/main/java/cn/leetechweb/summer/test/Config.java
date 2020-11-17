@@ -8,6 +8,6 @@ import cn.leetechweb.summer.bean.annotation.Summer;
  *
  * @author junyu lee
  **/
-@Summer(value = "cn.leetechweb.summer.bean")
+@Summer(value = "cn.leetechweb.summer.test")
 public class Config {
 }

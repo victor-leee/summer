@@ -6,6 +6,7 @@ import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.handler.creation.PostCreationProcessor;
 import cn.leetechweb.summer.bean.loader.Loader;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
+import cn.leetechweb.summer.mvc.annotation.Controller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,6 +53,7 @@ public abstract class Context {
         allowedInterfaces.add(ContainerAware.class);
         allowedInterfaces.add(PostCreationProcessor.class);
         result.add(pClass -> pClass.isAnnotationPresent(Component.class));
+        result.add(pClass -> pClass.isAnnotationPresent(Controller.class));
         result.add(pClass -> {
             if (pClass.isInterface()) {
                 return false;
