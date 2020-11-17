@@ -12,7 +12,6 @@ import java.util.List;
  * BeanDefinition的加载器
  * 使用parser/XmlNodeParserRegistry处理由DomLoader提供的Element并返回BeanDefinition
  * @see DomLoader
- * @see cn.leetechweb.summer.bean.loader.parser.XmlNodeParserRegistry
  * @see cn.leetechweb.summer.bean.definition.AbstractBeanDefinition
  *
  * Project Name: summer

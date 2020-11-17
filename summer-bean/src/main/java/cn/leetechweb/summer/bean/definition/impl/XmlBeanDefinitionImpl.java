@@ -88,6 +88,7 @@ public class XmlBeanDefinitionImpl implements AbstractBeanDefinition {
         return null;
     }
 
+
     @Override
     public String[] dependsOn() {
         return dependsOn;

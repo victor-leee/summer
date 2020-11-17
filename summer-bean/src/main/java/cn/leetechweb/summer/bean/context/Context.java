@@ -1,10 +1,16 @@
 package cn.leetechweb.summer.bean.context;
 
+import cn.leetechweb.summer.bean.ContainerAware;
+import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.loader.Loader;
+import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Summer 应用容器上下文
@@ -37,6 +43,26 @@ public abstract class Context {
 
     protected void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
+    }
+
+    protected List<Predicate<Class<?>>> classFilters() {
+        List<Predicate<Class<?>>> result = new ArrayList<>();
+        Set<Class<?>> allowedInterfaces = new HashSet<>();
+        allowedInterfaces.add(ContainerAware.class);
+        result.add(pClass -> pClass.isAnnotationPresent(Component.class));
+        result.add(pClass -> {
+            if (pClass.isInterface()) {
+                return false;
+            }
+            List<Class<?>> interfaces = ReflectionUtils.getInterfaces(pClass);
+            for (Class<?> i : interfaces) {
+                if (allowedInterfaces.contains(i)) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        return result;
     }
 
 }

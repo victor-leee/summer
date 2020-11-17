@@ -43,7 +43,11 @@ public final class BeanCreator {
         for (int i = 0; i < args.length; i++) {
             beanParam.put(beanDefinition.dependsOn()[i], args[i]);
         }
-        return this.instanceCreator.create(beanDefinition.beanType(), beanParam);
+        // 如果该bean已经创建，则只需要修饰一下就好了
+        String beanName = beanDefinition.getBeanName();
+        boolean isCreated = this.beanFactory.hasBean(beanName);
+        return this.instanceCreator.create(isCreated ?
+                this.beanFactory.getBean(beanName) : beanDefinition.beanType(), isCreated, beanParam);
     }
 
     public BeanCreator(InstanceCreator instanceCreator, BeanFactory beanFactory) {

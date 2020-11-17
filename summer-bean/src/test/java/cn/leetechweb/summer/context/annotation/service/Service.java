@@ -18,6 +18,9 @@ public class Service {
 
     FuckDao fuckDao;
 
+    @Autowired
+    SecondService secondService;
+
     @Value(value = "1")
     private Integer b;
 
@@ -38,5 +41,9 @@ public class Service {
     public void fuckfuckDao(FuckDao fuckDao, Dao dao) {
         this.fuckDao = fuckDao;
         this.dao = dao;
+    }
+
+    public SecondService getSecondService() {
+        return secondService;
     }
 }

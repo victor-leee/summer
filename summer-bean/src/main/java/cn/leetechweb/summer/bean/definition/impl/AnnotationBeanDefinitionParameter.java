@@ -23,6 +23,11 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
     private final boolean isReference;
 
     /**
+     * 是否是构造函数参数
+     */
+    private final boolean isConstructorParameter;
+
+    /**
      * 如果是primitive类型，则这个代表实际的参数值
      * 否则依然是bean的名称
      */
@@ -54,17 +59,23 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
         return getReferenceClass();
     }
 
+    @Override
+    public boolean isConstructorParameter() {
+        return this.isConstructorParameter;
+    }
+
     /**
      * 指定该参数依赖于其他对象
      * 参数名和参数值为依赖的对象beanName
      * 注意这里的beanName使用默认的beanName，也就是类的名称
      * @param referenceClass 依赖对象
      */
-    public AnnotationBeanDefinitionParameter(Class<?> referenceClass) {
+    public AnnotationBeanDefinitionParameter(Class<?> referenceClass, boolean isConstructorParameter) {
         this.parameterName = BeanUtils.getBeanName(referenceClass);
         this.isReference = true;
         this.parameterValue = BeanUtils.getBeanName(referenceClass);
         this.referenceClass = referenceClass;
+        this.isConstructorParameter = isConstructorParameter;
     }
 
     /**
@@ -72,18 +83,20 @@ public class AnnotationBeanDefinitionParameter implements BeanDefinitionParamete
      * @param beanName 依赖的bean名称
      * @param parameterType 参数类型
      */
-    public AnnotationBeanDefinitionParameter(String beanName, Class<?> parameterType) {
+    public AnnotationBeanDefinitionParameter(String beanName, Class<?> parameterType, boolean isConstructorParameter) {
         this.parameterName = beanName;
         this.isReference = true;
         this.parameterValue = beanName;
         this.referenceClass = parameterType;
+        this.isConstructorParameter = isConstructorParameter;
     }
 
-    public AnnotationBeanDefinitionParameter(String parameterName, String parameterValue) {
+    public AnnotationBeanDefinitionParameter(String parameterName, String parameterValue, boolean isConstructorParameter) {
         this.parameterName = parameterName;
         this.parameterValue = parameterValue;
         this.isReference = false;
         this.referenceClass = null;
+        this.isConstructorParameter = isConstructorParameter;
     }
 
 }

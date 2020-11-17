@@ -11,7 +11,8 @@ import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
 import cn.leetechweb.summer.bean.handler.BeanDefinitionConstantInjectionHandler;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionDependencyInjectionHandler;
+import cn.leetechweb.summer.bean.handler.BeanDefinitionCtorDependencyInjectionHandler;
+import cn.leetechweb.summer.bean.handler.BeanDefinitionFieldDependencyInjectionHandler;
 import cn.leetechweb.summer.bean.loader.AnnotationConfigBeanDefinitionLoader;
 import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
 
@@ -27,7 +28,7 @@ public final class AnnotationConfigContext extends Context {
     public AnnotationConfigContext(Class<?> baseClass) throws ClassNotFoundException {
         // 定义Bean定义表的加载器，通过指定的根路径加载
         BeanDefinitionLoader beanDefinitionLoader = new AnnotationConfigBeanDefinitionLoader(
-            baseClass, new SimpleBasePackageReader()
+            baseClass, new SimpleBasePackageReader(), this.classFilters()
         );
         BeanFactory beanFactory = new SimpleBeanFactory();
         setBeanFactory(beanFactory);
@@ -37,15 +38,20 @@ public final class AnnotationConfigContext extends Context {
         InstanceCreator setterInjection = new SetterInjectionInstanceCreatorDecoratorImpl(fieldInjection);
         BeanCreator beanCreator = new BeanCreator(setterInjection, beanFactory);
         // bean依赖注入处理器
-        Listener<BeanDefinitionRegistry> postHandler = new BeanDefinitionDependencyInjectionHandler(
+        Listener<BeanDefinitionRegistry> dependencyHandler = new BeanDefinitionCtorDependencyInjectionHandler(
                 beanFactory, beanCreator
         );
         // 常量注入处理器
         Listener<BeanDefinitionRegistry> constantHandler = new BeanDefinitionConstantInjectionHandler(
-                beanFactory
+                beanFactory, beanCreator
         );
-        beanDefinitionLoader.addListener(postHandler);
+        // 其他bean依赖注入处理器
+        Listener<BeanDefinitionRegistry> restDependencyHandler = new BeanDefinitionFieldDependencyInjectionHandler(
+                beanFactory, beanCreator
+        );
+        beanDefinitionLoader.addListener(dependencyHandler);
         beanDefinitionLoader.addListener(constantHandler);
+        beanDefinitionLoader.addListener(restDependencyHandler);
         loaderList.add(beanDefinitionLoader);
 
         initLoaders();

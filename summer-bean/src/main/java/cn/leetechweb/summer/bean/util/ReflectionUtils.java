@@ -7,6 +7,7 @@ import cn.leetechweb.summer.bean.annotation.Value;
 
 import java.lang.reflect.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -124,6 +125,15 @@ public abstract class ReflectionUtils {
 
     public static List<Method> getMethodsProducingBeans(Class<?> clazz) {
         return filterMethods(clazz, method -> method.isAnnotationPresent(Bean.class));
+    }
+
+    public static List<Class<?>> getInterfaces(Class<?> clazz) {
+        List<Class<?>> result = new ArrayList<>();
+        while (!Object.class.equals(clazz)) {
+            Collections.addAll(result, clazz.getInterfaces());
+            clazz = clazz.getSuperclass();
+        }
+        return result;
     }
 
     private static List<Method> filterMethods(Class<?> clazz, Predicate<Method> predicate) {

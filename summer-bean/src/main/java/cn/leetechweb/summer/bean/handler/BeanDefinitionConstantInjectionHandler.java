@@ -1,6 +1,6 @@
 package cn.leetechweb.summer.bean.handler;
 
-import cn.leetechweb.summer.bean.Listener;
+import cn.leetechweb.summer.bean.creator.BeanCreator;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
@@ -14,12 +14,10 @@ import cn.leetechweb.summer.bean.util.ReflectionUtils;
  *
  * @author junyu lee
  **/
-public final class BeanDefinitionConstantInjectionHandler implements Listener<BeanDefinitionRegistry> {
+public final class BeanDefinitionConstantInjectionHandler extends BeanDefinitionInjectionHandler {
 
-    private final BeanFactory beanFactory;
-
-    public BeanDefinitionConstantInjectionHandler(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
+    public BeanDefinitionConstantInjectionHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
+        super(beanFactory, beanCreator);
     }
 
     @Override

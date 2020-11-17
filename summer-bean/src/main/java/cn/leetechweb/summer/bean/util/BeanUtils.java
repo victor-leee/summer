@@ -5,7 +5,6 @@ import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Resource;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
-import cn.leetechweb.summer.bean.exception.NoSuchBeanException;
 
 import java.lang.reflect.*;
 import java.util.*;

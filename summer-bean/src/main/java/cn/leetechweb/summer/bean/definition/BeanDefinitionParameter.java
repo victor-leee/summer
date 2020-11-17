@@ -34,4 +34,10 @@ public interface BeanDefinitionParameter {
      * @return 参数类型
      */
     Class<?> getParameterType();
+
+    /**
+     * 如果参数属于构造函数参数，则存在强依赖关系，需要通过这个构建依赖关系
+     * @return 是否属于构造函数参数
+     */
+    boolean isConstructorParameter();
 }

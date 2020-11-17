@@ -41,6 +41,8 @@ public class AnnotationBeanDefinitionImpl implements AbstractBeanDefinition {
      */
     Method beanMethod;
 
+    boolean isObjectProduced;
+
     /**
      * 父bean定义，用于在@Bean生成bean对象时引用
      */

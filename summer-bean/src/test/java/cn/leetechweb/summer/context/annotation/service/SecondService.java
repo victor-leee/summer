@@ -25,8 +25,7 @@ public class SecondService {
     @Override
     public String toString() {
         return "SecondService{" +
-                "service=" + service +
-                ", fuckDao=" + fuckDao +
+                "fuckDao=" + fuckDao +
                 ", baseDao=" + baseDao +
                 '}';
     }
@@ -41,4 +40,7 @@ public class SecondService {
         this.baseDao = baseDao;
     }
 
+    public Service getService() {
+        return service;
+    }
 }

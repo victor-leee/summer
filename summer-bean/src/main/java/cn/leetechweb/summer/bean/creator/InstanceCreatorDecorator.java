@@ -2,7 +2,6 @@ package cn.leetechweb.summer.bean.creator;
 
 import cn.leetechweb.summer.bean.creator.impl.FieldInstanceCreatorDecoratorImpl;
 import cn.leetechweb.summer.bean.creator.impl.SetterInjectionInstanceCreatorDecoratorImpl;
-import cn.leetechweb.summer.bean.util.BeanUtils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
@@ -30,20 +29,15 @@ public abstract class InstanceCreatorDecorator implements InstanceCreator {
     }
 
     @Override
-    public Object create(Class<?> clazz, Map<String, Object> paramMap) throws InstantiationException, InvocationTargetException, IllegalAccessException {
-        Object bean = this.instanceCreator.create(clazz, paramMap);
+    public Object create(Object bean, boolean isCreated, Map<String, Object> paramMap) throws InstantiationException, InvocationTargetException, IllegalAccessException {
+        bean = this.instanceCreator.create(bean, isCreated, paramMap);
         this.fill(bean, paramMap);
         return bean;
     }
 
     @Override
-    public Object create(Class<?> clazz) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return this.instanceCreator.create(clazz);
-    }
-
-    @Override
-    public Object create(String beanPath, Map<String, Object> paramMap) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        return this.create(BeanUtils.loadClassFromPath(beanPath), paramMap);
+    public Object create(Object bean, boolean isCreated) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+        return this.instanceCreator.create(bean, isCreated);
     }
 
     /**

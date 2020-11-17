@@ -14,17 +14,15 @@ import java.util.Map;
 public class ConstructorInstanceCreatorImpl implements InstanceCreator {
 
     @Override
-    public Object create(Class<?> clazz) {
+    public Object create(Object bean, boolean isCreated) {
         return null;
     }
 
     @Override
-    public Object create(Class<?> clazz, Map<String, Object> paramMap) {
-        return BeanUtils.createBeanByConstructor(clazz, paramMap);
-    }
-
-    @Override
-    public Object create(String beanPath, Map<String, Object> paramMap) {
-        return BeanUtils.createBeanByConstructor(beanPath, paramMap);
+    public Object create(Object bean, boolean isCreated, Map<String, Object> paramMap) {
+        if (isCreated) {
+            return bean;
+        }
+        return BeanUtils.createBeanByConstructor((Class<?>) bean, paramMap);
     }
 }

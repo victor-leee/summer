@@ -40,4 +40,9 @@ public class XmlBeanDefinitionParameter implements BeanDefinitionParameter {
         return null;
     }
 
+    @Override
+    public boolean isConstructorParameter() {
+        return false;
+    }
+
 }

@@ -27,5 +27,8 @@ public class AnnotationContainerTest {
         System.out.println(innerBean);
         WTFDao wtfDao = context.getBean("wtf", WTFDao.class);
         System.out.println(wtfDao);
+
+        System.out.println(service.getSecondService() == secondService);
+        System.out.println(secondService.getService() == service);
     }
 }

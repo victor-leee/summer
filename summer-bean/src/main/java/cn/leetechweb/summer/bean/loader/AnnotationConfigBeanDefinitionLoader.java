@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.function.Predicate;
 
 /**
  * Project Name: summer
@@ -43,16 +44,14 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
      */
     private final Reader classReader;
 
+    private final List<Predicate<Class<?>>> loadingClassFilters;
 
-    /**
-     * 要扫描的base packages
-     */
-    private String[] basePackages;
-
-    public AnnotationConfigBeanDefinitionLoader(Class<?> mainClass, Reader reader) {
+    public AnnotationConfigBeanDefinitionLoader(Class<?> mainClass, Reader reader,
+                                                List<Predicate<Class<?>>> loadingClassFilters) {
         this.mainClass = mainClass;
         this.loadingClasses = new HashSet<>(16);
         this.classReader = reader;
+        this.loadingClassFilters = loadingClassFilters;
         reader.setClassSet(this.loadingClasses);
     }
 
@@ -71,14 +70,32 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
                 this.classReader.read(basePackage);
             }
 
-            this.loadingClasses.removeIf(
-                    loadingClass -> !loadingClass.isAnnotationPresent(Component.class)
-            );
+            doBeanFilter();
 
             constructClassMetaData();
 
             publish(beanRegistry);
         }
+    }
+
+    /**
+     * 对loadingClasses作一次过滤
+     */
+    private void doBeanFilter() {
+        Set<Class<?>> removed = new HashSet<>(16);
+        for (Class<?> loadingClass : this.loadingClasses) {
+            boolean stay = false;
+            for (Predicate<Class<?>> predicate : this.loadingClassFilters) {
+                if (predicate.test(loadingClass)) {
+                    stay = true;
+                    break;
+                }
+            }
+            if (!stay) {
+                removed.add(loadingClass);
+            }
+        }
+        this.loadingClasses.removeAll(removed);
     }
 
     /**
@@ -124,8 +141,9 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             Parameter[] parameters = method.getParameters();
             for (Parameter parameter : parameters) {
                 String paramBeanName = BeanUtils.getBeanName(parameter);
+                // 使用方法产生bean，参数相当于构造函数参数，必须得到满足
                 AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
-                        paramBeanName, parameter.getType()
+                        paramBeanName, parameter.getType(), true
                 );
                 put(paramBeanName, beanParam, parameterMap);
             }
@@ -146,7 +164,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Parameter parameter : ctorParams) {
             String parameterBeanName = BeanUtils.getBeanName(parameter);
             AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
-                    parameterBeanName, parameter.getType()
+                    parameterBeanName, parameter.getType(), true
             );
             put(parameterBeanName, beanParam, parameterMap);
         }
@@ -161,7 +179,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Field field : withAutowiredFields) {
             String fieldBeanName = BeanUtils.getBeanName(field);
             AnnotationBeanDefinitionParameter parameter = new AnnotationBeanDefinitionParameter(
-                    fieldBeanName, field.getType()
+                    fieldBeanName, field.getType(), false
             );
             put(fieldBeanName, parameter, parameterMap);
         }
@@ -170,7 +188,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
         for (Field field : withValuesFields) {
             String annotationValue = field.getAnnotation(Value.class).value();
             AnnotationBeanDefinitionParameter parameter =
-                    new AnnotationBeanDefinitionParameter(field.getName(), annotationValue);
+                    new AnnotationBeanDefinitionParameter(field.getName(), annotationValue, false);
             put(parameter.getParameterName(), parameter, parameterMap);
         }
     }
@@ -183,7 +201,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             for (Parameter parameter : parameters) {
                 String parameterBeanName = BeanUtils.getBeanName(parameter);
                 AnnotationBeanDefinitionParameter beanParam = new AnnotationBeanDefinitionParameter(
-                        parameterBeanName, parameter.getType()
+                        parameterBeanName, parameter.getType(), false
                 );
                 put(parameterBeanName, beanParam, parameterMap);
             }

@@ -4,7 +4,6 @@ import cn.leetechweb.summer.bean.creator.BeanCreator;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionParameter;
 import cn.leetechweb.summer.bean.exception.AnnotationContainerInitializationException;
 import cn.leetechweb.summer.bean.exception.CycleDependencyException;
-import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.definition.AbstractBeanDefinition;
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
@@ -20,11 +19,7 @@ import java.util.*;
  *
  * @author junyu lee
  **/
-public final class BeanDefinitionDependencyInjectionHandler implements Listener<BeanDefinitionRegistry> {
-
-    private final BeanFactory beanFactory;
-
-    private final BeanCreator beanCreator;
+public final class BeanDefinitionCtorDependencyInjectionHandler extends BeanDefinitionInjectionHandler {
 
     /**
      * 依赖倒置map，能够通过beanName快速查找哪些bean依赖了该bean
@@ -48,6 +43,9 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
             // 检查参数依赖
             for (String dependency : dependsOn) {
                 BeanDefinitionParameter parameter = beanDefinition.getParameter(dependency);
+                if (!parameter.isConstructorParameter()) {
+                    continue;
+                }
                 AbstractBeanDefinition dependencyBean = data.getBeanDefinition(parameter);
                 dependencies.add(dependencyBean);
                 String dependencyBeanName = dependencyBean.getBeanName();
@@ -112,9 +110,8 @@ public final class BeanDefinitionDependencyInjectionHandler implements Listener<
 
     }
 
-    public BeanDefinitionDependencyInjectionHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
-        this.beanFactory = beanFactory;
-        this.beanCreator = beanCreator;
+    public BeanDefinitionCtorDependencyInjectionHandler(BeanFactory beanFactory, BeanCreator beanCreator) {
+        super(beanFactory, beanCreator);
     }
 
 }
