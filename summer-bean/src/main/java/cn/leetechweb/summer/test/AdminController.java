@@ -14,9 +14,16 @@ import cn.leetechweb.summer.mvc.annotation.Mapping;
 public class AdminController {
 
     @Mapping
-    public void fuckDao(String haha, Integer two) {
+    public String fuckDao(String haha, Integer two) {
         System.out.println(haha);
         System.out.println(two);
+        return "redirect:/admin/here";
+    }
+
+    @Mapping(path = "here")
+    public void process(String haha, Integer two) {
+        System.err.println(haha);
+        System.err.println("收到了" + two);
     }
 
 }

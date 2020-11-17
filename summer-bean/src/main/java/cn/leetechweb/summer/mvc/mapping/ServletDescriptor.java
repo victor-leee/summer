@@ -30,23 +30,17 @@ public class ServletDescriptor {
      */
     private String mappingUrl;
 
-
-    private Class<?>[] methodParameterTypes;
+    private Parameter[] parameters;
 
     private String[] urlSegments;
 
     public void setMethod(Method method) {
         this.method = method;
-        Parameter[] parameters = method.getParameters();
-        Class<?>[] methodParameterTypes = new Class[parameters.length];
-        for (int i = 0; i < methodParameterTypes.length; i++) {
-            methodParameterTypes[i] = parameters[i].getType();
-        }
-        this.methodParameterTypes = methodParameterTypes;
+        this.parameters = method.getParameters();
     }
 
-    public Class<?>[] getMethodParameterTypes() {
-        return methodParameterTypes;
+    public Parameter[] getParameters() {
+        return parameters;
     }
 
     public Method getMethod() {
@@ -82,7 +76,7 @@ public class ServletDescriptor {
         try {
             this.method.invoke(this.bean, args);
         }catch (Exception e) {
-            e.printStackTrace();
+            // TODO: 2020/11/17 Do something ?
         }
     }
 }
