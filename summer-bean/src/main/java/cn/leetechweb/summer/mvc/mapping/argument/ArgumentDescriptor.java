@@ -18,6 +18,13 @@ public final class ArgumentDescriptor {
      */
     private Object argumentValue;
 
+    public ArgumentDescriptor() {
+    }
+
+    public ArgumentDescriptor(String argumentType, Object argumentValue) {
+        this.argumentType = argumentType;
+        this.argumentValue = argumentValue;
+    }
 
     public void setArgumentType(String argumentType) {
         this.argumentType = argumentType;

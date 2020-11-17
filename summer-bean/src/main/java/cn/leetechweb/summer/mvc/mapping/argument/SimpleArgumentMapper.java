@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.mvc.mapping.argument;
 
 import cn.leetechweb.summer.bean.util.Assert;
+import cn.leetechweb.summer.mvc.exception.MissingArgumentException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,10 @@ public class SimpleArgumentMapper implements ArgumentMapper {
 
     @Override
     public Object[] get(String parameterName) {
-        return this.descriptorMap.get(parameterName).toArray();
+        List<ArgumentDescriptor> descriptors = this.descriptorMap.get(parameterName);
+        if (descriptors == null) {
+            throw new MissingArgumentException("参数缺失:{}", parameterName);
+        }
+        return descriptors.stream().map(ArgumentDescriptor::getArgumentValue).toArray();
     }
 }

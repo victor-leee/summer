@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.mvc.support.method;
 
+import cn.leetechweb.summer.bean.util.ConvertUtils;
 import cn.leetechweb.summer.mvc.annotation.RequestParam;
 import cn.leetechweb.summer.mvc.handler.InvokeHandler;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
@@ -51,7 +52,7 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
             String parameterName = argParameter.getAnnotation(RequestParam.class).value();
             Object[] params = argumentMapper.get(parameterName);
             if (params.length == 1) {
-                return params[0];
+                return ConvertUtils.convert(argParameter.getType(), params[0]);
             }
             return params;
         }

@@ -49,6 +49,7 @@ public abstract class SummerServletBean extends HttpServlet implements Container
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
+        initFields();
     }
 
     private void initFields() {

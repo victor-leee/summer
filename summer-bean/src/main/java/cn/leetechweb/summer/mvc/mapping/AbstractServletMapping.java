@@ -2,6 +2,7 @@ package cn.leetechweb.summer.mvc.mapping;
 
 import cn.leetechweb.summer.bean.util.Assert;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -24,6 +25,6 @@ public abstract class AbstractServletMapping implements ServletMapping {
 
     @Override
     public Set<String> getAllServletPaths() {
-        return this.servletDescriptorMap.keySet();
+        return new HashSet<>(this.servletDescriptorMap.keySet());
     }
 }

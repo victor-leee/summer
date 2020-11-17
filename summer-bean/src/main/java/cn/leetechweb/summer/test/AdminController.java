@@ -2,6 +2,7 @@ package cn.leetechweb.summer.test;
 
 import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
+import cn.leetechweb.summer.mvc.annotation.RequestParam;
 
 /**
  * Project Name: summer
@@ -14,16 +15,16 @@ import cn.leetechweb.summer.mvc.annotation.Mapping;
 public class AdminController {
 
     @Mapping
-    public String fuckDao(String haha, Integer two) {
+    public String fuckDao(@RequestParam("haha") String haha, @RequestParam("two") Integer two) {
         System.out.println(haha);
         System.out.println(two);
         return "redirect:/admin/here";
     }
 
     @Mapping(path = "here")
-    public void process(String haha, Integer two) {
-        System.err.println(haha);
-        System.err.println("收到了" + two);
+    public void process(@RequestParam("haha") String haha, @RequestParam("two") Integer two) {
+        System.err.println("process收到了 " + haha);
+        System.err.println("process收到了 " + two);
     }
 
 }
