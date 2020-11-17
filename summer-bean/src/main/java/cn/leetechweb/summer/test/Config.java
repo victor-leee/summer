@@ -1,4 +1,4 @@
-package cn.leetechweb.summer;
+package cn.leetechweb.summer.test;
 
 import cn.leetechweb.summer.bean.annotation.Summer;
 

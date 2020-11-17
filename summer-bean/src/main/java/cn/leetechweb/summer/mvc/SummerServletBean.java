@@ -1,7 +1,9 @@
 package cn.leetechweb.summer.mvc;
 
 import cn.leetechweb.summer.bean.ContainerAware;
+import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
+import cn.leetechweb.summer.mvc.mapping.ServletMapping;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,13 +17,18 @@ import java.io.IOException;
  *
  * @author junyu lee
  **/
-public abstract class SummerServletBean extends HttpServlet implements ContainerAware {
+public abstract class SummerServletBean extends HttpServlet implements ContainerAware, Listener<ServletMapping> {
 
     /**
      * bean工厂
      * 由容器初始化后注入进来供summer-mvc进行初始化工作
      */
     protected BeanFactory beanFactory;
+
+    /**
+     * 映射表
+     */
+    protected ServletMapping servletMapping;
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
@@ -69,5 +76,10 @@ public abstract class SummerServletBean extends HttpServlet implements Container
     @Override
     protected void doTrace(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         this.doInternalDispatch(req, resp);
+    }
+
+    @Override
+    public void onEvent(ServletMapping data) {
+        this.servletMapping = data;
     }
 }
