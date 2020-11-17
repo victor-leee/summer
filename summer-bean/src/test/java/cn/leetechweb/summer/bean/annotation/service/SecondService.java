@@ -1,10 +1,10 @@
-package cn.leetechweb.summer.context.annotation.service;
+package cn.leetechweb.summer.bean.annotation.service;
 
 import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.annotation.Resource;
-import cn.leetechweb.summer.context.annotation.dao.BaseDao;
-import cn.leetechweb.summer.context.annotation.dao.FuckDao;
+import cn.leetechweb.summer.bean.annotation.dao.BaseDao;
+import cn.leetechweb.summer.bean.annotation.dao.FuckDao;
 
 /**
  * Project Name: summer

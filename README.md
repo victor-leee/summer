@@ -5,7 +5,7 @@ A micro java framework to study the Spring Framework
 
 主入口：
 ```java
-@Summer(value = "cn.leetechweb.summer.context.annotation")
+@Summer(value = "cn.leetechweb.summer.bean.annotation")
 public class TestBBB {
 }
 ```

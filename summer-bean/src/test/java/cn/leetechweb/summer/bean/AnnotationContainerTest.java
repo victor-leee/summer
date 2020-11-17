@@ -1,12 +1,12 @@
-package cn.leetechweb.summer.context;
+package cn.leetechweb.summer.bean;
 
 import cn.leetechweb.summer.bean.context.AnnotationConfigContext;
 import cn.leetechweb.summer.bean.context.Context;
-import cn.leetechweb.summer.context.annotation.dao.FuckDao;
-import cn.leetechweb.summer.context.annotation.dao.InnerBean;
-import cn.leetechweb.summer.context.annotation.dao.WTFDao;
-import cn.leetechweb.summer.context.annotation.service.SecondService;
-import cn.leetechweb.summer.context.annotation.service.Service;
+import cn.leetechweb.summer.bean.annotation.dao.FuckDao;
+import cn.leetechweb.summer.bean.annotation.dao.InnerBean;
+import cn.leetechweb.summer.bean.annotation.dao.WTFDao;
+import cn.leetechweb.summer.bean.annotation.service.SecondService;
+import cn.leetechweb.summer.bean.annotation.service.Service;
 
 /**
  * Project Name: summer

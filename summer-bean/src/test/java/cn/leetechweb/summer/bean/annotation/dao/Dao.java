@@ -1,6 +1,5 @@
-package cn.leetechweb.summer.context.annotation.dao;
+package cn.leetechweb.summer.bean.annotation.dao;
 
-import cn.leetechweb.summer.bean.annotation.Autowired;
 import cn.leetechweb.summer.bean.annotation.Component;
 
 /**

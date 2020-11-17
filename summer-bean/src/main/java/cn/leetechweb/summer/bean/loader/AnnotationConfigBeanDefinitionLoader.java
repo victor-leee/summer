@@ -14,10 +14,7 @@ import cn.leetechweb.summer.bean.exception.BeanNameAlreadyExistsException;
 import cn.leetechweb.summer.bean.util.BeanUtils;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -46,6 +43,14 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
 
     private final List<Predicate<Class<?>>> loadingClassFilters;
 
+    private final String[] internalScanBasePackages;
+
+    {
+        internalScanBasePackages = new String[]{
+                "cn.leetechweb.summer.mvc"
+        };
+    }
+
     public AnnotationConfigBeanDefinitionLoader(Class<?> mainClass, Reader reader,
                                                 List<Predicate<Class<?>>> loadingClassFilters) {
         this.mainClass = mainClass;
@@ -66,7 +71,15 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             if (basePackages.length == 0) {
                 throw new AnnotationContainerInitializationException("basePackages长度为0");
             }
+            String[] packages = new String[basePackages.length + this.internalScanBasePackages.length];
+            int index = 0;
             for (String basePackage : basePackages) {
+                packages[index++] = basePackage;
+            }
+            for (String basePackage : this.internalScanBasePackages) {
+                packages[index++] = basePackage;
+            }
+            for (String basePackage : packages) {
                 this.classReader.read(basePackage);
             }
 
@@ -83,12 +96,15 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
      */
     private void doBeanFilter() {
         Set<Class<?>> removed = new HashSet<>(16);
+        Predicate<Class<?>> isNotAbstract = pClass -> !Modifier.isAbstract(pClass.getModifiers());
         for (Class<?> loadingClass : this.loadingClasses) {
             boolean stay = false;
             for (Predicate<Class<?>> predicate : this.loadingClassFilters) {
                 if (predicate.test(loadingClass)) {
-                    stay = true;
-                    break;
+                    if (isNotAbstract.test(loadingClass)) {
+                        stay = true;
+                        break;
+                    }
                 }
             }
             if (!stay) {

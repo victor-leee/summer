@@ -1,4 +1,4 @@
-package cn.leetechweb.summer.context.annotation.dao;
+package cn.leetechweb.summer.bean.annotation.dao;
 
 import cn.leetechweb.summer.bean.annotation.Bean;
 import cn.leetechweb.summer.bean.annotation.Component;

@@ -1,4 +1,4 @@
-package cn.leetechweb.summer.context;
+package cn.leetechweb.summer.bean;
 
 import cn.leetechweb.summer.bean.annotation.Summer;
 
@@ -8,6 +8,6 @@ import cn.leetechweb.summer.bean.annotation.Summer;
  *
  * @author junyu lee
  **/
-@Summer(value = "cn.leetechweb.summer.context.annotation")
+@Summer(value = "cn.leetechweb.summer.bean.annotation")
 public class TestBBB {
 }

@@ -1,7 +1,4 @@
-package cn.leetechweb.summer.context.annotation.dao;
-
-import cn.leetechweb.summer.bean.annotation.Component;
-import cn.leetechweb.summer.bean.annotation.Value;
+package cn.leetechweb.summer.bean.annotation.dao;
 
 /**
  * Project Name: summer
