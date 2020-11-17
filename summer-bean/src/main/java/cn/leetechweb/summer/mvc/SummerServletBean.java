@@ -4,6 +4,9 @@ import cn.leetechweb.summer.bean.ContainerAware;
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.mvc.mapping.ServletMapping;
+import cn.leetechweb.summer.mvc.support.ServerConfig;
+import cn.leetechweb.summer.mvc.support.method.MethodInvoker;
+import cn.leetechweb.summer.mvc.support.method.SimpleMethodInvoker;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -33,9 +36,24 @@ public abstract class SummerServletBean extends HttpServlet implements Container
      */
     protected ServletMapping servletMapping;
 
+    /**
+     * 方法执行中心
+     */
+    protected MethodInvoker methodInvoker;
+
+    /**
+     * 服务器基本配置
+     */
+    protected ServerConfig serverConfig;
+
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
+    }
+
+    private void initFields() {
+        this.methodInvoker = this.beanFactory.getBean("SimpleMethodInvoker", SimpleMethodInvoker.class);
+        this.serverConfig = this.beanFactory.getBean("ServerConfig", ServerConfig.class);
     }
 
     /**

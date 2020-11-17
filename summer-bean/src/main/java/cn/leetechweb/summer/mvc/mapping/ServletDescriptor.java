@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.mvc.mapping;
 
 import cn.leetechweb.summer.mvc.MvcUtils;
+import cn.leetechweb.summer.mvc.exception.MethodInvokeException;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -72,11 +73,11 @@ public class ServletDescriptor {
      * 执行该方法
      * @param args 参数
      */
-    public void invoke(Object... args) {
+    public Object invoke(Object... args) {
         try {
-            this.method.invoke(this.bean, args);
+            return this.method.invoke(this.bean, args);
         }catch (Exception e) {
-            // TODO: 2020/11/17 Do something ?
+            throw new MethodInvokeException("执行方法{}失败, 原因:{}", this.method.getName(), e.getMessage());
         }
     }
 }

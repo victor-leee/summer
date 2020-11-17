@@ -1,7 +1,10 @@
-package cn.leetechweb.summer.mvc.support;
+package cn.leetechweb.summer.mvc.support.method;
 
+import cn.leetechweb.summer.mvc.annotation.RequestParam;
+import cn.leetechweb.summer.mvc.handler.InvokeHandler;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
+import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 
 import java.lang.reflect.Parameter;
 
@@ -11,7 +14,7 @@ import java.lang.reflect.Parameter;
  *
  * @author junyu lee
  **/
-public class SimpleMethodInvoker implements MethodInvoker {
+public class SimpleMethodInvoker extends AbstractMethodInvoker {
 
     @Override
     public MethodInvokeResult doInvoke(ServletDescriptor servletDescriptor, ArgumentMapper argumentMapper) {
@@ -20,8 +23,20 @@ public class SimpleMethodInvoker implements MethodInvoker {
         for (int i = 0; i < args.length; i++) {
             args[i] = resolveEach(methodParameters[i], argumentMapper);
         }
+
+        // 执行前置切面
+        for (InvokeHandler invokeResult : this.invokeHandlers) {
+            invokeResult.preHandle(args, servletDescriptor);
+        }
+
         MethodInvokeResult invokeResult = new MethodInvokeResult();
-        servletDescriptor.invoke(args);
+        Object result = servletDescriptor.invoke(args);
+
+        // 执行后置切面
+        for (InvokeHandler invokeHandler : this.invokeHandlers) {
+            invokeHandler.postHandle(result, invokeResult);
+        }
+
         return invokeResult;
     }
 
@@ -32,6 +47,14 @@ public class SimpleMethodInvoker implements MethodInvoker {
      * @return parameter对应的最佳参数
      */
     private Object resolveEach(Parameter argParameter, ArgumentMapper argumentMapper) {
+        if (argParameter.isAnnotationPresent(RequestParam.class)) {
+            String parameterName = argParameter.getAnnotation(RequestParam.class).value();
+            Object[] params = argumentMapper.get(parameterName);
+            if (params.length == 1) {
+                return params[0];
+            }
+            return params;
+        }
         return null;
     }
 

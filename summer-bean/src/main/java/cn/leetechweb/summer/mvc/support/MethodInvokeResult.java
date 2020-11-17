@@ -9,7 +9,7 @@ package cn.leetechweb.summer.mvc.support;
 public final class MethodInvokeResult {
 
     /**
-     * 是否重定向到其他的mapper
+     * 是否重定向
      */
     boolean isRedirect;
 
@@ -21,6 +21,42 @@ public final class MethodInvokeResult {
     /**
      * 如果要重定向forward，这个就是要到达的目的地址
      */
-    String mapperContextUrl;
+    String targetAddress;
 
+    /**
+     * 方法的返回对象
+     */
+    Object resultObject;
+
+    public boolean isRedirect() {
+        return isRedirect;
+    }
+
+    public void setRedirect(boolean redirect) {
+        isRedirect = redirect;
+    }
+
+    public boolean isForward() {
+        return isForward;
+    }
+
+    public void setForward(boolean forward) {
+        isForward = forward;
+    }
+
+    public String getTargetAddress() {
+        return targetAddress;
+    }
+
+    public void setTargetAddress(String targetAddress) {
+        this.targetAddress = targetAddress;
+    }
+
+    public Object getResultObject() {
+        return resultObject;
+    }
+
+    public void setResultObject(Object resultObject) {
+        this.resultObject = resultObject;
+    }
 }

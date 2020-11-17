@@ -7,6 +7,8 @@ import cn.leetechweb.summer.bean.handler.creation.PostCreationProcessor;
 import cn.leetechweb.summer.bean.loader.Loader;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 import cn.leetechweb.summer.mvc.annotation.Controller;
+import cn.leetechweb.summer.mvc.handler.InvokeHandler;
+import cn.leetechweb.summer.mvc.support.method.MethodInvoker;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -52,6 +54,8 @@ public abstract class Context {
         Set<Class<?>> allowedInterfaces = new HashSet<>();
         allowedInterfaces.add(ContainerAware.class);
         allowedInterfaces.add(PostCreationProcessor.class);
+        allowedInterfaces.add(InvokeHandler.class);
+        allowedInterfaces.add(MethodInvoker.class);
         result.add(pClass -> pClass.isAnnotationPresent(Component.class));
         result.add(pClass -> pClass.isAnnotationPresent(Controller.class));
         result.add(pClass -> {
