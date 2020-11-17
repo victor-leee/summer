@@ -2,6 +2,7 @@ package cn.leetechweb.summer.bean.factory.impl;
 
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,4 +44,8 @@ public final class SimpleBeanFactory implements BeanFactory {
         this.beanMap.put(beanName, bean);
     }
 
+    @Override
+    public Collection<Object> getBeans() {
+        return this.beanMap.values();
+    }
 }

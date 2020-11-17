@@ -3,6 +3,7 @@ package cn.leetechweb.summer.bean.context;
 import cn.leetechweb.summer.bean.ContainerAware;
 import cn.leetechweb.summer.bean.annotation.Component;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
+import cn.leetechweb.summer.bean.handler.creation.PostCreationProcessor;
 import cn.leetechweb.summer.bean.loader.Loader;
 import cn.leetechweb.summer.bean.util.ReflectionUtils;
 
@@ -50,6 +51,7 @@ public abstract class Context {
         List<Predicate<Class<?>>> result = new ArrayList<>();
         Set<Class<?>> allowedInterfaces = new HashSet<>();
         allowedInterfaces.add(ContainerAware.class);
+        allowedInterfaces.add(PostCreationProcessor.class);
         result.add(pClass -> pClass.isAnnotationPresent(Component.class));
         result.add(pClass -> {
             if (pClass.isInterface()) {

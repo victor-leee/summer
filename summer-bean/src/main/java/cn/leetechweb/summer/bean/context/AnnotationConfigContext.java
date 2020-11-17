@@ -10,10 +10,7 @@ import cn.leetechweb.summer.bean.creator.impl.SetterInjectionInstanceCreatorDeco
 import cn.leetechweb.summer.bean.definition.BeanDefinitionRegistry;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.factory.impl.SimpleBeanFactory;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionConstantInjectionHandler;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionContainerAwareInjectionHandler;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionCtorDependencyInjectionHandler;
-import cn.leetechweb.summer.bean.handler.BeanDefinitionFieldDependencyInjectionHandler;
+import cn.leetechweb.summer.bean.handler.*;
 import cn.leetechweb.summer.bean.loader.AnnotationConfigBeanDefinitionLoader;
 import cn.leetechweb.summer.bean.loader.BeanDefinitionLoader;
 
@@ -54,10 +51,15 @@ public final class AnnotationConfigContext extends Context {
         Listener<BeanDefinitionRegistry> containerAwareHandler = new BeanDefinitionContainerAwareInjectionHandler(
                 beanFactory, beanCreator
         );
+        // PostBeanProcessor方法注入器
+        Listener<BeanDefinitionRegistry> postBeanProcessorHandler = new BeanDefinitionPostBeanProcessor(
+                beanFactory, beanCreator
+        );
         beanDefinitionLoader.addListener(dependencyHandler);
         beanDefinitionLoader.addListener(constantHandler);
         beanDefinitionLoader.addListener(restDependencyHandler);
         beanDefinitionLoader.addListener(containerAwareHandler);
+        beanDefinitionLoader.addListener(postBeanProcessorHandler);
         loaderList.add(beanDefinitionLoader);
 
         initLoaders();

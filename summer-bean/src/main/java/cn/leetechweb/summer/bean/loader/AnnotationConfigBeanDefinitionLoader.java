@@ -47,7 +47,8 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
 
     {
         internalScanBasePackages = new String[]{
-                "cn.leetechweb.summer.mvc"
+                "cn.leetechweb.summer.mvc",
+                "cn.leetechweb.summer.bean"
         };
     }
 

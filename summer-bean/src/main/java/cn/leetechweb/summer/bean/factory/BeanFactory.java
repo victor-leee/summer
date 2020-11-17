@@ -1,5 +1,8 @@
 package cn.leetechweb.summer.bean.factory;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Project Name: summer
  * Create Time: 2020/11/4 1:03
@@ -37,4 +40,12 @@ public interface BeanFactory {
      * @param bean bean实体
      */
     void addBean(String beanName, Object bean);
+
+    /**
+     * 获取所有的bean
+     * @return 获取所有的bean
+     */
+    default Collection<Object> getBeans() {
+        return null;
+    }
 }
