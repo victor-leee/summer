@@ -55,11 +55,16 @@ public final class AnnotationConfigContext extends Context {
         Listener<BeanDefinitionRegistry> postBeanProcessorHandler = new BeanDefinitionPostBeanProcessor(
                 beanFactory, beanCreator
         );
+        // Loader代理执行器
+        Listener<BeanDefinitionRegistry> loaderHandler = new BeanDefinitionLoaderHandler(
+                beanFactory, beanCreator
+        );
         beanDefinitionLoader.addListener(dependencyHandler);
         beanDefinitionLoader.addListener(constantHandler);
         beanDefinitionLoader.addListener(restDependencyHandler);
         beanDefinitionLoader.addListener(containerAwareHandler);
         beanDefinitionLoader.addListener(postBeanProcessorHandler);
+        beanDefinitionLoader.addListener(loaderHandler);
         loaderList.add(beanDefinitionLoader);
 
         initLoaders();

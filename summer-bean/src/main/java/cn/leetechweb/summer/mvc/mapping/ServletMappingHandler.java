@@ -1,10 +1,8 @@
 package cn.leetechweb.summer.mvc.mapping;
 
-import cn.leetechweb.summer.bean.ContainerAware;
 import cn.leetechweb.summer.bean.Listener;
 import cn.leetechweb.summer.bean.Publisher;
-import cn.leetechweb.summer.bean.factory.BeanFactory;
-import cn.leetechweb.summer.bean.handler.creation.PostCreationProcessor;
+import cn.leetechweb.summer.bean.handler.creation.AbstractBeanPostProcessor;
 import cn.leetechweb.summer.mvc.DispatcherServlet;
 import cn.leetechweb.summer.mvc.MvcUtils;
 import cn.leetechweb.summer.mvc.annotation.Controller;
@@ -21,24 +19,12 @@ import java.util.List;
  *
  * @author junyu lee
  **/
-public class ServletMappingHandler implements ContainerAware, PostCreationProcessor, Publisher<ServletMapping> {
-
-    /**
-     * Bean工厂
-     * 用于处理映射关系
-     * 扫描所有的bean，并初始化映射信息
-     */
-    private BeanFactory beanFactory;
+public class ServletMappingHandler extends AbstractBeanPostProcessor implements Publisher<ServletMapping> {
 
     /**
      * 映射信息监听器，ServletMappingHandler将映射信息处理完毕后发布信息
      */
     private Listener<ServletMapping> servletMappingListener;
-
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
-    }
 
     @Override
     public void invoke() {
