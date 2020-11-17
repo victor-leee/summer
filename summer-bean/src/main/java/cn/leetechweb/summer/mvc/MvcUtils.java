@@ -1,10 +1,12 @@
 package cn.leetechweb.summer.mvc;
 
+import cn.leetechweb.summer.bean.util.Assert;
 import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,6 +67,19 @@ public abstract class MvcUtils {
             return baseUrl + Constant.URL_SEPARATOR + subUrl;
         }
         return baseUrl + subUrl;
+    }
+
+
+    /**
+     * 将url做切分后返回
+     * @param urlPattern 完整的项目路径
+     * @return 根据/split
+     */
+    public static String[] getUrlSegments(String urlPattern) {
+        Assert.isNotNull(urlPattern, "Url不能为空");
+        return Arrays.stream(urlPattern.split(Constant.URL_SEPARATOR))
+                .filter(urlSegment -> urlSegment != null && urlSegment.length() > 0)
+                .toArray(String[]::new);
     }
 
 }

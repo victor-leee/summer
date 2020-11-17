@@ -13,9 +13,10 @@ import cn.leetechweb.summer.mvc.annotation.Mapping;
 @Mapping(path = "/admin")
 public class AdminController {
 
-    @Mapping(path = "fuckdao")
-    public void fuckDao() {
-
+    @Mapping
+    public void fuckDao(String haha, Integer two) {
+        System.out.println(haha);
+        System.out.println(two);
     }
 
 }

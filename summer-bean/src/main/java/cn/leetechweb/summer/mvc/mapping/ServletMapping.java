@@ -1,5 +1,8 @@
 package cn.leetechweb.summer.mvc.mapping;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Project Name: summer
  * Create Time: 2020/11/17 17:20
@@ -21,5 +24,11 @@ public interface ServletMapping {
      * @param servletDescriptor servlet描述
      */
     void addServletDescriptor(ServletDescriptor servletDescriptor);
+
+    /**
+     * 返回所有的处理器路径
+     * @return 所有的servlet路径
+     */
+    Set<String> getAllServletPaths();
 
 }

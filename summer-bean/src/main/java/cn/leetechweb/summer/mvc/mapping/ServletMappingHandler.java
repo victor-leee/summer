@@ -29,29 +29,28 @@ public class ServletMappingHandler extends AbstractBeanPostProcessor implements 
     @Override
     public void invoke() {
         addListener(this.beanFactory.getBean(DispatcherServlet.SERVLET_NAME, DispatcherServlet.class));
-        ServletMapping servletMapping = new SimpleServletMapping();
+        ServletMapping servletMapping = new MaxPrefixServletMapping();
         for (Object bean : this.beanFactory.getBeans()) {
             Class<?> beanType = bean.getClass();
             if (beanType.isAnnotationPresent(Controller.class)) {
                 // 处理这个bean的所有映射关系
                 String baseMappingUrl = MvcUtils.getBaseMappingUrl(beanType);
-                // 处理所有的Servlet映射
-                List<Method> servletMethods = MvcUtils.getServletMethods(beanType);
-
-                appendMappings(servletMethods, servletMapping, baseMappingUrl);
+                appendMappings(bean, servletMapping, baseMappingUrl);
             }
         }
 
         this.publish(servletMapping);
     }
 
-    private void appendMappings(List<Method> methods, ServletMapping servletMapping, String baseMappingUrl) {
+    private void appendMappings(Object bean, ServletMapping servletMapping, String baseMappingUrl) {
+        List<Method> methods = MvcUtils.getServletMethods(bean.getClass());
         for (Method method : methods) {
             String subMapping = method.getAnnotation(Mapping.class).path();
             String mappingUrl = MvcUtils.mergeMappingUrl(baseMappingUrl, subMapping);
             ServletDescriptor descriptor = new ServletDescriptor();
             descriptor.setMethod(method);
             descriptor.setMappingUrl(mappingUrl);
+            descriptor.setBean(bean);
             servletMapping.addServletDescriptor(descriptor);
         }
     }

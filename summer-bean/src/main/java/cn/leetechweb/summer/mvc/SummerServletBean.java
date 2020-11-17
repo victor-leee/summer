@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 /**
  * Project Name: summer
@@ -18,6 +19,8 @@ import java.io.IOException;
  * @author junyu lee
  **/
 public abstract class SummerServletBean extends HttpServlet implements ContainerAware, Listener<ServletMapping> {
+
+    protected Logger logger = Logger.getGlobal();
 
     /**
      * bean工厂
