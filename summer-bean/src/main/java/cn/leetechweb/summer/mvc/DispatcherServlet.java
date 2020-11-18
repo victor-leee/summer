@@ -4,6 +4,7 @@ import cn.leetechweb.summer.bean.util.StringUtils;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentFactory;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
+import cn.leetechweb.summer.mvc.support.HttpMethod;
 import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 import cn.leetechweb.summer.mvc.view.View;
 
@@ -27,7 +28,8 @@ public final class DispatcherServlet extends SummerServletBean {
 
         String mappingUrl = request.getServletPath();
 
-        ServletDescriptor descriptor = this.servletMapping.getMapping(mappingUrl);
+        ServletDescriptor descriptor = this.servletMapping.getMapping(mappingUrl,
+                HttpMethod.methodOf(request.getMethod()));
 
         MethodInvokeResult invokeResult = methodInvoker.doInvoke(descriptor, argumentMapper);
 

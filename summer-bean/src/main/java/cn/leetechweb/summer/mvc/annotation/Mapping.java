@@ -1,5 +1,7 @@
 package cn.leetechweb.summer.mvc.annotation;
 
+import cn.leetechweb.summer.mvc.support.HttpMethod;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,5 +22,10 @@ public @interface Mapping {
      * @return 映射路径
      */
     String path() default "";
+
+    /**
+     * @return HTTP请求方法
+     */
+    HttpMethod method() default HttpMethod.GET;
 
 }

@@ -7,6 +7,7 @@ import cn.leetechweb.summer.mvc.DispatcherServlet;
 import cn.leetechweb.summer.mvc.MvcUtils;
 import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
+import cn.leetechweb.summer.mvc.support.HttpMethod;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -51,7 +52,8 @@ public class ServletMappingHandler extends AbstractBeanPostProcessor implements 
             descriptor.setMethod(method);
             descriptor.setMappingUrl(mappingUrl);
             descriptor.setBean(bean);
-            servletMapping.addServletDescriptor(descriptor);
+            HttpMethod requestMethod = method.getAnnotation(Mapping.class).method();
+            servletMapping.addServletDescriptor(descriptor, requestMethod);
         }
     }
 
