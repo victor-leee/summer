@@ -32,4 +32,19 @@ public abstract class AbstractView implements View {
     public String[] get() {
         return this.paramMap.keySet().toArray(new String[0]);
     }
+
+    protected Object getDefault() {
+        if (paramMap.size() != 1) {
+            return null;
+        }
+        return paramMap.get(View.SINGLE_OBJECT_TAG);
+    }
+
+    protected <T> T getDefault(Class<T> cast) {
+        Object get = getDefault();
+        if (get != null) {
+            return (T) get;
+        }
+        return null;
+    }
 }

@@ -8,6 +8,7 @@ import cn.leetechweb.summer.mvc.annotation.Restful;
 import cn.leetechweb.summer.mvc.multipart.EasyFile;
 import cn.leetechweb.summer.mvc.support.HttpMethod;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -34,5 +35,10 @@ public class TestController {
                     easyFile.getFileName(), easyFile.getFormName()));
         }
         return BigDecimal.ONE;
+    }
+
+    @Mapping(path = "/download")
+    public File download() {
+        return new File("README.md");
     }
 }

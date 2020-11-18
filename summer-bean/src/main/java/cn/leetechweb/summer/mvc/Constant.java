@@ -41,4 +41,6 @@ public abstract class Constant {
     public static final String CONTENT_TYPE_JSON = "application/json";
 
     public static final String DEFAULT_CHARACTER_SET = "utf-8";
+
+    public static final String MEDIA_TYPE_ALL = "*/*";
 }

@@ -19,11 +19,10 @@ public class RestfulJsonView extends AbstractView {
     @Override
     public void render(HttpServletRequest request, HttpServletResponse response) {
         JsonParse jsonParse = new FastJsonParse();
-        String[] params = get();
         String writeResult;
-        if (params.length == 1 && View.SINGLE_OBJECT_TAG.equals(params[0])) {
+        if (getDefault() != null) {
             // 如果只有一个默认对象的情况下
-            writeResult = jsonParse.toText(paramMap.get(params[0]));
+            writeResult = jsonParse.toText(getDefault());
         }else {
             writeResult = jsonParse.toText(paramMap);
         }
