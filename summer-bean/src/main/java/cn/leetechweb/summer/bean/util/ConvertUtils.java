@@ -1,8 +1,8 @@
 package cn.leetechweb.summer.bean.util;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
+
 
 /**
  * Project Name: summer
@@ -40,10 +40,31 @@ public abstract class ConvertUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T convert(Class<T> clazz, Object val) {
+        if (val.getClass().isArray()) {
+            Collection<T> converted = createCollection(clazz);
+            Object[] array = (Object[]) val;
+            for (Object data : array) {
+                converted.add((T) data);
+            }
+            return (T) converted;
+        }
         Function<Object, ?> converter = converterMap.get(clazz);
         if (converter == null) {
             return (T) val;
         }
         return (T) converter.apply(val);
+    }
+
+    public static <T> Collection<T> createCollection(Class<T> type) {
+        if (type.isAssignableFrom(ArrayList.class)) {
+            return new ArrayList<>();
+        }else if (type.isAssignableFrom(HashSet.class)) {
+            return new HashSet<>();
+        }else if (type.isAssignableFrom(LinkedHashSet.class)) {
+            return new LinkedHashSet<>();
+        }else if (type.isAssignableFrom(TreeSet.class)) {
+            return new TreeSet<>();
+        }
+        return null;
     }
 }

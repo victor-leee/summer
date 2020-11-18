@@ -24,4 +24,16 @@ public interface ArgumentMapper {
      */
     Object[] get(String parameterName);
 
+    /**
+     * 返回请求体参数
+     * @return 请求体参数数据
+     */
+    String getRequestBody();
+
+    /**
+     * 设置请求体参数
+     * @param requestBody 请求体
+     */
+    void setRequestBody(String requestBody);
+
 }

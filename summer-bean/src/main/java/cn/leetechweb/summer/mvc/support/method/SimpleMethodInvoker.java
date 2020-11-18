@@ -8,6 +8,7 @@ import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
 import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 
 import java.lang.reflect.Parameter;
+import java.util.Collection;
 
 /**
  * Project Name: summer
@@ -54,7 +55,9 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
             if (params.length == 1) {
                 return ConvertUtils.convert(argParameter.getType(), params[0]);
             }
-            return params;
+            // 否则这个参数应该是集合类型的
+            Class<? extends Collection<?>> colType = (Class<? extends Collection<?>>) argParameter.getType();
+            return ConvertUtils.convert(colType, params);
         }
         return null;
     }

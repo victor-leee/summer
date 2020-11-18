@@ -20,6 +20,8 @@ public class SimpleArgumentMapper implements ArgumentMapper {
 
     private final Map<String, List<ArgumentDescriptor>> descriptorMap = new ConcurrentHashMap<>(8);
 
+    private String requestBody;
+
     @Override
     public void add(String parameterName, ArgumentDescriptor argumentDescriptor) {
         Assert.isNotNull(parameterName, "参数名不能为空");
@@ -36,5 +38,15 @@ public class SimpleArgumentMapper implements ArgumentMapper {
             throw new MissingArgumentException("参数缺失:{}", parameterName);
         }
         return descriptors.stream().map(ArgumentDescriptor::getArgumentValue).toArray();
+    }
+
+    @Override
+    public String getRequestBody() {
+        return this.requestBody;
+    }
+
+    @Override
+    public void setRequestBody(String requestBody) {
+        this.requestBody = requestBody;
     }
 }
