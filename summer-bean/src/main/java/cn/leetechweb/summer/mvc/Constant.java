@@ -32,4 +32,13 @@ public abstract class Constant {
      * 如果一个servlet直接返回了xxx.jsp，则转发到响应的JSP页面进行渲染返回
      */
     public static final String JSP_SUFFIX = ".jsp";
+
+    /**
+     * 响应头的内容内省
+     */
+    public static final String CONTENT_TYPE = "content-type";
+
+    public static final String CONTENT_TYPE_JSON = "application/json";
+
+    public static final String DEFAULT_CHARACTER_SET = "utf-8";
 }

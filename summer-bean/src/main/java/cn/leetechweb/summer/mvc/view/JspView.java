@@ -14,11 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 public class JspView extends AbstractView {
 
     @Override
-    public Object get(String name) {
-        return super.paramMap.get(name);
-    }
-
-    @Override
     public void render(HttpServletRequest request, HttpServletResponse response) {
         paramMap.forEach(request::setAttribute);
         try {

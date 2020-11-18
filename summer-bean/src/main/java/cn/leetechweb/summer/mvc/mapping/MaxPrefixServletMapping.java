@@ -36,11 +36,11 @@ public final class MaxPrefixServletMapping extends AbstractServletMapping {
         }
         String shortest = allPaths.stream().min(Comparator.comparingInt(String::length)).orElse(null);
         if (shortest == null) {
-            throw new NoServletMappingException("不支持请求方法:{},因为没找到对应的处理器", httpMethod.getMethodName());
+            throw new NoServletMappingException("路径:{} 不支持请求方法:{},因为没找到对应的处理器", urlPattern, httpMethod.getMethodName());
         }
         ServletDescriptor descriptor = this.servletDescriptorMap.get(httpMethod).get(shortest);
         if (descriptor == null) {
-            throw new NoServletMappingException("不支持请求方法:{},因为没找到对应的处理器", httpMethod.getMethodName());
+            throw new NoServletMappingException("路径:{} 不支持请求方法:{},因为没找到对应的处理器", urlPattern, httpMethod.getMethodName());
         }
         return descriptor;
     }

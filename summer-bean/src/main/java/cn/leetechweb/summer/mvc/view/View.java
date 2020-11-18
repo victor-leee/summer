@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
  **/
 public interface View {
 
+    String SINGLE_OBJECT_TAG = "";
+
     /**
      * 设置视图名字
      * @param name 视图名字
@@ -27,11 +29,10 @@ public interface View {
     void append(String name, Object val);
 
     /**
-     * 从视图中获取对应的参数
-     * @param name 参数名
-     * @return 参数值
+     * 从视图中获取所有的参数名
+     * @return 参数名
      */
-    Object get(String name);
+    String[] get();
 
     /**
      * 执行渲染工作

@@ -27,4 +27,9 @@ public abstract class AbstractView implements View {
     public void append(String name, Object val) {
         this.paramMap.put(name, val);
     }
+
+    @Override
+    public String[] get() {
+        return this.paramMap.keySet().toArray(new String[0]);
+    }
 }
