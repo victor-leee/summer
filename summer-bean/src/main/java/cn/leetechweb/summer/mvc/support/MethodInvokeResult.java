@@ -1,6 +1,6 @@
 package cn.leetechweb.summer.mvc.support;
 
-import cn.leetechweb.summer.mvc.ModelAndView;
+import cn.leetechweb.summer.mvc.view.View;
 
 /**
  * Project Name: summer
@@ -20,7 +20,36 @@ public final class MethodInvokeResult {
      */
     boolean isForward;
 
-    ModelAndView modelAndView;
+    /**
+     * 重定向或者转发的路径
+     */
+    String url;
+
+    /**
+     * 返回的视图模型
+     */
+    View view;
+
+    /**
+     * 响应状态
+     */
+    HttpStatus httpStatus;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void setView(View view) {
+        this.view = view;
+    }
 
     public boolean isRedirect() {
         return isRedirect;
@@ -38,11 +67,12 @@ public final class MethodInvokeResult {
         isForward = forward;
     }
 
-    public void setModelAndView(ModelAndView modelAndView) {
-        this.modelAndView = modelAndView;
+
+    public HttpStatus getHttpStatus() {
+        return httpStatus;
     }
 
-    public ModelAndView getModelAndView() {
-        return modelAndView;
+    public void setHttpStatus(HttpStatus httpStatus) {
+        this.httpStatus = httpStatus;
     }
 }

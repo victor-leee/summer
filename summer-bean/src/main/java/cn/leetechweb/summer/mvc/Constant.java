@@ -28,7 +28,8 @@ public abstract class Constant {
     public static final String FORWARD_RETURN_PREFIX = "forward:";
 
     /**
-     * HTTP前缀
+     * JSP文件后缀
+     * 如果一个servlet直接返回了xxx.jsp，则转发到响应的JSP页面进行渲染返回
      */
-    public static final String HTTP_PREFIX = "http://";
+    public static final String JSP_SUFFIX = ".jsp";
 }
