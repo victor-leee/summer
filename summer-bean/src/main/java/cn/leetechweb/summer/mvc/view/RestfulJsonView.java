@@ -22,6 +22,7 @@ public class RestfulJsonView extends AbstractView {
         String[] params = get();
         String writeResult;
         if (params.length == 1 && View.SINGLE_OBJECT_TAG.equals(params[0])) {
+            // 如果只有一个默认对象的情况下
             writeResult = jsonParse.toText(paramMap.get(params[0]));
         }else {
             writeResult = jsonParse.toText(paramMap);

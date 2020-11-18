@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
  **/
 public interface View {
 
+    /**
+     * 标记要渲染的业务对象只有单个
+     */
     String SINGLE_OBJECT_TAG = "";
 
     /**

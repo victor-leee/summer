@@ -49,6 +49,7 @@ public final class DispatcherServlet extends SummerServletBean {
 
         if (result.isRedirect()) {
             response.setHeader(Constant.REDIRECT_RESPONSE_HEADER, result.getUrl());
+            return;
         }
 
         // 其余的所有情况，根据包装的View实例进行处理

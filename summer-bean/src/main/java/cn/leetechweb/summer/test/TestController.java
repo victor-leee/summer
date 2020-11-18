@@ -3,9 +3,6 @@ package cn.leetechweb.summer.test;
 import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
 import cn.leetechweb.summer.mvc.annotation.Restful;
-import cn.leetechweb.summer.mvc.support.HttpMethod;
-import cn.leetechweb.summer.mvc.view.JspView;
-import cn.leetechweb.summer.mvc.view.View;
 
 /**
  * Project Name: summer
