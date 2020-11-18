@@ -25,35 +25,15 @@ public final class DispatcherServlet extends SummerServletBean {
 
         String mappingUrl = request.getServletPath();
 
-        this.invoke(mappingUrl, argumentMapper, request, response);
-    }
-
-    private void invoke(String mappingUrl, ArgumentMapper argumentMapper, HttpServletRequest request, HttpServletResponse response) {
         ServletDescriptor descriptor = this.servletMapping.getMapping(mappingUrl);
 
         MethodInvokeResult invokeResult = methodInvoker.doInvoke(descriptor, argumentMapper);
 
-        if (invokeResult.isRedirect()) {
-            doRedirect(response, invokeResult);
-        }
-
-        if (invokeResult.isForward()) {
-            doForward(request, response, argumentMapper, invokeResult);
-        }
+        finalProcess(invokeResult, request, response);
     }
 
-    private void doForward(HttpServletRequest request, HttpServletResponse response, ArgumentMapper argumentMapper, MethodInvokeResult result) {
-        this.invoke(result.getTargetAddress(), argumentMapper, request, response);
-    }
+    private void finalProcess(MethodInvokeResult invokeResult, HttpServletRequest request, HttpServletResponse response) {
 
-    private void doRedirect(HttpServletResponse response, MethodInvokeResult result) {
-        response.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-        if (result.getTargetAddress().startsWith(Constant.HTTP_PREFIX)) {
-            response.setHeader(Constant.REDIRECT_RESPONSE_HEADER, result.getTargetAddress());
-        }else {
-            response.setHeader(Constant.REDIRECT_RESPONSE_HEADER,
-                    MvcUtils.mergeMappingUrl(serverConfig.getContext(), result.getTargetAddress()));
-        }
     }
 
 

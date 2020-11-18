@@ -25,6 +25,8 @@ public class SetBasicInvokeResultPostHandler implements InvokeHandler {
                 methodInvokeResult.setRedirect(true);
                 methodInvokeResult.setTargetAddress(desc.substring(Constant.REDIRECT_RETURN_PREFIX.length()));
             }
+        }else {
+            methodInvokeResult.setResultObject(resultObject);
         }
     }
 

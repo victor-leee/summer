@@ -1,5 +1,7 @@
 package cn.leetechweb.summer.mvc.support;
 
+import cn.leetechweb.summer.mvc.ModelAndView;
+
 /**
  * Project Name: summer
  * Create Time: 2020/11/17 22:04
@@ -18,15 +20,7 @@ public final class MethodInvokeResult {
      */
     boolean isForward;
 
-    /**
-     * 如果要重定向forward，这个就是要到达的目的地址
-     */
-    String targetAddress;
-
-    /**
-     * 方法的返回对象
-     */
-    Object resultObject;
+    ModelAndView modelAndView;
 
     public boolean isRedirect() {
         return isRedirect;
@@ -44,19 +38,11 @@ public final class MethodInvokeResult {
         isForward = forward;
     }
 
-    public String getTargetAddress() {
-        return targetAddress;
+    public void setModelAndView(ModelAndView modelAndView) {
+        this.modelAndView = modelAndView;
     }
 
-    public void setTargetAddress(String targetAddress) {
-        this.targetAddress = targetAddress;
-    }
-
-    public Object getResultObject() {
-        return resultObject;
-    }
-
-    public void setResultObject(Object resultObject) {
-        this.resultObject = resultObject;
+    public ModelAndView getModelAndView() {
+        return modelAndView;
     }
 }
