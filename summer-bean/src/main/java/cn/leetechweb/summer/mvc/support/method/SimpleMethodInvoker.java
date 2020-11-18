@@ -35,7 +35,7 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
 
         // 执行后置切面
         for (InvokeHandler invokeHandler : this.invokeHandlers) {
-            invokeHandler.postHandle(result, invokeResult);
+            invokeHandler.postHandle(result, invokeResult, servletDescriptor);
         }
 
         return invokeResult;

@@ -26,7 +26,7 @@ public interface InvokeHandler {
      * @param resultObject 返回结果
      * @param methodInvokeResult 返回结果包装
      */
-    default void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult) {
+    default void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult, ServletDescriptor descriptor) {
 
     }
 

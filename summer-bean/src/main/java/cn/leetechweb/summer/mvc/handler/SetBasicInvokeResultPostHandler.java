@@ -1,6 +1,7 @@
 package cn.leetechweb.summer.mvc.handler;
 
 import cn.leetechweb.summer.mvc.Constant;
+import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 
 /**
@@ -13,7 +14,7 @@ import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 public class SetBasicInvokeResultPostHandler implements InvokeHandler {
 
     @Override
-    public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult) {
+    public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult, ServletDescriptor descriptor) {
         if (resultObject instanceof String) {
             String desc = (String) resultObject;
             if (desc.startsWith(Constant.FORWARD_RETURN_PREFIX)) {

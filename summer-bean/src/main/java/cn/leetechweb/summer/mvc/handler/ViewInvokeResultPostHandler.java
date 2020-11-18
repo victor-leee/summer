@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.mvc.handler;
 
+import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 import cn.leetechweb.summer.mvc.view.View;
 
@@ -11,7 +12,7 @@ import cn.leetechweb.summer.mvc.view.View;
  **/
 public class ViewInvokeResultPostHandler implements InvokeHandler {
     @Override
-    public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult) {
+    public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult, ServletDescriptor descriptor) {
         if (resultObject instanceof View) {
             methodInvokeResult.setView((View) resultObject);
         }
