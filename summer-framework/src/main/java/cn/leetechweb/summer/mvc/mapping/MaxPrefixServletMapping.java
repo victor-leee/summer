@@ -25,7 +25,7 @@ public final class MaxPrefixServletMapping extends AbstractServletMapping {
             String segment = segments[i];
             for (String path : copy) {
                 String[] pathSegments = this.servletDescriptorMap.get(httpMethod).get(path).getUrlSegments();
-                if (i == pathSegments.length) {
+                if (i >= pathSegments.length) {
                     allPaths.remove(path);
                     continue;
                 }

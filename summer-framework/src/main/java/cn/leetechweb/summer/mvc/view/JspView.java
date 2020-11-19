@@ -4,6 +4,7 @@ import cn.leetechweb.summer.bean.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 /**
  * Project Name: summer
@@ -19,6 +20,7 @@ public class JspView extends AbstractView {
         try {
             request.getRequestDispatcher(this.viewName).forward(request, response);
         }catch (Exception e) {
+            logger.severe(Arrays.toString(e.getStackTrace()));
             logger.severe(StringUtils.format("JSP视图渲染发生错误:{}", false, e.getMessage()));
         }
     }

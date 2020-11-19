@@ -1,5 +1,7 @@
 package cn.leetechweb.summer.mvc;
 
+import org.apache.jasper.servlet.JspServlet;
+
 /**
  * Project Name: summer
  * Create Time: 2020/11/17 17:27
@@ -43,4 +45,6 @@ public abstract class Constant {
     public static final String DEFAULT_CHARACTER_SET = "utf-8";
 
     public static final String MEDIA_TYPE_ALL = "*/*";
+
+    public static final String JSP_SERVLET = JspServlet.class.getSimpleName();
 }

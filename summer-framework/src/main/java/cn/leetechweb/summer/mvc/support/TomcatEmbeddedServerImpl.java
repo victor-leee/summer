@@ -2,12 +2,21 @@ package cn.leetechweb.summer.mvc.support;
 
 import cn.leetechweb.summer.bean.ContainerAware;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
+import cn.leetechweb.summer.mvc.Constant;
 import cn.leetechweb.summer.mvc.DispatcherServlet;
 import cn.leetechweb.summer.mvc.exception.WebServerStartException;
 import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
+import org.apache.jasper.runtime.JspFactoryImpl;
+import org.apache.jasper.servlet.JspServlet;
 
-import java.io.File;
+import javax.servlet.jsp.JspFactory;
+import java.io.*;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.UUID;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 /**
@@ -20,20 +29,28 @@ public final class TomcatEmbeddedServerImpl implements EmbeddedServer, Container
 
     private DispatcherServlet dispatcherServlet = null;
 
-    private Logger logger = Logger.getLogger(TomcatEmbeddedServerImpl.class.getName());
+    private final Logger logger = Logger.getLogger(TomcatEmbeddedServerImpl.class.getName());
 
     @Override
     public void run(ServerConfig serverConfig) {
         Tomcat embeddedTomcat = new Tomcat();
-        String docBase = new File(".").getAbsolutePath();
+        String docBase = new File("classes").getAbsolutePath();
 
         // 配置tomcat基础上下文
         Context tomcatContext = embeddedTomcat.addContext(serverConfig.getContext(), docBase);
         embeddedTomcat.setPort(serverConfig.getPort());
 
+
         // 配置DispatcherServlet
         embeddedTomcat.addServlet("", DispatcherServlet.SERVLET_NAME, dispatcherServlet);
         tomcatContext.addServletMappingDecoded("/", DispatcherServlet.SERVLET_NAME);
+
+        // 配置jasper的JspServlet
+        JspServlet jspServlet = new JspServlet();
+        embeddedTomcat.addServlet("", Constant.JSP_SERVLET, jspServlet);
+        tomcatContext.addServletMappingDecoded("*.jsp", Constant.JSP_SERVLET);
+
+        JspFactory.setDefaultFactory(new JspFactoryImpl());
 
         // 启动tomcat
         try {
@@ -49,4 +66,13 @@ public final class TomcatEmbeddedServerImpl implements EmbeddedServer, Container
     public void setBeanFactory(BeanFactory beanFactory) {
         this.dispatcherServlet = beanFactory.getBean(DispatcherServlet.SERVLET_NAME, DispatcherServlet.class);
     }
+
+    private void close(Closeable closeable) {
+        try {
+            closeable.close();
+        }catch (Exception e) {
+            logger.warning("Close错误");
+        }
+    }
+
 }

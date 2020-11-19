@@ -13,11 +13,16 @@ import javax.servlet.http.HttpServletRequest;
  * @author junyu lee
  **/
 @Controller
-@Restful
 @Mapping(path = "/admin")
 public class AdminController {
     @Mapping
+    @Restful
     public String getMapping(HttpServletRequest httpServletRequest) {
         return httpServletRequest.getMethod();
+    }
+
+    @Mapping(path = "/jsp")
+    public String getJsp() {
+        return "index.jsp";
     }
 }
