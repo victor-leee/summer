@@ -335,7 +335,7 @@ public class TestController {
 ```
 
 #### JSP视图处理
-要指定一个方法用于处理JSP，则**类**注解和**方法**一定不能存在@Restful注解，可以使用两种格式返回，
+要指定一个方法用于处理JSP，则**类**和**方法**一定不能存在@Restful注解，可以使用两种格式返回，
 第一种可以使用JSP视图名返回：
 ```java
     @Mapping(path = "/jsp")

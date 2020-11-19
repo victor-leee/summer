@@ -2,9 +2,12 @@ package cn.leetechweb.test.controller;
 
 import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
+import cn.leetechweb.summer.mvc.annotation.RequestBody;
 import cn.leetechweb.summer.mvc.annotation.Restful;
+import cn.leetechweb.summer.mvc.support.HttpMethod;
 import cn.leetechweb.summer.mvc.view.JspView;
 import cn.leetechweb.summer.mvc.view.View;
+import cn.leetechweb.test.Person;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,5 +32,11 @@ public class AdminController {
         jspView.setViewName("index");
         jspView.append("name", "李峻宇");
         return jspView;
+    }
+
+    @Restful
+    @Mapping(path = "/person", method = HttpMethod.POST)
+    public Person same(@RequestBody Person person) {
+        return person;
     }
 }
