@@ -5,11 +5,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>cn.leetechweb</groupId>
-  <artifactId>summer-bean</artifactId>
+  <artifactId>summer-framework</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>summer-bean Maven Webapp</name>
+  <name>summer-framework Maven Webapp</name>
   <url>https://github.com/victor-leee/summer</url>
 
   <properties>
