@@ -1,20 +1,77 @@
 # summer
 A micro java framework to study the Spring Framework
 
+### 基本准备
+
+由于一些特殊的原因，这个微型框架现在只能用一种很笨重的方法工作，我先将如何在本地搭建环境做一下简单介绍：
+首先使用`git clone`克隆整个项目
+
+进入`summer-framework`中，在控制台执行`mvn install`向本地maven仓库添加框架jar包
+
+接下来你可以单独建立一个新项目，注意推荐使用maven构建jar项目(不再推荐war是因为summer内嵌了tomcat)
+
+建立完毕过后，在src/main/下新建立一个webapp目录，这里是你存放jsp文件的地方
+
+接下来在src/main/java下建立一个程序入口类(见下面的主入口示例,@Summer注解用于标注要扫描的类路径)
+
+然后打开pom.xml,需要添加如下内容(注意这里有一处需要按照实际情况做修改)：
+
+```xml
+    <dependencies>
+        <dependency>
+            <groupId>cn.leetechweb</groupId>
+            <artifactId>summer-framework</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/webapp</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>这里是程序入口类的全限定类名</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+```
+
+使用maven编译时，使用`maven package`构建jar包，然后进入`/target`目录，执行`java -jar 你的jar包`运行项目
+
+---
+
 ### 简短的教程
 
 主入口：
 ```java
 @Summer(value = "cn.leetechweb.summer.bean.annotation")
 public class TestBBB {
+    // 构建使用注解的summer容器
+    Context context = new AnnotationConfigContext(TestBBB.class);
+    // 获取bean名称为service的bean
+    Service service = context.getBean("service", Service.class);
 }
-```
-
-```java
-        // 构建使用注解的summer容器
-        Context context = new AnnotationConfigContext(TestBBB.class);
-        // 获取bean名称为service的bean
-        Service service = context.getBean("service", Service.class);
 ```
 
 ### 将JavaBean交由Summer管理
@@ -272,4 +329,38 @@ public class TestController {
     public File download() {
         return new File("README.md");
     }
+```
+
+#### JSP视图处理
+要指定一个方法用于处理JSP，则**类**注解和**方法**一定不能存在**@Restful**注解，可以使用两种格式返回，
+第一种可以使用JSP视图名返回：
+```java
+    @Mapping(path = "/jsp")
+    public String getJsp() {
+        return "index";
+    }
+```
+如果JSP中需要解析el表达式，需要额外的参数设置到requestAttribute上，则可以使用JspView对象返回：
+```java
+    @Mapping(path = "/jsp")
+    public View getJsp() {
+        View jspView = new JspView();
+        jspView.setViewName("index");
+        jspView.append("name", "李峻宇");
+        return jspView;
+    }
+```
+index.jsp:
+```jsp
+<%@ page contentType="text/html" pageEncoding="utf-8" %>
+<html>
+<head>
+    <title>
+        很棒的一个测试
+    </title>
+</head>
+<body>
+<h1>${name}</h1>
+</body>
+</html>
 ```
