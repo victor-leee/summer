@@ -36,4 +36,13 @@ public interface ArgumentMapper {
      */
     void setRequestBody(String requestBody);
 
+//    /**
+//     * 获取type对应的对象
+//     * 用于一些特殊的对象获取
+//     * 例如HttpServletRequest
+//     * @param type 类类型
+//     * @return 类对应的对象
+//     */
+//    Object getArgumentByClassType(Class<?> type);
+
 }

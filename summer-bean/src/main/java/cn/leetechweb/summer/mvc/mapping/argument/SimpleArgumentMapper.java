@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 建议的Web参数查询器
+ * 简易的Web参数查询器
  * 当一个request请求到来时，会实例化这个对象供请求使用
  * Project Name: summer
  * Create Time: 2020/11/18 0:17

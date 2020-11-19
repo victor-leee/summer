@@ -28,7 +28,7 @@ public final class ArgumentFactory {
 
     private static final Logger logger = Logger.getLogger(ArgumentFactory.class.getName());
 
-    private static final DiskFileItemFactory factory = new DiskFileItemFactory();
+    private static final DiskFileItemFactory FILE_ITEM_FACTORY = new DiskFileItemFactory();
 
     private static final String UPLOAD_FILE_TEMP_DIR = "javax.servlet.context.tempdir";
 
@@ -95,8 +95,8 @@ public final class ArgumentFactory {
     private static ServletFileUpload initFileUpload(HttpServletRequest request) {
         ServletContext servletContext = request.getServletContext();
         File repo = (File) servletContext.getAttribute(UPLOAD_FILE_TEMP_DIR);
-        factory.setRepository(repo);
-        return new ServletFileUpload(factory);
+        FILE_ITEM_FACTORY.setRepository(repo);
+        return new ServletFileUpload(FILE_ITEM_FACTORY);
     }
 
 }

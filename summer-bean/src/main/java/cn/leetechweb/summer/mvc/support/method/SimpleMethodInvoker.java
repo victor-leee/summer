@@ -1,16 +1,21 @@
 package cn.leetechweb.summer.mvc.support.method;
 
 import cn.leetechweb.summer.bean.util.ConvertUtils;
+import cn.leetechweb.summer.mvc.annotation.RequestBody;
 import cn.leetechweb.summer.mvc.annotation.RequestParam;
+import cn.leetechweb.summer.mvc.context.RequestContextHolder;
 import cn.leetechweb.summer.mvc.handler.InvokeHandler;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
 import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
 
 /**
+ * // TODO: 2020/11/19 重构，写一个通用转换器用于对象转换
  * Project Name: summer
  * Create Time: 2020/11/17 22:14
  *
@@ -58,6 +63,23 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
             // 否则这个参数应该是集合类型的
             Class<? extends Collection<?>> colType = (Class<? extends Collection<?>>) argParameter.getType();
             return ConvertUtils.convert(colType, params);
+        }else if (argParameter.isAnnotationPresent(RequestBody.class)) {
+            Class<?> paramType = argParameter.getType();
+            String requestBody = argumentMapper.getRequestBody();
+            if (requestBody == null) {
+                return null;
+            }
+            return jsonParse.parse(requestBody, paramType);
+        }
+        return furtherResolve(argParameter);
+    }
+
+    private Object furtherResolve(Parameter parameter) {
+        if (parameter.getType().equals(HttpServletRequest.class)) {
+            return RequestContextHolder.getRequestAttrHolder().getRequest();
+        }
+        if (parameter.getType().equals(HttpServletResponse.class)) {
+            return RequestContextHolder.getRequestAttrHolder().getResponse();
         }
         return null;
     }

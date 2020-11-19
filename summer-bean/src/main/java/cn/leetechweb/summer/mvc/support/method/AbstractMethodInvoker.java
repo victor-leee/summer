@@ -3,6 +3,8 @@ package cn.leetechweb.summer.mvc.support.method;
 import cn.leetechweb.summer.bean.ContainerAware;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.mvc.handler.InvokeHandler;
+import cn.leetechweb.summer.mvc.json.FastJsonParse;
+import cn.leetechweb.summer.mvc.json.JsonParse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,10 +21,13 @@ public abstract class AbstractMethodInvoker implements MethodInvoker, ContainerA
 
     protected List<InvokeHandler> invokeHandlers;
 
+    protected JsonParse jsonParse;
+
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
         this.initHandlers();
+        this.jsonParse = beanFactory.getBean("json", FastJsonParse.class);
     }
 
     private void initHandlers() {

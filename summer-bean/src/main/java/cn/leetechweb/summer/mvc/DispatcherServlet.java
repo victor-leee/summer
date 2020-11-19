@@ -1,6 +1,8 @@
 package cn.leetechweb.summer.mvc;
 
 import cn.leetechweb.summer.bean.util.StringUtils;
+import cn.leetechweb.summer.mvc.context.RequestAttributes;
+import cn.leetechweb.summer.mvc.context.RequestContextHolder;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentFactory;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
@@ -25,6 +27,8 @@ public final class DispatcherServlet extends SummerServletBean {
     protected void doInternalDispatch(HttpServletRequest request, HttpServletResponse response) {
 
         ArgumentMapper argumentMapper = ArgumentFactory.getArgumentMapper(request);
+
+        RequestContextHolder.setRequestAttrHolder(new RequestAttributes(request, response));
 
         String mappingUrl = request.getServletPath();
 

@@ -27,13 +27,4 @@ public class SimpleBasePackageReader implements Reader {
         this.classSet = classSet;
     }
 
-    /**
-     * 将类路径中的.替换为File.separator
-     * @param classpath 类路径
-     * @return 文件路径
-     */
-    private String getFilePath(String classpath) {
-        return classpath.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
-    }
-
 }

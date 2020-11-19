@@ -9,6 +9,7 @@
   <version>1.0-SNAPSHOT</version>
     <modules>
         <module>summer-bean</module>
+        <module>summer-test</module>
     </modules>
     <packaging>pom</packaging>
 

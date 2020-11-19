@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.mvc.json;
 
+import cn.leetechweb.summer.bean.annotation.Component;
 import com.alibaba.fastjson.JSON;
 
 /**
@@ -8,6 +9,7 @@ import com.alibaba.fastjson.JSON;
  *
  * @author junyu lee
  **/
+@Component(name = "json")
 public class FastJsonParse implements JsonParse {
 
 
