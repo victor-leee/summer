@@ -198,3 +198,78 @@ public class InnerBean {
 由于BaseDao具有多个实现类，因此必须显示指定实现类的beanName实现装配，否则容器报错退出
 #### 实现常量注入
 在字段(Primitive Types)上使用@Value即可实现常量注入，注意暂时不支持从配置文件读取数据
+
+### 使用summer-mvc处理restful请求
+
+> 代码实例在summer-framework/src/main/java/cn.leetechweb.summer/test下
+
+#### 使用@Controller和@Mapping进行URL映射
+在类上标记该类为@Controller，summer会自动装配该类并且读取其URL映射信息(使用@Mapping设置)，
+当一个新的web请求到来时，summer会根据url映射关系，自动选取对应的方法执行并返回结果
+例如:
+```java
+@Controller
+@Mapping(path = "/test")
+public class TestController {
+    @Mapping
+    @Restful
+    public Person getView() {
+        return new Person("李峻宇", 19);
+    }
+}
+```
+在上面这个Controller中，声明了类映射路径为/test，同时getView方法映射路径继承，
+使用@Restful注解标注该方法(@Restful也可以用于类标注)，表明该方法的返回应该直接
+写入响应体而不是进行视图渲染处理，由于summer自动装配了JSON处理器，所以可以直接
+返回业务对象，summer会自动进行类型转换
+
+#### 自动装配方法参数
+summer会根据注解和类型对于请求参数进行自动装配，例如，假设表单中有字段"name"和"age"，
+要获取这两个字段：
+```java
+@Controller
+@Mapping(path = "/test")
+public class TestController {
+    @Mapping
+    @Restful(path = "/form")
+    public Person getView(@RequestParam("name") String name, @RequestParam("age") int age) {
+        return new Person(name, age);
+    }
+}
+```
+
+如果要获取请求体中的参数：
+```java
+@Controller
+@Mapping(path = "/test")
+public class TestController {
+    @Mapping
+    @Restful(path = "/body")
+    public Person getView(@RequestBody Person person) {
+        return person;
+    }
+}
+```
+
+#### 文件处理
+##### 文件上传
+使用apache-commons-fileupload组件， Summer对于文件上传和下载都进行了处理，要获取form中的上传文件，只需要：
+```java
+    @Mapping(path = "/upload", method = HttpMethod.POST)
+    @Restful
+    public BigDecimal upload(@RequestParam("file") List<EasyFile> fileList) {
+        for (EasyFile easyFile : fileList) {
+            System.out.println(StringUtils.format("文件名:{},form域:{}", false,
+                    easyFile.getFileName(), easyFile.getFormName()));
+        }
+        return BigDecimal.ONE;
+    }
+```
+##### 文件下载
+直接返回File即可，summer会处理其他的所有工作：
+```java
+    @Mapping(path = "/download")
+    public File download() {
+        return new File("README.md");
+    }
+```
