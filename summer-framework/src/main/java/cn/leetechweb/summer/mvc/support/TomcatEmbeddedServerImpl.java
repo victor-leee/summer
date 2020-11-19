@@ -8,6 +8,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
+import java.util.logging.Logger;
 
 /**
  * Project Name: summer
@@ -18,6 +19,8 @@ import java.io.File;
 public final class TomcatEmbeddedServerImpl implements EmbeddedServer, ContainerAware {
 
     private DispatcherServlet dispatcherServlet = null;
+
+    private Logger logger = Logger.getLogger(TomcatEmbeddedServerImpl.class.getName());
 
     @Override
     public void run(ServerConfig serverConfig) {
@@ -35,7 +38,7 @@ public final class TomcatEmbeddedServerImpl implements EmbeddedServer, Container
         // 启动tomcat
         try {
             embeddedTomcat.start();
-            System.out.println("TOMCAT启动了！");
+            logger.info("内置tomcat启动成功");
         }catch (Exception e) {
             throw new WebServerStartException("tomcat启动发生错误，原因:{}", e.getMessage());
         }

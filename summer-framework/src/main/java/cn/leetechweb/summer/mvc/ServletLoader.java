@@ -25,8 +25,6 @@ public class ServletLoader implements Loader, ContainerAware {
     private void loadHelper() {
         ServerConfig serverConfig = this.beanFactory.getBean("ServerConfig", ServerConfig.class);
         EmbeddedServer embeddedServer = beanFactory.getBean("TomcatEmbeddedServerImpl", TomcatEmbeddedServerImpl.class);
-        System.out.println("Config启动了");
-        System.out.println("TOMCAT要来了！！！");
         embeddedServer.run(serverConfig);
     }
 

@@ -44,7 +44,6 @@ public abstract class FileUtils {
                         Class<?> clazz = urlClassLoader.loadClass(
                                 getEntryName(entry)
                         );
-                        System.err.println(clazz);
                         classSet.add(clazz);
                     }
                 }
