@@ -3,7 +3,10 @@ A micro java framework to study the Spring Framework
 
 ### 基本准备
 
-由于一些特殊的原因，这个微型框架现在只能用一种很笨重的方法工作，我先将如何在本地搭建环境做一下简单介绍：
+- summer-framework:框架源码
+- summer-test: 测试样例
+
+由于一些特殊的原因，这个微型框架现在只能用一种稍微笨重一点的方法工作，我先将如何在本地搭建环境做一下简单介绍：
 首先使用`git clone`克隆整个项目
 
 进入`summer-framework`中，在控制台执行`mvn install`向本地maven仓库添加框架jar包
@@ -301,7 +304,7 @@ public class TestController {
 @Mapping(path = "/test")
 public class TestController {
     @Mapping
-    @Restful(path = "/body")
+    @Restful(path = "/body", method = HttpMethod.POST)
     public Person getView(@RequestBody Person person) {
         return person;
     }
@@ -332,7 +335,7 @@ public class TestController {
 ```
 
 #### JSP视图处理
-要指定一个方法用于处理JSP，则**类**注解和**方法**一定不能存在**@Restful**注解，可以使用两种格式返回，
+要指定一个方法用于处理JSP，则**类**注解和**方法**一定不能存在@Restful注解，可以使用两种格式返回，
 第一种可以使用JSP视图名返回：
 ```java
     @Mapping(path = "/jsp")
