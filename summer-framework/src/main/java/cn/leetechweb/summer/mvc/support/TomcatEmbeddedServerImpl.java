@@ -12,11 +12,6 @@ import org.apache.jasper.servlet.JspServlet;
 
 import javax.servlet.jsp.JspFactory;
 import java.io.*;
-import java.util.Arrays;
-import java.util.Enumeration;
-import java.util.UUID;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 /**
@@ -65,14 +60,6 @@ public final class TomcatEmbeddedServerImpl implements EmbeddedServer, Container
     @Override
     public void setBeanFactory(BeanFactory beanFactory) {
         this.dispatcherServlet = beanFactory.getBean(DispatcherServlet.SERVLET_NAME, DispatcherServlet.class);
-    }
-
-    private void close(Closeable closeable) {
-        try {
-            closeable.close();
-        }catch (Exception e) {
-            logger.warning("Close错误");
-        }
     }
 
 }

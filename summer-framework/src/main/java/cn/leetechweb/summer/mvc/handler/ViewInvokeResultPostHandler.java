@@ -2,6 +2,7 @@ package cn.leetechweb.summer.mvc.handler;
 
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.view.JspView;
 import cn.leetechweb.summer.mvc.view.View;
 
 /**
@@ -15,6 +16,10 @@ public class ViewInvokeResultPostHandler implements InvokeHandler {
     public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult, ServletDescriptor descriptor) {
         if (resultObject instanceof View) {
             methodInvokeResult.setView((View) resultObject);
+            if (resultObject instanceof JspView) {
+                JspView jspView = (JspView) resultObject;
+                jspView.setViewName("/" + jspView.getViewName() + ".jsp");
+            }
         }
     }
 }

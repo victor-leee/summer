@@ -23,7 +23,7 @@ public class JspResponsePostHandler implements InvokeHandler {
             if (!method.isAnnotationPresent(Restful.class)
                     && !method.getDeclaringClass().isAnnotationPresent(Restful.class)) {
                 View jspView = new JspView();
-                jspView.setViewName("/" + jsp);
+                jspView.setViewName("/" + jsp + ".jsp");
                 methodInvokeResult.setView(jspView);
             }
         }

@@ -47,4 +47,8 @@ public abstract class AbstractView implements View {
         }
         return null;
     }
+
+    public String getViewName() {
+        return viewName;
+    }
 }

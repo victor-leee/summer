@@ -3,6 +3,8 @@ package cn.leetechweb.test.controller;
 import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
 import cn.leetechweb.summer.mvc.annotation.Restful;
+import cn.leetechweb.summer.mvc.view.JspView;
+import cn.leetechweb.summer.mvc.view.View;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,7 +24,10 @@ public class AdminController {
     }
 
     @Mapping(path = "/jsp")
-    public String getJsp() {
-        return "index.jsp";
+    public View getJsp() {
+        View jspView = new JspView();
+        jspView.setViewName("index");
+        jspView.append("name", "李峻宇");
+        return jspView;
     }
 }
