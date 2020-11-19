@@ -35,6 +35,7 @@ public final class TomcatEmbeddedServerImpl implements EmbeddedServer, Container
         // 启动tomcat
         try {
             embeddedTomcat.start();
+            System.out.println("TOMCAT启动了！");
         }catch (Exception e) {
             throw new WebServerStartException("tomcat启动发生错误，原因:{}", e.getMessage());
         }

@@ -83,6 +83,7 @@ public final class AnnotationConfigBeanDefinitionLoader extends BeanDefinitionLo
             for (String basePackage : packages) {
                 this.classReader.read(basePackage);
             }
+            System.out.println(this.loadingClasses);
 
             doBeanFilter();
 

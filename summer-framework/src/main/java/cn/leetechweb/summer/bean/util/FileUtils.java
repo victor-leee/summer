@@ -1,9 +1,13 @@
 package cn.leetechweb.summer.bean.util;
 
-import java.io.File;
+
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.Set;
-import java.util.regex.Matcher;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import static cn.leetechweb.summer.bean.Constant.*;
 
@@ -29,52 +33,34 @@ public abstract class FileUtils {
      * @param classSet 类集合
      */
     public static void scans(String basePackage, Set<Class<?>> classSet) throws ClassNotFoundException {
-        doScans(new StringBuilder(basePackage), classSet);
-    }
-
-    private static void doScans(StringBuilder basePackage, Set<Class<?>> classSet) throws ClassNotFoundException {
-        String directoryPath = getAbsoluteFilePath(basePackage.toString());
-        File directoryFile = new File(directoryPath);
-        File[] children = directoryFile.listFiles();
-        if (children != null && children.length > 0) {
-            for (File subFile : children) {
-                if (subFile.isFile()) {
-                    // 检查该文件是否是class文件
-                    if (subFile.getName().endsWith(CLASS_SUFFIX)) {
-                        String className = subFile.getName();
-                        className = className.substring(0, className.length() - CLASS_SUFFIX.length());
-                        Class<?> clazz = loadClass(basePackage.toString(), className);
-                        if (clazz != null) {
-                            classSet.add(clazz);
-                        }
+        try {
+            JarFile jarFile = new JarFile(getJarLocation().getPath());
+            Enumeration<JarEntry> entryEnumeration = jarFile.entries();
+            URLClassLoader urlClassLoader = new URLClassLoader(new URL[]{getJarLocation()});
+            while (entryEnumeration.hasMoreElements()) {
+                JarEntry entry = entryEnumeration.nextElement();
+                if (getEntryName(entry).startsWith(basePackage)) {
+                    if (entry.getName().endsWith(CLASS_SUFFIX)) {
+                        Class<?> clazz = urlClassLoader.loadClass(
+                                getEntryName(entry)
+                        );
+                        System.err.println(clazz);
+                        classSet.add(clazz);
                     }
-                }else {
-                    basePackage.append(PACKAGE_SEPARATOR).append(subFile.getName());
-                    doScans(basePackage, classSet);
-                    basePackage.delete(basePackage.length() - (PACKAGE_SEPARATOR + subFile.getName()).length(),
-                            basePackage.length());
                 }
             }
+        }catch (Exception e) {
+            throw new RuntimeException();
         }
     }
 
-    public static Class<?> loadClass(String basePackage, String className) throws ClassNotFoundException {
-        return Thread.currentThread().getContextClassLoader().loadClass(basePackage + PACKAGE_SEPARATOR + className);
+    private static URL getJarLocation() {
+        return FileUtils.class.getProtectionDomain().getCodeSource().getLocation();
     }
 
-    private static String getAbsoluteFilePath(String packageName) {
-        String classpath = FileUtils.class.getResource("/").getPath();
-        return classpath + getFilePath(packageName);
-    }
-
-
-    /**
-     * 将类路径中的.替换为File.separator
-     * @param classpath 类路径
-     * @return 文件路径
-     */
-    private static String getFilePath(String classpath) {
-        return classpath.replaceAll("\\.", Matcher.quoteReplacement(File.separator));
+    private static String getEntryName(JarEntry jarEntry) {
+        return jarEntry.getName().replaceAll("/", "\\.")
+                .replaceAll(".class", "");
     }
 
 }
