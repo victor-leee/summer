@@ -9,8 +9,7 @@
   <version>1.0-SNAPSHOT</version>
     <modules>
       <module>summer-framework</module>
-        <module>summer-test</module>
-      <module>untitled</module>
+      <module>summer-test</module>
     </modules>
     <packaging>pom</packaging>
 
