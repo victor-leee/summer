@@ -7,7 +7,8 @@ import cn.leetechweb.summer.mvc.context.RequestContextHolder;
 import cn.leetechweb.summer.mvc.handler.InvokeHandler;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
-import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.support.method.result.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.support.method.result.MethodInvokeResultFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,8 +37,11 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
             invokeResult.preHandle(args, servletDescriptor);
         }
 
-        MethodInvokeResult invokeResult = new MethodInvokeResult();
         Object result = servletDescriptor.invoke(args);
+
+        MethodInvokeResult invokeResult = MethodInvokeResultFactory.produceResult(
+                result, servletDescriptor
+        );
 
         // 执行后置切面
         for (InvokeHandler invokeHandler : this.invokeHandlers) {

@@ -1,7 +1,7 @@
 package cn.leetechweb.summer.mvc.handler;
 
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
-import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.support.method.result.MethodInvokeResult;
 
 /**
  * 执行方法的切面接口

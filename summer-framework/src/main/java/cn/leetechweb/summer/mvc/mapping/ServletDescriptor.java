@@ -3,6 +3,7 @@ package cn.leetechweb.summer.mvc.mapping;
 import cn.leetechweb.summer.mvc.MvcUtils;
 import cn.leetechweb.summer.mvc.exception.MethodInvokeException;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
@@ -79,5 +80,14 @@ public class ServletDescriptor {
         }catch (Exception e) {
             throw new MethodInvokeException("执行方法{}失败, 原因:{}", this.method.getName(), e.getMessage());
         }
+    }
+
+    public boolean isAnnotationPresentOnMethodOnly(Class<? extends Annotation> clazz) {
+        return this.getMethod().isAnnotationPresent(clazz);
+    }
+
+    public boolean isAnnotationPresentAnyway(Class<? extends Annotation> clazz) {
+        return this.getMethod().isAnnotationPresent(clazz) ||
+                this.getBean().getClass().isAnnotationPresent(clazz);
     }
 }

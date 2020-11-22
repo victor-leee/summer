@@ -347,10 +347,10 @@ public class TestController {
 ```java
     @Mapping(path = "/jsp")
     public View getJsp() {
-        View jspView = new JspView();
-        jspView.setViewName("index");
-        jspView.append("name", "李峻宇");
-        return jspView;
+        View internalView = new JspView();
+        internalView.setViewName("index");
+        internalView.append("name", "李峻宇");
+        return internalView;
     }
 ```
 index.jsp:

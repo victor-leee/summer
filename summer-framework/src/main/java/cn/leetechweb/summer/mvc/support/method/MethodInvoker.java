@@ -2,7 +2,7 @@ package cn.leetechweb.summer.mvc.support.method;
 
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
-import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.support.method.result.MethodInvokeResult;
 
 /**
  * 方法执行接口

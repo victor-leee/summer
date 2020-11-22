@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * @author junyu lee
  **/
-public class JspView extends AbstractView {
+public class InternalView extends AbstractView {
 
     @Override
     public void render(HttpServletRequest request, HttpServletResponse response) {

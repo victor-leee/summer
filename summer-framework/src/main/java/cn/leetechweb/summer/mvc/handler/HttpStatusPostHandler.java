@@ -3,7 +3,7 @@ package cn.leetechweb.summer.mvc.handler;
 import cn.leetechweb.summer.mvc.annotation.Status;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.support.HttpStatus;
-import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.support.method.result.MethodInvokeResult;
 
 import java.lang.reflect.Method;
 
@@ -19,10 +19,15 @@ public class HttpStatusPostHandler implements InvokeHandler {
     public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult, ServletDescriptor descriptor) {
         Method servletMethod = descriptor.getMethod();
         HttpStatus responseStatus = HttpStatus.OK;
+        if (methodInvokeResult.isRedirect()) {
+            responseStatus = HttpStatus.REDIRECT;
+        }
         if (servletMethod.isAnnotationPresent(Status.class)) {
             responseStatus = servletMethod.getAnnotation(Status.class).value();
         }
-        methodInvokeResult.setHttpStatus(responseStatus);
+        if (methodInvokeResult.getStatus() == null) {
+            methodInvokeResult.setStatus(responseStatus);
+        }
     }
 
 }

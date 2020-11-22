@@ -1,13 +1,12 @@
 package cn.leetechweb.summer.mvc;
 
-import cn.leetechweb.summer.bean.util.StringUtils;
 import cn.leetechweb.summer.mvc.context.RequestAttributes;
 import cn.leetechweb.summer.mvc.context.RequestContextHolder;
 import cn.leetechweb.summer.mvc.mapping.ServletDescriptor;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentFactory;
 import cn.leetechweb.summer.mvc.mapping.argument.ArgumentMapper;
 import cn.leetechweb.summer.mvc.support.HttpMethod;
-import cn.leetechweb.summer.mvc.support.MethodInvokeResult;
+import cn.leetechweb.summer.mvc.support.method.result.MethodInvokeResult;
 import cn.leetechweb.summer.mvc.view.View;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,22 +40,9 @@ public final class DispatcherServlet extends SummerServletBean {
     }
 
     private void processResult(HttpServletRequest request, HttpServletResponse response, MethodInvokeResult result) {
-        response.setStatus(result.getHttpStatus().getValue());
-        // 单独处理转发与重定向
-        if (result.isForward()) {
-            try {
-                request.getRequestDispatcher(result.getUrl()).forward(request, response);
-            }catch (Exception e) {
-                logger.severe(StringUtils.format("转发发生错误:{}", false, e.getMessage()));
-            }
-        }
-
-        if (result.isRedirect()) {
-            response.setHeader(Constant.REDIRECT_RESPONSE_HEADER, result.getUrl());
-            return;
-        }
-
-        // 其余的所有情况，根据包装的View实例进行处理
+        // 设置HTTP状态码
+        response.setStatus(result.getStatus().getValue());
+        // 渲染结果视图
         if (result.getView() == null) {
             logger.warning("View空");
         }else {

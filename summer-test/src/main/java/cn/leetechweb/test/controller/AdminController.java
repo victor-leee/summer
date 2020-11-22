@@ -5,7 +5,7 @@ import cn.leetechweb.summer.mvc.annotation.Mapping;
 import cn.leetechweb.summer.mvc.annotation.RequestBody;
 import cn.leetechweb.summer.mvc.annotation.Restful;
 import cn.leetechweb.summer.mvc.support.HttpMethod;
-import cn.leetechweb.summer.mvc.view.JspView;
+import cn.leetechweb.summer.mvc.view.InternalView;
 import cn.leetechweb.summer.mvc.view.View;
 import cn.leetechweb.test.Person;
 
@@ -28,7 +28,7 @@ public class AdminController {
 
     @Mapping(path = "/jsp")
     public View getJsp() {
-        View jspView = new JspView();
+        View jspView = new InternalView();
         jspView.setViewName("index");
         jspView.append("name", "李峻宇");
         return jspView;
