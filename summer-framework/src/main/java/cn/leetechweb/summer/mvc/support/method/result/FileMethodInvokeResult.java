@@ -17,20 +17,10 @@ public class FileMethodInvokeResult extends AbstractMethodInvokeResult {
     private final File file;
 
     @Override
-    public boolean isRedirect() {
-        return false;
-    }
-
-    @Override
     public View getView() {
         View fileView = new FileView();
         fileView.append(View.SINGLE_OBJECT_TAG, this.file);
         return fileView;
-    }
-
-    @Override
-    public HttpStatus getStatus() {
-        return null;
     }
 
     public FileMethodInvokeResult(File file) {

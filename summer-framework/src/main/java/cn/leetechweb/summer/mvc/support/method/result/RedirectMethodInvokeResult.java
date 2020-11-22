@@ -15,11 +15,6 @@ public class RedirectMethodInvokeResult extends AbstractMethodInvokeResult {
     private final String redirectUrl;
 
     @Override
-    public boolean isRedirect() {
-        return true;
-    }
-
-    @Override
     public View getView() {
         return new RedirectView(this.redirectUrl);
     }

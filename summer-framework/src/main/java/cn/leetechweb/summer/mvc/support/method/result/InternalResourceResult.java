@@ -14,11 +14,6 @@ public class InternalResourceResult extends AbstractMethodInvokeResult {
     private final InternalView internalView;
 
     @Override
-    public boolean isRedirect() {
-        return false;
-    }
-
-    @Override
     public View getView() {
         return this.internalView;
     }

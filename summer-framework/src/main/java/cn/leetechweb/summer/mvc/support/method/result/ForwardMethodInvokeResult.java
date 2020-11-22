@@ -15,20 +15,10 @@ public class ForwardMethodInvokeResult extends AbstractMethodInvokeResult {
     private final String forwardUrl;
 
     @Override
-    public boolean isRedirect() {
-        return false;
-    }
-
-    @Override
     public View getView() {
         View forwardView = new InternalView();
         forwardView.setViewName(this.forwardUrl);
         return forwardView;
-    }
-
-    @Override
-    public HttpStatus getStatus() {
-        return null;
     }
 
     public ForwardMethodInvokeResult(String forwardUrl) {

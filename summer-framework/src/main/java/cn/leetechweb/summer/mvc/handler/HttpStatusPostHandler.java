@@ -19,9 +19,6 @@ public class HttpStatusPostHandler implements InvokeHandler {
     public void postHandle(Object resultObject, MethodInvokeResult methodInvokeResult, ServletDescriptor descriptor) {
         Method servletMethod = descriptor.getMethod();
         HttpStatus responseStatus = HttpStatus.OK;
-        if (methodInvokeResult.isRedirect()) {
-            responseStatus = HttpStatus.REDIRECT;
-        }
         if (servletMethod.isAnnotationPresent(Status.class)) {
             responseStatus = servletMethod.getAnnotation(Status.class).value();
         }

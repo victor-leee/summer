@@ -12,12 +12,6 @@ import cn.leetechweb.summer.mvc.view.View;
 public interface MethodInvokeResult {
 
     /**
-     * 该方法返回是否进行转发
-     * @return 是否重定向
-     */
-    boolean isRedirect();
-
-    /**
      * 返回执行该servlet的结果响应视图
      * @return 响应视图
      */
