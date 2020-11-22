@@ -367,3 +367,31 @@ index.jsp:
 </body>
 </html>
 ```
+
+#### 转发与重定向
+
+##### 转发
+在非@Restful下返回前缀带有"forward:{转发的链接}"的字符串即可实现转发
+```java
+    @Mapping(path = "/jsp")
+    public String getJsp() {
+        return "forward:/admin/forward";
+    }
+
+    @Mapping(path = "/forward")
+    public View forwardJsp() {
+        View jspView = new InternalView();
+        jspView.setViewName("index");
+        jspView.append("name", "李峻宇");
+        return jspView;
+    }
+```
+
+##### 重定向
+在非@Restful下返回前缀带有"redirect:{重定向的链接}"的字符串即可实现重定向
+```java
+    @Mapping(path = "/redirect")
+    public String doRedirect(@RequestParam("url") String to) {
+        return "redirect:" + to;
+    }
+```
