@@ -1,15 +1,13 @@
 package cn.leetechweb.test.controller;
 
-import cn.leetechweb.summer.mvc.annotation.Controller;
-import cn.leetechweb.summer.mvc.annotation.Mapping;
-import cn.leetechweb.summer.mvc.annotation.RequestBody;
-import cn.leetechweb.summer.mvc.annotation.Restful;
+import cn.leetechweb.summer.mvc.annotation.*;
 import cn.leetechweb.summer.mvc.support.HttpMethod;
 import cn.leetechweb.summer.mvc.view.InternalView;
 import cn.leetechweb.summer.mvc.view.View;
 import cn.leetechweb.test.Person;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 /**
  * Project Name: summer
@@ -27,7 +25,12 @@ public class AdminController {
     }
 
     @Mapping(path = "/jsp")
-    public View getJsp() {
+    public String getJsp() {
+        return "forward:/admin/forward";
+    }
+
+    @Mapping(path = "/forward")
+    public View forwardJsp() {
         View jspView = new InternalView();
         jspView.setViewName("index");
         jspView.append("name", "李峻宇");
@@ -38,5 +41,15 @@ public class AdminController {
     @Mapping(path = "/person", method = HttpMethod.POST)
     public Person same(@RequestBody Person person) {
         return person;
+    }
+
+    @Mapping(path = "/redirect")
+    public String doRedirect(@RequestParam("url") String to) {
+        return "redirect:" + to;
+    }
+
+    @Mapping(path = "/file")
+    public File getMdFile() {
+        return new File("D:\\Developer\\Projects\\summer\\README.md");
     }
 }

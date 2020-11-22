@@ -39,7 +39,7 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
 
         Object result = servletDescriptor.invoke(args);
 
-        MethodInvokeResult invokeResult = MethodInvokeResultFactory.produceResult(
+        MethodInvokeResult invokeResult = MethodInvokeResultFactory.wrapResult(
                 result, servletDescriptor
         );
 

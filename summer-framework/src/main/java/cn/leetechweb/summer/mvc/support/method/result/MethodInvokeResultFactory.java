@@ -19,7 +19,7 @@ public final class MethodInvokeResultFactory {
      * @param methodResult 方法执行结果
      * @return 方法结果
      */
-    public static MethodInvokeResult produceResult(Object methodResult, ServletDescriptor servletDescriptor) {
+    public static MethodInvokeResult wrapResult(Object methodResult, ServletDescriptor servletDescriptor) {
         if (isFile(methodResult)) {
             return new FileMethodInvokeResult((File) methodResult);
         }else if (isForward(methodResult, servletDescriptor)) {
@@ -34,11 +34,12 @@ public final class MethodInvokeResultFactory {
             return new InternalResourceResult((InternalView) methodResult);
         }else if (isJspResource(methodResult, servletDescriptor)) {
             InternalView jspView = new InternalView();
-            jspView.setViewName("/" + methodResult + ".jsp");
+            jspView.setViewName((String) methodResult);
             return new InternalResourceResult(jspView);
-        }else {
+        }else if (isRestfulView(servletDescriptor)){
             return new JsonMethodInvokeResult(methodResult);
         }
+        throw new IllegalArgumentException("发生错误");
     }
 
     private static boolean isFile(Object methodResult) {
@@ -77,6 +78,10 @@ public final class MethodInvokeResultFactory {
             return !descriptor.isAnnotationPresentAnyway(Restful.class);
         }
         return false;
+    }
+
+    private static boolean isRestfulView(ServletDescriptor servletDescriptor) {
+        return servletDescriptor.isAnnotationPresentAnyway(Restful.class);
     }
 
 }

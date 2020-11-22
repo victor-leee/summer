@@ -6,6 +6,7 @@ import cn.leetechweb.summer.mvc.Constant;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Arrays;
 
 /**
  * 处理文件下载view
@@ -27,7 +28,8 @@ public class FileView extends AbstractView {
                 os.write(bytes, 0, len);
             }
         }catch (Exception e) {
-            logger.warning(StringUtils.format("下载{}发生错误", false, file.getName()));
+            logger.warning(StringUtils.format("下载{}发生错误，原因：{}，堆栈：{}", false,
+                    file.getName(), e.getMessage(), Arrays.toString(e.getStackTrace())));
         }
     }
 
