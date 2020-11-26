@@ -5,11 +5,15 @@ import cn.leetechweb.summer.mvc.annotation.Controller;
 import cn.leetechweb.summer.mvc.annotation.Mapping;
 import cn.leetechweb.summer.mvc.annotation.RequestParam;
 import cn.leetechweb.summer.mvc.annotation.Restful;
+import cn.leetechweb.summer.mvc.multipart.EasyFile;
 import cn.leetechweb.summer.mvc.support.HttpMethod;
 import cn.leetechweb.summer.mvc.view.InternalView;
 import cn.leetechweb.summer.mvc.view.View;
 import cn.leetechweb.test.dao.PersonDao;
 import cn.leetechweb.test.model.Person;
+
+import java.io.File;
+import java.util.List;
 
 
 /**
@@ -25,6 +29,8 @@ public class PersonController {
     @Autowired
     PersonDao personDao;
 
+    File base = new File("D:\\");
+
     @Restful
     @Mapping(method = HttpMethod.POST)
     public String insertPerson(@RequestParam("name") String name, @RequestParam("age") int age) {
@@ -39,6 +45,26 @@ public class PersonController {
         view.setViewName("index");
         view.append("person", person);
         return view;
+    }
+
+    @Restful
+    @Mapping(path = "/upload", method = HttpMethod.POST)
+    public String uploadFile(@RequestParam("file") List<EasyFile> fileList) {
+        for (EasyFile easyFile : fileList) {
+            System.out.println("文件名:" + easyFile.getFileName());
+            try {
+                easyFile.store(base);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return "上传成功";
+    }
+
+    @Restful
+    @Mapping(path = "/download")
+    public File downloadFile(@RequestParam("name") String fileName) {
+        return new File(base, fileName);
     }
 
 }
