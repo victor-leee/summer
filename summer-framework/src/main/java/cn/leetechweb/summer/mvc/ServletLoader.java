@@ -24,7 +24,7 @@ public class ServletLoader implements Loader, ContainerAware {
 
     private void loadHelper() {
         ServerConfig serverConfig = this.beanFactory.getBean("ServerConfig", ServerConfig.class);
-        EmbedServer embedServer = beanFactory.getBean("TomcatEmbeddedServerImpl", TomcatEmbedServerImpl.class);
+        EmbedServer embedServer = beanFactory.getBean("TomcatEmbedServerImpl", TomcatEmbedServerImpl.class);
         embedServer.run(serverConfig);
     }
 

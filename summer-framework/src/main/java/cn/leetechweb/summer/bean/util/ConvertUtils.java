@@ -1,5 +1,6 @@
 package cn.leetechweb.summer.bean.util;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.function.Function;
 
@@ -40,13 +41,29 @@ public abstract class ConvertUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T convert(Class<T> clazz, Object val) {
-        if (val.getClass().isArray()) {
+        if (Collection.class.isAssignableFrom(clazz)) {
             Collection<T> converted = createCollection(clazz);
             Object[] array = (Object[]) val;
             for (Object data : array) {
                 converted.add((T) data);
             }
             return (T) converted;
+        }
+        if (val.getClass().isArray()) {
+            if (!clazz.isArray()) {
+                int arrayLength = Array.getLength(val);
+                if (arrayLength == 1) {
+                    val = Array.get(val, 0);
+                } else {
+                    throw new IllegalArgumentException("数组元素匹配到了非数组元素");
+                }
+            }else {
+                Object[] ret = new Object[Array.getLength(val)];
+                for (int i = 0; i < ret.length; i++) {
+                    ret[i] = convert(Array.get(val, i).getClass(), Array.get(val, i));
+                }
+                return (T) ret;
+            }
         }
         Function<Object, ?> converter = converterMap.get(clazz);
         if (converter == null) {

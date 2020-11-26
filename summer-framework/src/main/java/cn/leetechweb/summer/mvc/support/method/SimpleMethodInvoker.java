@@ -61,12 +61,7 @@ public class SimpleMethodInvoker extends AbstractMethodInvoker {
         if (argParameter.isAnnotationPresent(RequestParam.class)) {
             String parameterName = argParameter.getAnnotation(RequestParam.class).value();
             Object[] params = argumentMapper.get(parameterName);
-            if (params.length == 1) {
-                return ConvertUtils.convert(argParameter.getType(), params[0]);
-            }
-            // 否则这个参数应该是集合类型的
-            Class<? extends Collection<?>> colType = (Class<? extends Collection<?>>) argParameter.getType();
-            return ConvertUtils.convert(colType, params);
+            return ConvertUtils.convert(argParameter.getType(), params);
         }else if (argParameter.isAnnotationPresent(RequestBody.class)) {
             Class<?> paramType = argParameter.getType();
             String requestBody = argumentMapper.getRequestBody();

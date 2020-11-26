@@ -53,7 +53,7 @@ public class PersonController {
         for (EasyFile easyFile : fileList) {
             System.out.println("文件名:" + easyFile.getFileName());
             try {
-                easyFile.store(base);
+                easyFile.store(new File(base, easyFile.getFileName()));
             }catch (Exception e) {
                 e.printStackTrace();
             }
