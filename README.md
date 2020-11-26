@@ -261,7 +261,7 @@ public class InnerBean {
 
 ### 使用summer-mvc处理restful请求
 
-> 代码实例在summer-framework/src/main/java/cn.leetechweb.summer/test下
+> 代码实例在summer-test下
 
 #### 使用@Controller和@Mapping进行URL映射
 在类上标记该类为@Controller，summer会自动装配该类并且读取其URL映射信息(使用@Mapping设置)，
