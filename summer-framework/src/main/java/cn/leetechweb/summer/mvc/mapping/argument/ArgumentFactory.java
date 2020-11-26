@@ -82,6 +82,8 @@ public final class ArgumentFactory {
         for (FileItem fileItem : fileItems) {
             if (!fileItem.isFormField()) {
                 processFileField(fileItem, argumentMapper);
+            }else {
+                processNormalFormField(fileItem, argumentMapper);
             }
         }
     }
@@ -97,6 +99,18 @@ public final class ArgumentFactory {
         File repo = (File) servletContext.getAttribute(UPLOAD_FILE_TEMP_DIR);
         FILE_ITEM_FACTORY.setRepository(repo);
         return new ServletFileUpload(FILE_ITEM_FACTORY);
+    }
+
+    private static void processNormalFormField(FileItem fileItem, ArgumentMapper argumentMapper) {
+        String fieldName = fileItem.getFieldName();
+        try {
+            String fieldValue = fileItem.getString(Constant.DEFAULT_CHARACTER_SET);
+            argumentMapper.add(fieldName, new ArgumentDescriptor(
+                    ClassUtils.getClassName(String.class), fieldValue
+            ));
+        }catch (Exception e) {
+            logger.severe("UTF8不支持");
+        }
     }
 
 }
