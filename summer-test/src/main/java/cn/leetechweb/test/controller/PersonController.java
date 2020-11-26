@@ -67,4 +67,10 @@ public class PersonController {
         return new File(base, fileName);
     }
 
+    @Restful
+    @Mapping(path = "/rest")
+    public Person getPerson(@RequestParam("name") String name) {
+        return personDao.find(name);
+    }
+
 }
