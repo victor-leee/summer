@@ -6,7 +6,7 @@ package cn.leetechweb.summer.mvc.support;
  *
  * @author junyu lee
  **/
-public interface EmbeddedServer {
+public interface EmbedServer {
 
     /**
      * 使用serverConfig运行内嵌服务器

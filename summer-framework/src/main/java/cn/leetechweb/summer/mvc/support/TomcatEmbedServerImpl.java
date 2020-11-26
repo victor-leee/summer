@@ -20,11 +20,11 @@ import java.util.logging.Logger;
  *
  * @author junyu lee
  **/
-public final class TomcatEmbeddedServerImpl implements EmbeddedServer, ContainerAware {
+public final class TomcatEmbedServerImpl implements EmbedServer, ContainerAware {
 
     private DispatcherServlet dispatcherServlet = null;
 
-    private final Logger logger = Logger.getLogger(TomcatEmbeddedServerImpl.class.getName());
+    private final Logger logger = Logger.getLogger(TomcatEmbedServerImpl.class.getName());
 
     @Override
     public void run(ServerConfig serverConfig) {

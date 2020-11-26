@@ -3,9 +3,9 @@ package cn.leetechweb.summer.mvc;
 import cn.leetechweb.summer.bean.ContainerAware;
 import cn.leetechweb.summer.bean.factory.BeanFactory;
 import cn.leetechweb.summer.bean.loader.Loader;
-import cn.leetechweb.summer.mvc.support.EmbeddedServer;
+import cn.leetechweb.summer.mvc.support.EmbedServer;
 import cn.leetechweb.summer.mvc.support.ServerConfig;
-import cn.leetechweb.summer.mvc.support.TomcatEmbeddedServerImpl;
+import cn.leetechweb.summer.mvc.support.TomcatEmbedServerImpl;
 
 /**
  * Project Name: summer
@@ -24,8 +24,8 @@ public class ServletLoader implements Loader, ContainerAware {
 
     private void loadHelper() {
         ServerConfig serverConfig = this.beanFactory.getBean("ServerConfig", ServerConfig.class);
-        EmbeddedServer embeddedServer = beanFactory.getBean("TomcatEmbeddedServerImpl", TomcatEmbeddedServerImpl.class);
-        embeddedServer.run(serverConfig);
+        EmbedServer embedServer = beanFactory.getBean("TomcatEmbeddedServerImpl", TomcatEmbedServerImpl.class);
+        embedServer.run(serverConfig);
     }
 
     @Override
